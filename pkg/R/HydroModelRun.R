@@ -1,0 +1,100 @@
+setClass("HydroModelRun",
+	representation = representation(parameter="HydroModelParameters",
+                                modelledFluxes="list",
+				modelledStates="list",
+				measuredFluxes="list",
+				measuredStates="list",
+				performanceMeasures="data.frame",
+				modelSupportData="list",
+				call="character")
+)
+
+
+setMethod("summary",
+    signature(object = "HydroModelRun"),
+    function (object, ...) 
+    {
+        stop("Need a definition for the method here")
+    }
+)
+
+
+setMethod("plot",
+    signature(x = "HydroModelRun"),
+    function (x, y, 
+              plot.type=c("rainfall-runoff", "by.data.type", "by.station", "balance"),
+              kind=c("modelledFluxes", "modelledStates", "measuredFluxes", "measuredStates"),
+              the.data.types=data.types(x, kind=kind),
+              the.stations=stations(x, kind=kind),
+              legend.position="right",
+              ...) 
+    {
+        plot.type <- match.arg(plot.type, several.ok=TRUE)
+        kind <- match.arg(kind, several.ok=TRUE)
+        #oldpar <- par(ask=TRUE)
+        if("rainfall-runoff" %in% plot.type){
+            warning("Need a definition for the rainfall-runoff method here")
+        }
+        if("by.data.type" %in% plot.type){
+            for(theKind in kind){
+                theList <- slot(object, theKind)
+                for(hydroTS in theList){
+                    if(!is.null(hydroTS)){
+                        if(hydroTS@type %in% the.data.types){
+                             select <- dimnames(hydroTS@magnitude)[[2]] %in% the.stations
+                             plot(hydroTS[,select], main=hydroTS@type,...)
+                        }
+                    }
+                }
+            }
+        }
+        if("by.station" %in% plot.type){
+          for(the.station in the.stations){
+            new.zoos <- NULL
+            col.names <- list()
+            for(theKind in kind){
+                theList <- slot(object, theKind)
+                for(hydroTS in theList){
+                    if(!is.null(hydroTS)){
+                        if(hydroTS@type %in% the.data.types){
+                             select <- dimnames(hydroTS@magnitude)[[2]] %in% the.station
+                             if(any(select)){
+                                 if(is.null(new.zoos[[hydroTS@units]])){
+                                      new.zoos[[hydroTS@units]] <-  hydroTS@magnitude[,select]
+                                      col.names[[hydroTS@units]] <- hydroTS@type
+                                 } else {
+                                      new.zoos[[hydroTS@units]] <- merge(new.zoos[[hydroTS@units]], hydroTS@magnitude[,select])
+                                      col.names[[hydroTS@units]] <- c(col.names[[hydroTS@units]],hydroTS@type)
+                                 }
+                             }
+                        }
+                    }
+                }
+            }
+            for(unit in names(new.zoos)){
+               if(length(col.names[[unit]])>1){
+                   dimnames(new.zoos[[unit]])[[2]] <- col.names[[unit]]
+                   plot(new.zoos[[unit]], plot.type="single", ylab=unit, col=1:length(col.names[[unit]]),main=the.station,...)
+                   legend(legend.position, col.names[[unit]],col=1:length(col.names[[unit]]))
+               } else {
+                   plot(new.zoos[[unit]], plot.type="single", ylab=unit, col=1:length(col.names[[unit]]),main=paste(col.names[[unit]], "at", the.station),...)
+               }
+            }
+          }
+        }
+        if("balance" %in% plot.type){
+            warning("Need a definition for the balance method here")
+        }
+        #par(oldpar)
+
+    }
+)
+
+
+setMethod("print",
+    signature(x = "HydroModelRun"),
+    function (x, ...) 
+    {
+        stop("Need a definition for the method here")
+    }
+)

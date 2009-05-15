@@ -1,0 +1,4 @@
+setClass("HydroState",
+    contains = "HydroTS"
+    )
+
