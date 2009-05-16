@@ -19,13 +19,19 @@ setAs("numeric", "HydroModelParameters",
 setAs("HydroModelParameters", "data.frame", function(from) from@parameters)
 setAs("HydroModelParameters", "matrix", function(from) as.matrix(from@parameters))
 
-print.HydroModelParameters <- function(x) {
-  print(cat("Model: ",x@modelID))
-  print(summary(x@parameters))
-  invisible(x)
-}
+setMethod("print",
+          signature(x = "HydroModelParameters"),
+          function(x, ...) {
+            print(cat("Model: ",x@modelID))
+            print(summary(x@parameters))
+            invisible(x)
+          }
+          )
 
-
-setMethod("show", "HydroModelParameters", function(object) print.HydroModelParameters(object))
-
-
+#setMethod("show",
+#          signature(x = "HydroModelParameters"),
+#          function(x, ...) {
+#            print(x, ...)
+#            invisible(x)
+#          }
+#          )

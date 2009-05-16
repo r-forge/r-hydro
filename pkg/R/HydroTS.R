@@ -5,7 +5,6 @@ HydroTSvalidity <- function(object){
 }
 
 setOldClass("zoo")
-setOldClass("Spatial")
 setClass("HydroTS",
     representation = representation(magnitude="zoo",
 		location.name="character",
