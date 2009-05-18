@@ -1,6 +1,6 @@
 stations <- function(object, 
               kind=c("modelledFluxes", "modelledStates", "measuredFluxes", "measuredStates")){
-           stopifnot(class(object)=="HydroModelRun") 
+           stopifnot(is(object, "HydroModelRun")) 
            kind <- match.arg(kind, several.ok=TRUE)
            stations <- c()
            for(theKind in kind){
