@@ -1,14 +1,14 @@
 ##useDynLib(topmodel)
 
-##export(topmodel)
+export(stations,
+       NSeff,
+       topidx)
 
 exportClasses(HydroTS,
               HydroFlux,
-              HydroFluxes,
               HydroState,
-              HydroStates,
               HydroModelRun,
               HydroModelParameters,
               HydroTopmodelParameters)
 
-exportMethods(show,print,plot)
+exportMethods(print,plot)

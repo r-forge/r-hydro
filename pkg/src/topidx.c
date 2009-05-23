@@ -1,8 +1,8 @@
 
-/* calculates the topographic index (a/ tan(beta) ) */
-/*  Average downslope slope is also calculated but not returned */
+/* calculates the topographic index (a/ tan(beta) )
+   Average downslope slope is also calculated but not returned
 
-/* author: Wouter Buytaert based on routines of many others */
+   author: Wouter Buytaert based on routines of others */
 
 #include <math.h>
 #include <R.h>
@@ -17,10 +17,10 @@ void topidx(double *inputdem,
 	    double *ns_res,
 	    double *output)
 {
-  int    i,j,ii,jj,k,k1,k2,k3,nf,i2,j2,natbold;
+  int    i,j,ii,jj,k,natbold;
   int    natb = 0;     /* number of atbs still to be analysed */
-  int    iproute,nrout,river,not_yet;
-  double **dem, **atb, **area, **slope, **rivermap;
+  int    iproute,nrout,river,not_yet, **rivermap;
+  double **dem, **atb, **area, **slope;
   double exclude,dnx,routefac,nslp,xr,yr;
   int	 nsink = 0;
   double routdem[9], tanb[9];
@@ -32,23 +32,21 @@ void topidx(double *inputdem,
   atb   = (double **) R_alloc(*nrow, sizeof(double *));
   area  = (double **) R_alloc(*nrow, sizeof(double *));
   slope = (double **) R_alloc(*nrow, sizeof(double *));
-  rivermap = (double **) R_alloc(*nrow, sizeof(double *));
+  rivermap = (int **) R_alloc(*nrow, sizeof(int *));
 
   for(i=0; i<*nrow; i++){
-    dem[i]   = (double *) R_alloc(*ncol, sizeof(double));
-    atb[i]   = (double *) R_alloc(*ncol, sizeof(double));
-    area[i]  = (double *) R_alloc(*ncol, sizeof(double));
     slope[i] = (double *) R_alloc(*ncol, sizeof(double));
-    rivermap[i] = (double *) R_alloc(*ncol, sizeof(double));
-  }
-
-  /* copy input to dem (R fills matrices per column) */
-
-  for(j=0; j< *ncol; j++){
-    for(i=0; i< *nrow; i++){
-      dem[i][j] = inputdem[i+(*nrow)*j];
-      rivermap[i][j] = inputriver[i+(*nrow)*j];
     }
+
+  /* connect matrix pointers to in- and output arrays */
+  /* Note: R fills matrices per column, so first index is row,
+     second is column */
+
+  for(i=0; i<*nrow; i++){
+    dem[i]   = &inputdem[*ncol * i];
+    atb[i]   = &output[*ncol * i];
+    area[i]  = &output[(*ncol * i) + (*ncol * *nrow)];
+    rivermap[i] = &inputriver[*ncol * i];
   }
 
   /* initialisation */
@@ -246,18 +244,6 @@ void topidx(double *inputdem,
 	  }
 	}
       }
-    }
-  }
-
-  /*  Rprintf("\nNumber of sinks or boundaries: %i\n",nsink); */
-
-  /* format output */
-
-  for(j=0; j < *ncol; j++){
-    for(i=0; i < *nrow; i++){
-      if(atb[i][j] == exclude) area[i][j] = exclude;
-      output[i + (*nrow * j)] = atb[i][j];
-      output[*nrow * *ncol + i + (*nrow * j)] = area[i][j];
     }
   }
   return;

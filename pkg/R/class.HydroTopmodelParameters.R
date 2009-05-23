@@ -14,13 +14,13 @@ setClass("HydroTopmodelParameters",
                                modelID = "Topmodel"),
          validity = function(object) {
            ## check that number of parameters is correct
-           if(dim(object)[2] !=10)
+           if(length(object@parameters) !=10)
              return("Incorrect number of parameters")
            ## check for negative initial subsurface flow
-           if(length(object@parameters[,"Q0"] < 0) > 0)
+           if(any(object@parameters[1] < 0))
              return("Initial subsurface flow should not be negative")
            ## check for negative or extremely low streamflow velocity
-           if(length(object@parameters[,"v"] < 50) > 0)
+           if(any(object@parameters[7] < 50))
              return("Stream flow velocity should not be negative")
            return(TRUE)
          }
@@ -29,65 +29,40 @@ setClass("HydroTopmodelParameters",
 setAs("numeric", "HydroTopmodelParameters",
       function(from) {
         from <- as(from,"HydroModelParameters")
-        from <- new(from,"HydroTopmodelParameters")
-        from@modelID <- "Topmodel"
-        colnames(from@parameters) <- c("Q0","lnTe","m","D0","Dmax","td","v","Ks","CD","dt")
+        from <- as(from,"HydroTopmodelParameters")
       }
       )
 
 setAs("matrix", "HydroTopmodelParameters",
       function(from) {
         from <- as(from,"HydroModelParameters")
-        from <- new(from,"HydroTopmodelParameters")
-        from@modelID <- "Topmodel"
-        colnames(from@parameters) <- c("Q0","lnTe","m","D0","Dmax","td","v","Ks","CD","dt")
+        from <- as(from,"HydroTopmodelParameters")
       }
       )
 
 setAs("HydroModelParameters", "HydroTopmodelParameters",
       function(from) {
-        from <- new(from,"HydroTopmodelParameters")
+        from <- new("HydroTopmodelParameters", parameters=from@parameters)
         from@modelID <- "Topmodel"
-        colnames(from@parameters) <- c("Q0","lnTe","m","D0","Dmax","td","v","Ks","CD","dt")
+        names(from@parameters) <- c("Q0","lnTe","m","D0","Dmax","td","v","Ks","CD","dt")
+        return(from)
       }
-      )
+)
 
 setAs("HydroModelParameters", "data.frame", function(from) from@parameters)
 setAs("HydroModelParameters", "matrix", function(from) as.matrix(from@parameters))
 
 setMethod("print",
           signature(x = "HydroTopmodelParameters"),
-          function(x, ...) {
-            cat("Initial subsurface flow\n")
-            summary(x@parameters[1,])
-            cat("log of the areal average of saturated transmissivity\n")
-            summary(x@parameters[2,])
-            cat("m\n")
-            summary(x@parameters[3,])
-            cat("Initial root zone storage deficit\n")
-            summary(x@parameters[4,])
-            cat("Maximum root zone storage deficit\n")
-            summary(x@parameters[5,])
-            cat("Unsaturated zone time delay\n")
-            summary(x@parameters[6,])
-            cat("channel flow\n")
-            summary(x@parameters[7,])
-            cat("Surface hydraulic conductivity\n")
-            summary(x@parameters[8,])
-            cat("capillary drive\n")
-            summary(x@parameters[9,])
-            cat("time step\n")
-            summary(x@parameters[10,])
-            invisible(x)
-          }
+          function(x, ...) print(as(x,"HydroModelParameters"), ...)
 )
 
-#setMethod("show",
-#          signature(x = "HydroTopmodelParameters"),
-#          function(x) print(x)
-#)
+setMethod("show",
+          signature(object = "HydroTopmodelParameters"),
+          function(object) print(object)
+)
 
 setMethod("plot",
           signature(x = "HydroTopmodelParameters"),
-          function(x,y, ...) plot(x@parameters, ...)
+          function(x,y, ...) plot(as(x,"HydroModelParameters"), ...)
 )
