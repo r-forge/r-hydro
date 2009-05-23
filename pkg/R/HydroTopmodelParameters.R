@@ -82,10 +82,10 @@ setMethod("print",
           }
 )
 
-setMethod("show",
-          signature(object = "HydroTopmodelParameters"),
-          function(object) print(object)
-)
+#setMethod("show",
+#          signature(x = "HydroTopmodelParameters"),
+#          function(x) print(x)
+#)
 
 setMethod("plot",
           signature(x = "HydroTopmodelParameters"),

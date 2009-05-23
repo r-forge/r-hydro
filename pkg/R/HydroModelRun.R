@@ -1,5 +1,5 @@
 setClass("HydroModelRun",
-	representation = representation(parameters="HydroModelParameters",
+	representation = representation(parameter="HydroModelParameters",
                                 modelledFluxes="list",
 				modelledStates="list",
 				measuredFluxes="list",

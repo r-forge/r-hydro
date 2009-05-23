@@ -50,4 +50,3 @@ setMethod("summary",
     }
 )
     
-setAs("HydroTS", "numeric", function(from) as.numeric(from@magnitude))

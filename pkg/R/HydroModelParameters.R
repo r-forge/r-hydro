@@ -24,19 +24,14 @@ setMethod("print",
           function(x, ...) {
             print(cat("Model: ",x@modelID))
             print(summary(x@parameters))
+            invisible(x)
           }
           )
 
-setMethod("show",
-          signature(object = "HydroModelParameters"),
-          function(object) {
-            print(object)
-          }
-          )
-
-setMethod("summary",
-          signature(object = "HydroModelParameters"),
-          function(object, ...) {
-            print(object, ...)
-          }
-          )
+#setMethod("show",
+#          signature(x = "HydroModelParameters"),
+#          function(x, ...) {
+#            print(x, ...)
+#            invisible(x)
+#          }
+#          )
