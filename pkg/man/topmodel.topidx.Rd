@@ -12,10 +12,8 @@ topidx(DEM, resolution, river = NA)
 }
 \details{The river map should not contain negative values}
 \value{The function returns a list, containing 2 rasters. Atb are the topographic index values of each grid cell. Area contains the contributing area}
-%\references{}
+\references{thePaper}
 \author{Wouter Buytaert, Imperial College London, based on routines developed by the hydrology group of Lancaster University}
-%\note{}
-
 \seealso{\code{\link{topmodel}}}
 \examples{
   data(huagrahuma.dem)

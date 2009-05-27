@@ -1,17 +1,22 @@
 \name{HydroTS-class}
 \docType{class}
 \alias{HydroTS-class}
+\alias{HydroState-class}
 \alias{plot,HydroTS,ANY-method}
 \alias{print,HydroTS-method}
 
 \title{Class "HydroTS" }
 \description{	The HydroTS class represents a hydrological time series. }
 \section{Objects from the Class}{
-Objects can be created by calls of the form \code{new("HydroTS", ...)}.
+Objects can be created by calls of the form \code{new("HydroTS", ...)}
+and \code{new("HydroState", ...)}.
+
 They consist of a \code{zoo} time series and a \code{Spatial} object, combined with
 slots for the origin, accuracy, units and type (modelled or observed) of the
 data. The \code{Spatial} object can either be a spatial point, pixel or
 polygon, depending on the support of the data. Each HydroTS-Object can contain multiple time series.	  
+
+HydroState extends HydroTS directly, without additional functionality at this moment.
 }
 \section{Slots}{
 	 \describe{
@@ -38,6 +43,5 @@ polygon, depending on the support of the data. Each HydroTS-Object can contain m
 }
 \examples{
 showClass("HydroTS")
-ToDo
 }
 \keyword{classes}

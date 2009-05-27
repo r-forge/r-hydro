@@ -23,21 +23,21 @@ setMethod("plot",
     signature(x = "HydroModelRun"),
     function (x, y, 
               plot.type=c("rainfall-runoff", "by.data.type", "by.station", "balance"),
-              kind=c("modelledFluxes", "modelledStates", "measuredFluxes", "measuredStates"),
-              the.data.types=data.types(x, kind=kind),
-              the.stations=stations(x, kind=kind),
+              data.class=c("modelledFluxes", "modelledStates", "measuredFluxes", "measuredStates"),
+              the.data.types=data.types(x, data.class=data.class),
+              the.stations=stations(x, data.class=data.class),
               legend.position="right",
               ...) 
     {
         plot.type <- match.arg(plot.type, several.ok=TRUE)
-        kind <- match.arg(kind, several.ok=TRUE)
+        data.class <- match.arg(data.class, several.ok=TRUE)
         #oldpar <- par(ask=TRUE)
         if("rainfall-runoff" %in% plot.type){
             warning("Need a definition for the rainfall-runoff method here")
         }
         if("by.data.type" %in% plot.type){
-            for(theKind in kind){
-                theList <- slot(object, theKind)
+            for(theData.class in data.class){
+                theList <- slot(object, theData.class)
                 for(hydroTS in theList){
                     if(!is.null(hydroTS)){
                         if(hydroTS@type %in% the.data.types){
@@ -52,8 +52,8 @@ setMethod("plot",
           for(the.station in the.stations){
             new.zoos <- NULL
             col.names <- list()
-            for(theKind in kind){
-                theList <- slot(object, theKind)
+            for(theData.class in data.class){
+                theList <- slot(object, theData.class)
                 for(hydroTS in theList){
                     if(!is.null(hydroTS)){
                         if(hydroTS@type %in% the.data.types){

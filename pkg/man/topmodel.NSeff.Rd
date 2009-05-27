@@ -12,11 +12,15 @@
 \details{
   Qobs and Qsim should have the same dimensions. Both can contain NA values.
 }
-\value{}
-% \references{}
-\author{Wouter Buytaert, Imperial College London}
-\note{}
+\value{ The Nash-Suttcliffe coefficient}
+\references{
+thePaper
 
-% \seealso{\code{\link{topmodel.topmodel}}}
-\examples{}
+Nash, J. & Sutcliffe, J. River flow forecasting through conceptual models part I -- A discussion of principles. Journal of Hydrology, 1970 , 10 , 282-290
+}
+\author{Wouter Buytaert, Imperial College London}
+
+\seealso{\code{\link{topmodel}}}
+\examples{
+}
 \keyword{models}

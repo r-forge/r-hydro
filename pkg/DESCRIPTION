@@ -5,7 +5,7 @@ Version: 0.1
 Date: 2009-05-23
 Author: Dominik Reusser, Wouter Buytaert
 Maintainer: Dominik Reusser <>, Wouter Buytaert <w.buytaert@imperial.ac.uk>
-Depends: R (>= 2.4.0), methods, zoo, sp
+Depends: R (>= 2.4.0), methods, zoo, sp, methods, graphics
 Description: This package provides classes and functions for hydrological analysis
 License: GPL
 Collate: class.HydroTS.R class.HydroFlux.R class.HydroState.R getHydroTS.R
@@ -15,4 +15,4 @@ Collate: class.HydroTS.R class.HydroFlux.R class.HydroState.R getHydroTS.R
 	 eval.NSeff.R
 	 wasim.file2HydroTS.R wasim.head2spatial.R
 	 wasim.read.ModelParameters.R wasim.read.ModelRun.R wasim.read.table.R
-	 topmodel.topidx.R topmodel.make.classes.R
+	 topmodel.topidx.R topmodel.make.classes.R wasim.assemble.date.R

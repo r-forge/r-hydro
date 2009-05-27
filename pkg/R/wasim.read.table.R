@@ -25,7 +25,7 @@
     } else {
         table <- read.table(name,row.names=NULL, na.strings=na.strings, skip=endhead, nrows=max.row-endhead , col.names=cols, colClasses=colClasses)
          table[is.na(table)]=NaN     #mark NaNs to be distinguished from NAs        
-        ind <- assemble.date(table)
+        ind <- wasim.assemble.date(table)
         
 
         if(length(col.names)==length(cols)){

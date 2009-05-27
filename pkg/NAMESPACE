@@ -2,13 +2,21 @@
 
 export(stations,
        NSeff,
-       topidx)
+       topidx,
+       data.types,
+       stations,
+       getHydroTS,
+       wasim.data.types,
+       wasim.read.ModelRun,
+       wasim.file2HydroTS)
 
 exportClasses(HydroTS,
               HydroFlux,
               HydroState,
               HydroModelRun,
               HydroModelParameters,
-              HydroTopmodelParameters)
+              HydroTopmodelParameters,
+              HydroWasimParameters)
 
 exportMethods(print,plot)
+import(methods, graphics, sp)

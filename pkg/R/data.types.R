@@ -1,10 +1,10 @@
 data.types <- function(object, 
-              kind=c("modelledFluxes", "modelledStates", "measuredFluxes", "measuredStates")){
+              data.class=c("modelledFluxes", "modelledStates", "measuredFluxes", "measuredStates")){
            stopifnot(class(object)=="HydroModelRun") 
-           kind <- match.arg(kind, several.ok=TRUE)
+           data.class <- match.arg(data.class, several.ok=TRUE)
            types <- c()
-           for(theKind in kind){
-                theList <- slot(object, theKind)
+           for(theData.class in data.class){
+                theList <- slot(object, theData.class)
                 for(hydroTS in theList){
                     if(!is.null(hydroTS))
                         types <- append(types,hydroTS@type)
