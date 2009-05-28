@@ -1,11 +1,13 @@
-##useDynLib(topmodel)
+useDynLib(RHydro)
 
 export(stations,
        NSeff,
-       topidx,
        data.types,
        stations,
        getHydroTS,
+       topidx,
+       topidx.classes,
+       topmodel,
        wasim.data.types,
        wasim.read.ModelRun,
        wasim.file2HydroTS)
@@ -18,5 +20,5 @@ exportClasses(HydroTS,
               HydroTopmodelParameters,
               HydroWasimParameters)
 
-exportMethods(print,plot)
+exportMethods(print, plot)
 import(methods, graphics, sp)

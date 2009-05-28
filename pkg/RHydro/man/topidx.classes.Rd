@@ -1,9 +1,9 @@
-\name{make.classes}
-\alias{make.classes}
+\name{topidx.classes}
+\alias{topidx.classes}
 \alias{topmodel}
 \title{make topographic index classes from a topographic index map}
 \description{This function splits a dataset in n evenly distributed classes and calculates the number of elements of each class. It is very similar to \code{hist()}, but \code{hist()} does not always keep the number of breaks requested}
-\usage{make.classes(array,n)}
+\usage{topidx.classes(array,n)}
 \arguments{
   \item{array}{A vector of numeric values}
   \item{n}{Number of breaks}

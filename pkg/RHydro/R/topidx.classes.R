@@ -1,4 +1,4 @@
-make.classes <- function(array, n) {
+topidx.classes <- function(array, n) {
 	array<-array[!is.na(array)]
 	breaks<-seq(min(array),max(array), len=n)
 	interval<-findInterval(array,breaks,rightmost.closed=T)

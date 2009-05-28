@@ -2,7 +2,7 @@ Package: RHydro
 Type: Package
 Title: Classes for hydrological modelling and analysis, similar to ArcHydro
 Version: 0.1
-Date: 2009-05-23
+Date: 2009-05-28
 Author: Dominik Reusser, Wouter Buytaert
 Maintainer: Dominik Reusser <>, Wouter Buytaert <w.buytaert@imperial.ac.uk>
 Depends: R (>= 2.4.0), methods, zoo, sp, methods, graphics
@@ -15,4 +15,4 @@ Collate: class.HydroTS.R class.HydroFlux.R class.HydroState.R getHydroTS.R
 	 eval.NSeff.R
 	 wasim.file2HydroTS.R wasim.head2spatial.R
 	 wasim.read.ModelParameters.R wasim.read.ModelRun.R wasim.read.table.R
-	 topmodel.topidx.R topmodel.make.classes.R wasim.assemble.date.R
+	 topidx.R topidx.classes.R topmodel.R wasim.assemble.date.R
