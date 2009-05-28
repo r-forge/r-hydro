@@ -4,6 +4,10 @@ wasim.head2spatial <- function(head, x.line=3, y.line=4, z.line=2){
    x <- as.double(head.split[[x.line]][cols])
    y <- as.double(head.split[[y.line]][cols])
    z <- as.double(head.split[[z.line]][cols])
-   S <- SpatialPoints(data.frame(x,y,z))
+   if(any(is.na(z))){
+      S <- SpatialPoints(data.frame(x,y))
+   } else {
+      S <- SpatialPoints(data.frame(x,y,z))
+   }
    return(S)
 }

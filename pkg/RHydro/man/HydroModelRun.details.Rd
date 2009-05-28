@@ -28,5 +28,12 @@ to obtain information}
 \references{ thePaper }
 \author{ Dominik Reusser, Wouter Buytaert }
 \examples{
+library(RHydroWasimData)
+file=system.file("controllfile.$$$", package="RHydroWasimData")
+
+object <- wasim.read.ModelRun(file)
+data.types(object)
+stations(object)
+getHydroTS(object, the.data.types="radiation")
 }
 \keyword{ utilities }

@@ -45,5 +45,16 @@ data sets, what are reserved data.types
 }
 \examples{
 showClass("HydroModelRun")
+
+library(RHydroWasimData)
+file=system.file("controllfile.$$$", package="RHydroWasimData")
+
+object <- wasim.read.ModelRun(file)
+class(object)
+plot(object, plot.type="rainfall-runoff")
+show(object)
+print(object)
+summary(object)
+
 }
 \keyword{classes}

@@ -2,6 +2,10 @@
 `wasim.read.table` <- function (name, na.strings=c("999", "999.00","9999", "9999.00","9999.000", "9999.000000","-9999","-9999.0","-9999.00") #strings indicating missing data
 ){
 
+   if(!file.exists(name)){
+      warning(paste(name," does not exist"))
+      return(NULL)
+   }
    cf <- count.fields(name, blank.lines.skip = FALSE)
    col.count <- as.integer(names(which.max(table(cf))))
    max.row <- suppressWarnings(min(which(cf[10:length(cf)]!=col.count)))

@@ -1,0 +1,10 @@
+Package: RHydroWasimData
+Type: Package
+Title: Example data to demonstrate RHydro for WaSiM-ETH
+Version: 0.1
+Date: 2009-05-28
+Author: Dominik Reusser
+Maintainer: Dominik Reusser <dreusser@uni-potsdam.de>
+Depends: R (>= 2.4.0)
+Description: This package provides Example data to demonstrate RHydro for WaSiM-ETH
+License: GPL

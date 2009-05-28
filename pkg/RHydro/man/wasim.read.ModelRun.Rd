@@ -20,6 +20,12 @@ Schulla, J. & Jasper, K. Model Description WaSiM-ETH 2001
  }
 \author{ Dominik Reusser, University of Potsdam }
 \examples{
+library(RHydroWasimData)
+file=system.file("controllfile.$$$", package="RHydroWasimData")
+
+object <- wasim.read.ModelRun(file)
+plot(object, plot.type="rainfall-runoff")
+
 }
 \keyword{ utilities }
 \keyword{ models }

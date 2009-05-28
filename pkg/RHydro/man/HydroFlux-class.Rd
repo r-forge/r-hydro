@@ -38,5 +38,10 @@ No methods defined with class "HydroFlux" in the signature.
 }
 \examples{
 showClass("HydroFlux")
+
+library(RHydroWasimData)
+file=system.file("input/ww100-ddh.txt", package="RHydroWasimData")
+data <- wasim.file2HydroTS(file, is_recorded=TRUE, is_flux=TRUE, direction = zoo("out"), units="mm", type="discharge")
+plot(data)
 }
 \keyword{classes}

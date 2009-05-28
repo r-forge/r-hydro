@@ -4,7 +4,7 @@ Title: Classes for hydrological modelling and analysis, similar to ArcHydro
 Version: 0.1
 Date: 2009-05-28
 Author: Dominik Reusser, Wouter Buytaert
-Maintainer: Dominik Reusser <>, Wouter Buytaert <w.buytaert@imperial.ac.uk>
+Maintainer: Dominik Reusser <dreusser@uni-potsdam.de>, Wouter Buytaert <w.buytaert@imperial.ac.uk>
 Depends: R (>= 2.4.0), methods, zoo, sp, methods, graphics
 Description: This package provides classes and functions for hydrological analysis
 License: GPL

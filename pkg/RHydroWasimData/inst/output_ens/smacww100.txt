@@ -1,0 +1,3 @@
+YY	MM	DD	HH	"1"	"2"	tot_average
+Makroporenspeicher in mm je Zone  soil_model
+--	--	--	--	0.6468891	0.3531109	1.0000
