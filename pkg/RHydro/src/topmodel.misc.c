@@ -20,7 +20,7 @@ void get_Ad(int nch)
   double A1, A2;
 
   misc.tch = (double *) R_alloc(nch, sizeof(double));
-  misc.tch[0] = params.d[0] / misc.vch;
+  misc.tch[0] = params.d[0] / misc.vr;
 
   for(i=1; i<nch; i++)
     misc.tch[i] = misc.tch[0] + (params.d[i]-params.d[0]) / misc.vr;

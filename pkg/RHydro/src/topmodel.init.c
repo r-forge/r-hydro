@@ -7,7 +7,7 @@ void topmodel_init(double *parameters,
 		   int nidxclass,
 		   int ntimestep)
 {
-  int nparam = 11;
+  int nparam = 10;
   int i;
   double A;
 
@@ -20,7 +20,7 @@ void topmodel_init(double *parameters,
   params.vr     = parameters[6 + nparam*iteration];
   params.K0     = parameters[7 + nparam*iteration];
   params.CD     = parameters[8 + nparam*iteration];
-  params.dt     = parameters[9+ nparam*iteration];
+  params.dt     = parameters[9 + nparam*iteration];
 
   /* reading delay function */
 

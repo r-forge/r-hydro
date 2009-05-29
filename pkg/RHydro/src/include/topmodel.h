@@ -48,7 +48,7 @@ GLOBAL	struct
 	/* Model efficiency */
 	double	Em;
 	int	ndelay, nreach;
-	double	lnTe, vch, vr;
+	double	lnTe, vr;
 	double	lambda;
 	double	qss, qs0;
 	double	Qobs_mean;

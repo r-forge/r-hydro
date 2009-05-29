@@ -17,11 +17,13 @@ void topmodel(double *parameters,
 {
   int i,j;
 
+
   topmodel_topidx_calc(topidx, *nidxclass);
+
   topmodel_memory_allocation(*nch, *ntimestep, *nidxclass);
-	
+
   if(*iterations > 1) Rprintf("Iteration:         ");
-	
+
 #ifdef win32
   R_flushConsole();
   R_ProcessEvents();

@@ -44,12 +44,12 @@ topmodel <- function(parameters, inputs, topidx, delay, verbose = F) {
 
   ## number of iterations
 
-  iterations <- dim(parameters)[1]
+  iterations <- dim(parameters@parameters)[1]
 
   ## length of the returned result
 
-  if(NS) lengthResult <- length(prec)
-  else   lengthResult <- length(prec) * iterations * v
+  if(NS) { lengthResult <- iterations
+  } else { lengthResult <- length(prec) * iterations * v }
 
   ## running the model...
 
@@ -71,7 +71,7 @@ topmodel <- function(parameters, inputs, topidx, delay, verbose = F) {
   ## formatting the results
   
   if(!NS && v == 6) {
-    fluxes <- matrix(result,ncol=6)
+    result <- matrix(result,ncol=6)
     fluxes <- list(
                    Q  = zoo(matrix(result[,1], ncol=iterations), index),
                    qo = zoo(matrix(result[,2], ncol=iterations), index),
@@ -80,16 +80,16 @@ topmodel <- function(parameters, inputs, topidx, delay, verbose = F) {
                    Ea = zoo(matrix(result[,6], ncol=iterations), index)
                    )
     states <- list(S  = zoo(matrix(result[,4], ncol=iterations), index))
-    performance <- NULL
+    performance <- data.frame()
   }
   if(!NS && v == 1) {
     fluxes <- list(Q = zoo(matrix(result, ncol= iterations), index))
-    states <- NULL
-    performance <- NULL
+    states <- list()
+    performance <- data.frame()
   }
   if(NS) {
-    fluxes <- NULL
-    states <- NULL
+    fluxes <- list()
+    states <- list()
     performance <- data.frame(NS = result)
   }
 
@@ -99,7 +99,7 @@ topmodel <- function(parameters, inputs, topidx, delay, verbose = F) {
                 modelledStates      = states,
                 measuredFluxes      = inputs,
                 performanceMeasures = performance,
-                modelSupportData    = list(topidx, delay),
+                modelSupportData    = list(topidx = topidx, delay = delay),
                 call                = "topmodel")
   
   return(result)
