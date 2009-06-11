@@ -1,4 +1,4 @@
-getHydroTS <- function(object, 
+get.HydroTS <- function(object, 
               data.class=c("modelledFluxes", "modelledStates", "measuredFluxes", "measuredStates"),
               the.data.types=data.types(object, data.class=data.class)
               ){

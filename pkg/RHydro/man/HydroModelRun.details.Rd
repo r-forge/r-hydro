@@ -1,18 +1,18 @@
 \name{HydroModelRun.details}
 \alias{HydroModelRun.details}
-\alias{data.types}
-\alias{stations}
-\alias{getHydroTS}
+\alias{get.data.types}
+\alias{get.stations}
+\alias{get.HydroTS}
 \title{ Extract details from HydroModelRun object }
 \description{
-\code{data.types} extracts a list of data.types stored in a \code{\linkS4class{HydroModelRun}} object.
-\code{stations} extracts a list of stations for which data is available.
-\code{getHydroTS} extracts \code{\linkS4class{HydroTS}} objects from.
+\code{get.data.types} extracts a list of data.types stored in a \code{\linkS4class{HydroModelRun}} object.
+\code{get.stations} extracts a list of stations for which data is available.
+\code{get.HydroTS} extracts \code{\linkS4class{HydroTS}} objects from.
 }
 \usage{
-data.types(object, data.class = c("modelledFluxes", "modelledStates", "measuredFluxes", "measuredStates"))
-stations(object, data.class = c("modelledFluxes", "modelledStates", "measuredFluxes", "measuredStates"))
-getHydroTS(object, data.class = c("modelledFluxes", "modelledStates",
+get.data.types(object, data.class = c("modelledFluxes", "modelledStates", "measuredFluxes", "measuredStates"))
+get.stations(object, data.class = c("modelledFluxes", "modelledStates", "measuredFluxes", "measuredStates"))
+get.HydroTS(object, data.class = c("modelledFluxes", "modelledStates",
 "measuredFluxes", "measuredStates"),
     the.data.types=data.types(object, data.class=data.class))
 }
@@ -32,8 +32,8 @@ library(RHydroWasimData)
 file=system.file("controllfile.$$$", package="RHydroWasimData")
 
 object <- wasim.read.ModelRun(file)
-data.types(object)
-stations(object)
-getHydroTS(object, the.data.types="radiation")
+get.data.types(object)
+get.stations(object)
+get.HydroTS(object, the.data.types="radiation")
 }
 \keyword{ utilities }
