@@ -10,11 +10,32 @@ setClass("HydroModelRun",
 )
 
 
+setMethod("print",
+    signature(x = "HydroModelRun"),
+    function (x, ...) 
+    {
+      cat("Model ID: ",x@parameters@modelID,"\n")
+      cat("\n")
+      cat("Number of model runs: ", dim(x@parameters@parameters)[1],"\n")
+      cat("Number of parameters: ", dim(x@parameters@parameters)[2],"\n")
+      cat("Parameter names: ", names(x@parameters),"\n")
+      cat("\n")
+      cat("Modelled fluxes: ", names(x@modelledFluxes),"\n")
+      cat("Modelled states: ", names(x@modelledStates),"\n")
+      cat("Measured Fluxes: ", names(x@measuredFluxes),"\n")
+      cat("Measured States: ", names(x@measuredStates),"\n")
+      cat("\n")
+      cat("Calculated performance measures: ", names(x@performanceMeasures),"\n")
+      cat("Model Support Data: ", names(x@modelSupportData),"\n")
+      cat("Call: ", x@call,"\n")
+    }
+)
+
 setMethod("summary",
     signature(object = "HydroModelRun"),
     function (object, ...) 
     {
-        stop("Need a definition for the method here")
+      print(object, ...)
     }
 )
 
@@ -90,11 +111,3 @@ setMethod("plot",
     }
 )
 
-
-setMethod("print",
-    signature(x = "HydroModelRun"),
-    function (x, ...) 
-    {
-        stop("Need a definition for the method here")
-    }
-)

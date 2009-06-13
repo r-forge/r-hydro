@@ -1,10 +1,9 @@
 useDynLib(RHydro)
 
-export(stations,
-       NSeff,
-       data.types,
-       stations,
-       getHydroTS,
+export(NSeff,
+       get.data.types,
+       get.stations,
+       get.HydroTS,
        topidx,
        topidx.classes,
        topmodel,

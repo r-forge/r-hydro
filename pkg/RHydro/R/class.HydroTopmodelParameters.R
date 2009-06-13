@@ -62,7 +62,10 @@ setMethod("show",
           function(object) print(object)
 )
 
-setMethod("plot",
-          signature(x = "HydroTopmodelParameters"),
-          function(x,y, ...) plot(as(x,"HydroModelParameters"), ...)
+setMethod("summary",
+          signature(object = "HydroModelParameters"),
+          function (object, ...) 
+          {
+            print(object, ...)
+          }
 )

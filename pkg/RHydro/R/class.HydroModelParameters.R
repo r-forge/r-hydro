@@ -52,6 +52,21 @@ setMethod("plot",
           }
 )
 
+setMethod("summary",
+  signature(object = "HydroModelParameters"),
+  function (object, ...) 
+  {
+    print(object, ...)
+  }
+)
+
+setMethod("names",
+          signature(x = "HydroModelParameters"),
+          function(x) {
+            names(x@parameters)
+          }
+)
+
 
 
 
