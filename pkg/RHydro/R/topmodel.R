@@ -68,36 +68,64 @@ topmodel <- function(parameters, inputs, topidx, delay, verbose = F) {
                as.integer(v),
                result = double(lengthResult))$result
 
-  ## formatting the results
+  ## building the object to return
+
+  ## First, construct the list of fluxes and states...
+
+  modelledFluxes <- list(runs = list(), shared = list())
+  modelledStates <- list(runs = list(), shared = list())
+  
+  measuredFluxes <- list(runs = list(), shared = inputs)
+  measuredStates <- list(runs = list(), shared = list())
+
+  ## Format the results as they are returned from the C function
+  ## and add them to modelledFluxes and modelledStates
   
   if(!NS && v == 6) {
+    
     result <- matrix(result,ncol=6)
-    fluxes <- list(
-                   Q  = zoo(matrix(result[,1], ncol=iterations), index),
-                   qo = zoo(matrix(result[,2], ncol=iterations), index),
-                   qs = zoo(matrix(result[,3], ncol=iterations), index),
-                   fex= zoo(matrix(result[,5], ncol=iterations), index),
-                   Ea = zoo(matrix(result[,6], ncol=iterations), index)
-                   )
-    states <- list(S  = zoo(matrix(result[,4], ncol=iterations), index))
+    
+    Q   = as.data.frame(matrix(result[,1], ncol=iterations))
+    Qos = as.data.frame(matrix(result[,2], ncol=iterations))
+    Qb  = as.data.frame(matrix(result[,3], ncol=iterations))
+    S   = as.data.frame(matrix(result[,4], ncol=iterations))
+    Qoi = as.data.frame(matrix(result[,5], ncol=iterations))
+    ETa = as.data.frame(matrix(result[,6], ncol=iterations))
+
+    for(i in 1:iterations){
+      modelledFluxes$runs[[i]] <- list(Q   = zoo(Q[,i],index),
+                                       Qb  = zoo(Qb[,i],index),
+                                       Qos = zoo(Qos[,i],index),
+                                       Qoi = zoo(Qoi[,i],index),
+                                       ETa = zoo(ETa[,i],index))
+      
+      modelledStates$runs[[i]] <- list(S = zoo(S[,i],index))
+    }
+
     performance <- data.frame()
   }
+
+  
   if(!NS && v == 1) {
-    fluxes <- list(Q = zoo(matrix(result, ncol= iterations), index))
-    states <- list()
+
+    Q <- as.data.frame(matrix(result, ncol=iterations), index)
+    
+    for(i in 1:iterations){
+      modelledFluxes$runs[[i]] <- list(Q = zoo(Q[,i],index))
+    }
+
     performance <- data.frame()
   }
   if(NS) {
-    fluxes <- list()
-    states <- list()
     performance <- data.frame(NS = result)
   }
 
   result <- new("HydroModelRun",
                 parameters          = parameters,
-                modelledFluxes      = fluxes,
-                modelledStates      = states,
-                measuredFluxes      = inputs,
+                modelledFluxes      = modelledFluxes,
+                modelledStates      = modelledStates,
+                measuredFluxes      = measuredFluxes,
+                measuredStates      = measuredStates,
                 performanceMeasures = performance,
                 modelSupportData    = list(topidx = topidx, delay = delay),
                 call                = "topmodel")

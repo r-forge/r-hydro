@@ -20,10 +20,18 @@ setMethod("print",
       cat("Number of parameters: ", dim(x@parameters@parameters)[2],"\n")
       cat("Parameter names: ", names(x@parameters),"\n")
       cat("\n")
-      cat("Modelled fluxes: ", names(x@modelledFluxes),"\n")
-      cat("Modelled states: ", names(x@modelledStates),"\n")
-      cat("Measured Fluxes: ", names(x@measuredFluxes),"\n")
-      cat("Measured States: ", names(x@measuredStates),"\n")
+      cat("Modelled fluxes: ",
+          if(length(x@modelledFluxes$runs) > 0) { names(x@modelledFluxes$runs[[1]]) },
+          names(x@modelledFluxes$shared),"\n")
+      cat("Modelled states: ",
+          if(length(x@modelledStates$runs) > 0) { names(x@modelledStates$runs[[1]]) },
+          names(x@modelledStates$shared),"\n")
+      cat("Measured fluxes: ",
+          if(length(x@measuredFluxes$runs) > 0) { names(x@measuredFluxes$runs[[1]]) },
+          names(x@measuredFluxes$shared),"\n")
+      cat("Measured states: ",
+          if(length(x@measuredStates$runs) > 0) { names(x@measuredStates$runs[[1]]) },
+          names(x@measuredStates$shared),"\n")
       cat("\n")
       cat("Calculated performance measures: ", names(x@performanceMeasures),"\n")
       cat("Model Support Data: ", names(x@modelSupportData),"\n")
@@ -36,6 +44,14 @@ setMethod("summary",
     function (object, ...) 
     {
       print(object, ...)
+    }
+)
+
+setMethod("show",
+    signature(object = "HydroModelRun"),
+    function (object) 
+    {
+      print(object)
     }
 )
 
