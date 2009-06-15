@@ -1,13 +1,15 @@
 useDynLib(RHydro)
 
-export(NSeff,
+export( NSeff,
        get.data.types,
        get.stations,
+       get.runCount,
        get.HydroTS,
        topidx,
        topidx.classes,
        topmodel,
        wasim.data.types,
+       data.types,
        wasim.read.ModelRun,
        wasim.file2HydroTS)
 
