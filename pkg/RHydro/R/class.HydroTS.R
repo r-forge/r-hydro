@@ -1,7 +1,9 @@
 HydroTSvalidity <- function(object){
     if(! object@TSorigin %in% c("recorded", "generated"))
         message = "TSorigin must be either 'recorded' or 'generated'"
-    #stopifnot(class(object@magnitude)=="zoo")
+    #ToDo: Warning if units differ from prefered units
+    #ToDo: Type dependend validity check
+
 }
 
 setOldClass("zoo")

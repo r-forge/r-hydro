@@ -1,5 +1,5 @@
 setClass("HydroModelRun",
-	representation = representation(parameters="list",
+	representation = representation(parameters="HydroModelParameters",
                                 modelledFluxes="list",
 				modelledStates="list",
 				measuredFluxes="list",
@@ -9,31 +9,24 @@ setClass("HydroModelRun",
 				call="character"),
        validity =  function(object){
          toRet <- c()
-         #Check for 'all' element which is shared data for all runs
          #ToDo use slot(object, theData.class) e.g. get.data.types
-         has.all.measuredStates <- !is.null(object@measuredStates[["all"]])
-         has.all.modelledStates <- !is.null(object@modelledStates[["all"]])
-         has.all.measuredFluxes <- !is.null(object@measuredFluxes[["all"]])
-         has.all.modelledFluxes <- !is.null(object@modelledFluxes[["all"]])
               
          #Check for same number of runs
-         if(length(object@measuredStates) - has.all.measuredStates!= length(object@measuredFluxes)  - has.all.measuredFluxes||
-            length(object@measuredStates)  - has.all.measuredStates!= length(object@modelledFluxes)  - has.all.modelledFluxes||
-            length(object@measuredStates)  - has.all.measuredStates!= length(object@parameters) ||
-            length(object@measuredStates)  - has.all.measuredStates!= length(object@modelledStates) - has.all.modelledStates)
-            toRet <- "The slots 'measuredStates, measuredFluxes, modelledFluxes, modelledStates, and parameters' need the same number of entries. 'parameters' has one entry less if the other slots include an 'all' entry in the list."
+         if(length(object@measuredStates$runs) != length(object@measuredFluxes$runs)  ||
+            length(object@measuredStates$runs) != length(object@modelledFluxes$runs)  ||
+            length(object@measuredStates$runs) != length(object@parameters@parameters) ||
+            length(object@measuredStates$runs) != length(object@modelledStates$runs))
+            toRet <- "The slots 'measuredStates$runs, measuredFluxes$runs, modelledFluxes$runs, modelledStates$runs, and parameters@parameters' need the same number of entries (length())."
          
          #Check for data types in slots
-         if(any(sapply(object@measuredStates, FUN=function(x){sapply(x,class)})!="HydroState"))
-            toRet <- c(toRet, "Slot 'measuredStates' must be a list of lists of HydroStates-Objects") 
-         if(any(sapply(object@modelledStates, FUN=function(x){sapply(x,class)})!="HydroState"))
-            toRet <- c(toRet, "Slot 'modelledStates' must be a list of lists of HydroStates-Objects") 
-         if(any(sapply(object@measuredFluxes, FUN=function(x){sapply(x,class)})!="HydroFlux"))
-            toRet <- c(toRet, "Slot 'measuredFluxes' must be a list of lists of HydroFlux-Objects") 
-         if(any(sapply(object@modelledFluxes, FUN=function(x){sapply(x,class)})!="HydroFlux"))
-            toRet <- c(toRet, "Slot 'modelledFluxes' must be a list of lists of HydroFlux-Objects") 
-         if(any(sapply(object@parameters, class)!="HydroWasimParameters"))
-            toRet <- c(toRet, "Slot 'parameters' must be a list HydroWasimParameters-Objects") 
+         for(slot in c("modelledFluxes", "modelledStates", "measuredFluxes", "measuredStates")){
+             for(bla in c("run", "shared")){
+                  
+             if(any(sapply(slot(object, slot)[[bla]], FUN=function(x){sapply(x,class)})!="HydroState"))
+                toRet <- c(toRet, paste("Slot '",slot,"$",bla,"measuredStates' must be a list of lists of HydroStates-Objects", sep="")) 
+             }
+         }
+         #ToDo Check for consistency between list symbols and data types
     }
 )
 
@@ -87,57 +80,73 @@ setMethod("show",
 setMethod("plot",
     signature(x = "HydroModelRun"),
     function (x, y, 
-              plot.type=c("rainfall-runoff", "by.data.type", "by.station", "balance"),
+              hydro.plot.type=c("rainfall-runoff", "by.data.type", "by.station", "balance"),
               data.class=c("modelledFluxes", "modelledStates", "measuredFluxes", "measuredStates"),
               data.types=get.data.types(x, data.class=data.class),
               stations=get.stations(x, data.class=data.class),
+              balance.types=unique(unlist(strsplit(rhydro.data.types$balance.type, ", *"))),
               legend.position="right",
               runs=1:get.runCount(x),
               ...) 
     {
-        plot.type <- match.arg(plot.type, several.ok=TRUE)
+        hydro.plot.type <- match.arg(hydro.plot.type, several.ok=TRUE)
         data.class <- match.arg(data.class, several.ok=TRUE)
-        for(run in runs){
             #oldpar <- par(ask=TRUE)
-            if("rainfall-runoff" %in% plot.type){
-                warning("Need a definition for the rainfall-runoff method here")
+            if("rainfall-runoff" %in% hydro.plot.type){
+                rain <- get.HydroTS(object, data.class=c("modelledFluxes"), data.types="precipitation", stations=stations, runs=runs)
+                q.model <- get.HydroTS(object, data.class=c("modelledFluxes"), data.types="discharge", stations=stations, runs=runs)
+                q.measured <- get.HydroTS(object, data.class=c("measuredFluxes"), data.types="discharge", stations=stations, runs=runs)
+                for(run in runs){
+                    for(station in get.stations(object,
+                            data.class=c("measuredFluxes"), 
+                            data.types="discharge")){
+
+                            sel.rain <- dimnames(rain[[run]]@magnitude)[[2]] %in% station
+                            sel.q.model <- dimnames(q.model[[run]]@magnitude)[[2]] %in% station
+                            sel.q.measured <- dimnames(q.measured[[run]]@magnitude)[[2]] %in% station
+                            plot.rainfall.runoff(rain[[run]]@magnitude[,sel.rain],
+                                 q.model[[run]]@magnitude[,sel.q.model], 
+                                 q.measured[[run]]@magnitude[,sel.q.measured],
+                                 main=paste("Station:", station, "Run:", run),
+                                 q.units=q.model[[run]]@units,
+                                 p.units=rain[[run]]@units
+                                 )
+                    }
+                }
             }
-            if("by.data.type" %in% plot.type){
-                for(theData.class in data.class){
-                    theList <- slot(object, theData.class)[[run]]
-                    for(hydroTS in theList){
-                        if(!is.null(hydroTS)){
+            if("by.data.type" %in% hydro.plot.type){
+                 applyToHydroTS(object,
+                       FUN=function(hydroTS){
                             if(hydroTS@type %in% data.types){
                                  select <- dimnames(hydroTS@magnitude)[[2]] %in% stations
-                                 plot(hydroTS[,select], main=hydroTS@type,...)
+                                 plot(hydroTS@magnitude[,select], main=paste(hydroTS@type, "Run:", run),...)
                             }
-                        }
-                    }
-                }
+                            return(c())
+                       },
+                       data.class=data.class,
+                       runs=runs)
             }
-            if("by.station" %in% plot.type){
+            if("by.station" %in% hydro.plot.type){
               for(the.station in stations){
+                allTS <- get.HydroTS(object, stations=the.station, 
+                                     data.class=data.class, 
+                                     data.types=data.types,
+                                     runs=runs)
+                #Rearrange zoo objects
                 new.zoos <- NULL
                 col.names <- list()
-                for(theData.class in data.class){
-                    theList <- slot(object, theData.class)[[run]]
-                    for(hydroTS in theList){
-                        if(!is.null(hydroTS)){
-                            if(hydroTS@type %in% data.types){
-                                 select <- dimnames(hydroTS@magnitude)[[2]] %in% the.station
-                                 if(any(select)){
-                                     if(is.null(new.zoos[[hydroTS@units]])){
-                                          new.zoos[[hydroTS@units]] <-  hydroTS@magnitude[,select]
-                                          col.names[[hydroTS@units]] <- hydroTS@type
-                                     } else {
-                                          new.zoos[[hydroTS@units]] <- merge(new.zoos[[hydroTS@units]], hydroTS@magnitude[,select])
-                                          col.names[[hydroTS@units]] <- c(col.names[[hydroTS@units]],hydroTS@type)
-                                     }
-                                 }
-                            }
-                        }
-                    }
+                for(hydroTS in allTS){
+                     if(NCOL(hydroTS@magnitude)>0){
+                         if(is.null(new.zoos[[hydroTS@units]])){
+                              new.zoos[[hydroTS@units]] <-  hydroTS@magnitude
+                              col.names[[hydroTS@units]] <- hydroTS@type
+                         } else {
+                              new.zoos[[hydroTS@units]] <- merge(new.zoos[[hydroTS@units]], hydroTS@magnitude)
+                              col.names[[hydroTS@units]] <- c(col.names[[hydroTS@units]],hydroTS@type)
+                         }
+                     }
                 }
+                #Plot zoo objects by units
                 for(unit in names(new.zoos)){
                    if(length(col.names[[unit]])>1){
                        dimnames(new.zoos[[unit]])[[2]] <- col.names[[unit]]
@@ -149,12 +158,34 @@ setMethod("plot",
                 }
               }
             }
-            if("balance" %in% plot.type){
-                warning("Need a definition for the balance method here")
+            if("balance" %in% hydro.plot.type){
+                #loop through balance types
+                for(balance.type in balance.types){
+                    #what data.types occur in this balance?
+                    b.data.types <- rhydro.data.types$data.type[rhydro.data.types$balance.type==balance.type]
+                    #loop through runs and stations
+                    for(run in runs){
+                       for(station in stations){
+                            #get flux data
+                            allTS <- get.HydroTS(object, data.class="modelledFluxes",
+                                 data.types=b.data.types,
+                                 station=station,
+                                 runs=run)
+                            browser()
+                            #build sums for flux data
+                            #plot flux data by station and run
+                            #store total flux change (end sum) (with direction)
+                            
+                            #get state data
+                            #plot state data (on different axis?)
+                            #store total state change
+                       }
+                    }
+                }
+
             }
             #par(oldpar)
 
-        }
     }
 )
 
