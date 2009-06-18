@@ -23,12 +23,13 @@ direction=zoo("out"), units, type, generated.header.info=NULL){
               }
           }
     }
+    origin <- if(is_recorded) "recorded" else "generated"
     if(is_flux){
         to.ret <- new("HydroFlux", magnitude = data,
-TSorigin="recorded", coordinate=coordinate, direction=direction,
+TSorigin=origin, coordinate=coordinate, direction=direction,
 units=units, type=type, location.name=dimnames(data)[[2]])
     } else {
-        to.ret <- new("HydroState", magnitude = data, TSorigin="recorded", coordinate=coordinate, units=units, type=type, location.name=dimnames(data)[[2]])
+        to.ret <- new("HydroState", magnitude = data, TSorigin=origin, coordinate=coordinate, units=units, type=type, location.name=dimnames(data)[[2]])
     }
     return(to.ret)
 }

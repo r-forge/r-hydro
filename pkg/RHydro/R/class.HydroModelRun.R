@@ -1,3 +1,29 @@
+validityHydroModelRun <- function(object){
+     toRet <- c()
+     #ToDo use slot(object, theData.class) e.g. get.data.types
+          
+     #Check for same number of runs
+     if(length(object@measuredStates$runs) != length(object@measuredFluxes$runs)  ||
+        length(object@measuredStates$runs) != length(object@modelledFluxes$runs)  ||
+        length(object@measuredStates$runs) != length(object@parameters@parameters) ||
+        length(object@measuredStates$runs) != length(object@modelledStates$runs))
+        toRet <- "The slots 'measuredStates$runs, measuredFluxes$runs, modelledFluxes$runs, modelledStates$runs, and parameters@parameters' need the same number of entries (length())."
+     
+     #Check for data types in slots
+     for(slot in c("modelledFluxes", "modelledStates", "measuredFluxes", "measuredStates")){
+         for(bla in c("run", "shared")){
+              
+         browser()
+         #check for generated and recorded
+
+         #check for HydroState/HydroFlux
+         if(any(sapply(slot(object, slot)[[bla]], FUN=function(x){sapply(x,class)})!="HydroState"))
+            toRet <- c(toRet, paste("Slot '",slot,"$",bla,"measuredStates' must be a list of lists of HydroStates-Objects", sep="")) 
+         }
+     }
+     #ToDo Check for consistency between list symbols and data types
+}
+
 setClass("HydroModelRun",
 	representation = representation(parameters="HydroModelParameters",
                                 modelledFluxes="list",
@@ -7,27 +33,7 @@ setClass("HydroModelRun",
 				performanceMeasures="data.frame",
 				modelSupportData="list",
 				call="character"),
-       validity =  function(object){
-         toRet <- c()
-         #ToDo use slot(object, theData.class) e.g. get.data.types
-              
-         #Check for same number of runs
-         if(length(object@measuredStates$runs) != length(object@measuredFluxes$runs)  ||
-            length(object@measuredStates$runs) != length(object@modelledFluxes$runs)  ||
-            length(object@measuredStates$runs) != length(object@parameters@parameters) ||
-            length(object@measuredStates$runs) != length(object@modelledStates$runs))
-            toRet <- "The slots 'measuredStates$runs, measuredFluxes$runs, modelledFluxes$runs, modelledStates$runs, and parameters@parameters' need the same number of entries (length())."
-         
-         #Check for data types in slots
-         for(slot in c("modelledFluxes", "modelledStates", "measuredFluxes", "measuredStates")){
-             for(bla in c("run", "shared")){
-                  
-             if(any(sapply(slot(object, slot)[[bla]], FUN=function(x){sapply(x,class)})!="HydroState"))
-                toRet <- c(toRet, paste("Slot '",slot,"$",bla,"measuredStates' must be a list of lists of HydroStates-Objects", sep="")) 
-             }
-         }
-         #ToDo Check for consistency between list symbols and data types
-    }
+       validity =  validityHydroModelRun
 )
 
 
@@ -165,15 +171,45 @@ setMethod("plot",
                     b.data.types <- rhydro.data.types$data.type[rhydro.data.types$balance.type==balance.type]
                     #loop through runs and stations
                     for(run in runs){
+                       if(identical(stations,get.stations(x, data.class=data.class))){
+                             stations=get.stations(x, data.class="modelledFluxes",  data.types=b.data.types)
+                       }
                        for(station in stations){
                             #get flux data
                             allTS <- get.HydroTS(object, data.class="modelledFluxes",
                                  data.types=b.data.types,
                                  station=station,
                                  runs=run)
-                            browser()
-                            #build sums for flux data
-                            #plot flux data by station and run
+                            
+                            for(ts in allTS){
+                                #calc plot range
+                                y.range <- c(0,
+                                   max(sapply(allTS, FUN=function(x){sum(x@magnitude, na.rm=TRUE)}))
+                                   )
+                                
+                                #ToDo get better x-range
+                                #bla <-  lapply(allTS, FUN=function(x){as.POSIXlt(max(index(x@magnitude)), na.rm=TRUE)})
+                                #as.POSIXct(sapply(allTS, FUN=function(x){max(index(x@magnitude), na.rm=TRUE)}), origin="1970-01-01", tz="GMT")
+                                #bla2 <- bla[[1]]
+                                #for(i in bla){
+                                #   bla2 <- rbind(bla2, i)
+                                #}
+                                x.range <- lapply(allTS, FUN=function(x){range(index(x@magnitude), na.rm=TRUE)})[[1]]
+                                plot(x.range,y.range, type="n", xlab="time", ylab=allTS[[1]]@units)
+                                #build sums for flux data
+                                if(NCOL(ts@magnitude)==0){
+                                   warning(paste("No data available for station",station,"run",run," and data type", ts@type))
+                                } else {
+                                   if(any(is.na(ts@magnitude))){
+                                       warning(paste("dropping NA data while calculating cumulative sum for station",station,"run",run," and data type", ts@type))
+                                       ts@magnitude <- ts@magnitude[!is.na(ts@magnitude)]
+
+                                   }
+                                   the.sum <- cumsum(ts@magnitude)
+                                }
+                                #plot flux data by station and run
+                                browser()
+                            }
                             #store total flux change (end sum) (with direction)
                             
                             #get state data
