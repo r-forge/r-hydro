@@ -1,39 +1,21 @@
 get.HydroTS <- function(object, 
               data.class=c("modelledFluxes", "modelledStates", "measuredFluxes", "measuredStates"),
-              the.data.types=data.types(object, data.class=data.class),
+              data.types=get.data.types(object, data.class=data.class),
+              stations=get.stations(object, data.class=data.class),
               runs = 1:get.runCount(object)
               ){
-           stopifnot(class(object)=="HydroModelRun") 
-           data.class <- match.arg(data.class, several.ok=TRUE)
-           ret <- list()
-           if(length(runs)>1){
-                for(run in runs){
-                    ret[[run]] <- list()
-                }
-           }
-           for(theData.class in data.class){
-                allRuns <- slot(object, theData.class)
-                if(!is.null(allRuns[["all"]])){
-                    runs2 <- c(runs,"all")
-                } else {
-                    runs2 <- runs
-                }
-                for(run in runs2){
-                    theList <- allRuns[[run]]
-                    for(hydroTS in theList){
-                        if(!is.null(hydroTS)){
-                            if(hydroTS@type %in% the.data.types){
-                                if(length(runs)>1){
-                                   ret[[run]] <- append(ret[[run]], hydroTS)
-                                } else {
-                                   ret <- append(ret, hydroTS)
-                                }
-                            }
-                        }
-                    }
-               }
-           }
-           return(ret)
- 
+           return(applyToHydroTS(x=object,
+                          FUN=function(hydroTS){
+                               if(hydroTS@type %in% data.types){ 
+                                   selection <- dimnames(hydroTS@magnitude)[[2]] %in% stations
+                                   hydroTS@magnitude <- hydroTS@magnitude[,selection]
+                                   #ToDo uncomment when WaSiM Stations for generated TS is activated.
+                                   #hydroTS@coordinate <- hydroTS@coordinate[,selection]
+                                   return(hydroTS)
+                               }
+                          },
+                          data.class=data.class,
+                          runs=runs, by.runs=TRUE))
+
 }
 
