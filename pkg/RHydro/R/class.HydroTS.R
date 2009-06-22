@@ -1,8 +1,29 @@
 HydroTSvalidity <- function(object){
     if(! object@TSorigin %in% c("recorded", "generated"))
-        message = "TSorigin must be either 'recorded' or 'generated'"
+        error.message = "TSorigin must be either 'recorded' or 'generated'"
+    if(length(object@location.name) !=  NROW(object@coordinate@coords)){
+        new.message <- "expecting length(object@location.name) == NROW(object@coordinate@coords)"
+        if(exists("error.message")){
+              error.message <- c(error.message, new.message)
+        } else {
+              error.message = new.message
+        }
+    }
+    if(length(object@location.name) != NCOL(object@magnitude)){
+        new.message <- "expecting length(object@location.name) == NCOL(object@magnitude)"
+        if(exists("error.message")){
+              error.message <- c(error.message, new.message)
+        } else {
+              error.message = new.message
+        }
+    }
     #ToDo: Warning if units differ from prefered units
     #ToDo: Type dependend validity check
+    if(exists("error.message")){
+       return(error.message)
+    } else {
+       return(TRUE)
+    }
 
 }
 
