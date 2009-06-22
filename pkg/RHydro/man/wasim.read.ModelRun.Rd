@@ -5,11 +5,15 @@
   Functionality to process input data and results for a WaSiM model run.
 }
 \usage{
-wasim.read.ModelRun(file, data.types = wasim.data.types)
+wasim.read.ModelRun(files)
 }
 \arguments{
-  \item{file}{ path to a WaSiM \$\$\$-file (The parsed control file) }
-  \item{data.types}{ data.frame defining the data to be read - see \code{\link{wasim.data.types}} }
+  \item{files}{ vector of paths to a WaSiM \$\$\$-files (The parsed control file). }
+}
+\details{
+  A data.frame defining the data to be read must be stored as \code{\link{wasim.data.types}}. RHydro comes with a default definition for this data.frame 
+
+  If files points to multiple WaSiM \$\$\$-files, each is added as seperate run.
 }
 \value{
  A \code{\linkS4class{HydroModelRun}} object is returned.
@@ -24,7 +28,8 @@ library(RHydroWasimData)
 file=system.file("controllfile.$$$", package="RHydroWasimData")
 
 object <- wasim.read.ModelRun(file)
-plot(object, plot.type="rainfall-runoff")
+plot(object, hydro.plot.type="rainfall-runoff")
+plot(object, hydro.plot.type="balance")
 
 }
 \keyword{ utilities }

@@ -18,6 +18,12 @@
 \author{Wouter Buytaert, Imperial College London}
 
 \seealso{\code{\link{topmodel}}}
-#\examples{
-#}
+\examples{
+data(huagrahuma)
+attach(huagrahuma)
+
+output <- topmodel(parameters, inputs, topidx, delay)
+Qsim <- get.HydroTS(output, data.type="discharge", data.class="ModelledFluxes")
+NSeff(Qobs,Qsim)
+}
 \keyword{models}

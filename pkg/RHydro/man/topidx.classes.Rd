@@ -11,6 +11,7 @@
 \references{ thePaper}
 \author{Wouter Buytaert, Imperial College London}
 \seealso{\code{\link{topidx}}, \code{\link{topmodel}}}
-#\examples{
-#}
+\examples{
+ ToDo()
+}
 \keyword{models}

@@ -10,7 +10,7 @@ export( NSeff,
        topmodel,
        wasim.data.types,
        rhydro.data.types,
-       plot.rainfall.runoff,
+       plot_rainfall.runoff,
        wasim.read.ModelRun,
        wasim.file2HydroTS)
 

@@ -29,7 +29,7 @@ validityHydroModelRun <- function(object){
                 toRet <- c(toRet, paste("Slot '",slot,"$",bla,"' must be a list of lists of ",expected.type,"-Objects", sep="")) 
              #check for generated and recorded
              if(any(sapply(slot(object, slot)[[bla]], FUN=function(x){sapply(x,FUN=function(x){x@TSorigin})})!=expected.origin))
-                toRet <- c(toRet, paste("Slot '",slot,"$",bla,"' must be a list of lists of ",expected.object," Objects (object@TSorigin)", sep="")) 
+                toRet <- c(toRet, paste("Slot '",slot,"$",bla,"' must be a list of lists of ",expected.origin," Objects (object@TSorigin)", sep="")) 
              
          }
      }
@@ -129,7 +129,7 @@ setMethod("plot",
                             sel.rain <- dimnames(rain[[run]]@magnitude)[[2]] %in% station
                             sel.q.model <- dimnames(q.model[[run]]@magnitude)[[2]] %in% station
                             sel.q.measured <- dimnames(q.measured[[run]]@magnitude)[[2]] %in% station
-                            plot.rainfall.runoff(rain[[run]]@magnitude[,sel.rain],
+                            plot_rainfall.runoff(rain[[run]]@magnitude[,sel.rain],
                                  q.model[[run]]@magnitude[,sel.q.model], 
                                  q.measured[[run]]@magnitude[,sel.q.measured],
                                  main=paste("Station:", station, "Run:", run),

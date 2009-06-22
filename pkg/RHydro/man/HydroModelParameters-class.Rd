@@ -4,6 +4,7 @@
 \alias{HydroWasimParameters-class}
 \alias{plot,HydroModelParameters,ANY-method}
 \alias{print,HydroModelParameters-method}
+\alias{names,HydroModelParameters-method}
 
 \title{Class "HydroModelParameters" }
 \description{	 The class HydroModelParameters contains a dataframe with a collection of parameter sets for running a hydrological model}
@@ -26,6 +27,7 @@ the specific model }
   \describe{
     \item{plot}{\code{signature(x = "HydroModelParameters", y = "ANY")}: ... }
     \item{print}{\code{signature(x = "HydroModelParameters")}: ... }
+    \item{names}{\code{signature(x = "HydroModelParameters")}: ... }
 	 }
 }
 \references{ thePaper }

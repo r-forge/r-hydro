@@ -11,7 +11,7 @@ topmodel(parameters, inputs, topidx, delay, verbose = F)
   \item{parameters}{A vector, matrix or HydroModelParameters object containing the input parameters (see below for the exact structure)}
   \item{inputs}{A list of vectors or zoo time series, containing at least a member called ``prec'' (precipitation) and ``PET'' (potential evapotranspiration). ``Qobs'' may also be given, in which the Nash-Sutcliffe efficiency is calculated directly}
   \item{delay}{Delay function for overland flow (see below)}
-  \item{rain}{A vector of rain data (m per time unit dt)}
+  \item{topidx}{An object returned from the \code{\link{topidx}} method}
   \item{verbose}{If set to TRUE, returns besides predicted discharge also overland flow, base flow and storage}
 }
 \details{

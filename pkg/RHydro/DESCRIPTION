@@ -12,7 +12,7 @@ Collate: class.HydroTS.R class.HydroFlux.R class.HydroState.R
 	 class.HydroModelParameters.R class.HydroModelRun.R
 	 class.HydroTopmodelParameters.R class.HydroWasimParameters.R
 	 get.data.types.R get.stations.R get.runCount.R get.HydroTS.R
-	 eval.NSeff.R plot.rainfall.runoff.R
+	 eval.NSeff.R plot_rainfall.runoff.R
 	 wasim.file2HydroTS.R wasim.head2spatial.R applyToHydroTS.R
 	 wasim.read.ModelParameters.R wasim.read.ModelRun.R wasim.read.table.R
 	 topidx.R topidx.classes.R topmodel.R wasim.assemble.date.R

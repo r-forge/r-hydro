@@ -46,12 +46,18 @@ data sets, what are reserved data.types
 \examples{
 showClass("HydroModelRun")
 
+data(huagrahuma)
+attach(huagrahuma)
+
+output <- topmodel(parameters, inputs, topidx, delay)
+
+
 library(RHydroWasimData)
 file=system.file("controllfile.$$$", package="RHydroWasimData")
 
 object <- wasim.read.ModelRun(file)
 class(object)
-plot(object, plot.type="rainfall-runoff")
+plot(object, wasim.plot.type="rainfall-runoff")
 show(object)
 print(object)
 summary(object)

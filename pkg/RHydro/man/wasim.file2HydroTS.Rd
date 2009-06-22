@@ -5,7 +5,7 @@
 Convert WaSiM input or output file to HydroTS-object
 }
 \usage{
-wasim.file2HydroTS(file, is_recorded, is_flux, direction = zoo("out"), units, type)
+wasim.file2HydroTS(file, is_recorded, is_flux, direction = zoo("out"), units, type,  generated.header.info = NULL)
 }
 \arguments{
   \item{file}{ path to the WaSiM input or output file }
@@ -14,6 +14,7 @@ wasim.file2HydroTS(file, is_recorded, is_flux, direction = zoo("out"), units, ty
   \item{direction}{ direction data for fluxes - no meaning for states }
   \item{units}{ units of the data }
   \item{type}{ string describing the type. See also \code{\linkS4class{HydroModelRun}} for "reserved" types }
+  \item{generated.header.info}{ \code{\linkS4class{HydroTS}} from measured discharge data from which to extact header information for generated wasim data}
 }
 \value{
  \code{\linkS4class{HydroTS}} object is returned

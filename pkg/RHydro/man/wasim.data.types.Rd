@@ -20,6 +20,4 @@ WaSiM control file.
 \references{
 Schulla, J. & Jasper, K. Model Description WaSiM-ETH 2001
 }
-#\examples{
-#}
 \keyword{datasets}

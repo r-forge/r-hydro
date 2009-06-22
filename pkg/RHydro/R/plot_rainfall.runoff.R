@@ -1,4 +1,4 @@
-plot.rainfall.runoff <- function(rain, q.model, q.measured,
+plot_rainfall.runoff <- function(rain, q.model, q.measured,
 q.units="mm/h", p.units="mm/h", mar=c(3,4,2,4)+0.1, ...){
     if(class(rain) != "zoo") stop("rain must be object of class zoo")
     if(class(q.model) != "zoo") stop("q.model must be object of class zoo")
