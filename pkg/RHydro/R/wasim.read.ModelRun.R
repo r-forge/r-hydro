@@ -48,7 +48,7 @@ data.file, sep="/"),
            ts.data[[slot]]$runs[[fileNr]] <- list()
        }
        for(data.type in (i-1):1){
-          dt <- which(my.ts[[data.type]]@type == data.types$data.type)
+          dt <- which(my.ts[[data.type]]@type == rhydro.data.types$data.type)
           if(length(dt)==0){
              warning(paste("unrecognized data type", my.ts[[data.type]]@type, "You may redefine data.types to allow for advanced processing"))
              if(!exists("unknown")){
@@ -58,11 +58,11 @@ data.file, sep="/"),
              }
              symbol <- paste("unknwon", unknown, sep="")
           } else {
-             symbol <- data.types$symbol[dt]
+             symbol <- rhydro.data.types$symbol[dt]
           }
           slot <- 1 + wasim.data.types[data.type,"is_recorded"] + 2 * wasim.data.types[data.type,"is_flux"]
           if(!is.null(ts.data[[slot]][[symbol]])){
-              stop(paste(data.types$data.type[dt], "multiply defined"))
+              stop(paste(rhydro.data.types$data.type[dt], "multiply defined"))
           }
           ts.data[[slot]]$runs[[fileNr]][[symbol]] <- my.ts[[data.type]]
        }

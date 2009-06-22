@@ -21,7 +21,9 @@
     endhead <- suppressWarnings(min(grep("^[0-9]", head))-1)
     if(is.infinite(endhead)) endhead <- length(head)
     head <- head[1:endhead]
-    col.names <-  strsplit(head[endhead],"[\t ]+")[[1]]
+    head.split <- strsplit(head, "[ \t]+")
+    
+    col.names <-  head.split[[endhead]]
 
     if(endhead == max.row){
             warning(paste("Empty file",name,"not included"))
@@ -42,11 +44,14 @@
         if(length(drop.all.na)>0){
            warning( paste("Removing stations from",name,"with NA values only:", paste(names(drop.all.na), collapse=",")))
            t.data <- t.data[,-drop.all.na]
+           for(headrow in 2:length(head.split)){
+                head.split[[headrow]] <- head.split[[headrow]][-(drop.all.na+4)]
+           }
         }
     }
 
     z.data <- zoo(order.by=ind, x=t.data)
-     attr(z.data, "head") <- head
+     attr(z.data, "head") <- head.split
 
     return(z.data)
 
