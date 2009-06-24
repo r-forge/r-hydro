@@ -37,6 +37,19 @@ setClass("HydroTS",
     validity=HydroTSvalidity
     )
 
+setAs("HydroTS", "numeric" ,
+        function(from){
+            as.vector(from@magnitude)
+        }
+)
+setAs("numeric", "HydroTS",
+        function(from){
+              new("HydroTS", magnitude = zoo(from),
+                  location.name="unknown",
+                  coordinate = SpatialPoints(data.frame(x=0,y=0)),
+                  TSorigin = "generated")
+        }
+)
 
 setMethod("initialize",
     signature(.Object = "HydroTS"),

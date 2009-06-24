@@ -25,11 +25,14 @@ validityHydroModelRun <- function(object){
              } else {
                  expected.origin <- "recorded"
              }
-             if(any(sapply(slot(object, slot)[[bla]], FUN=function(x){sapply(x,class)})!=expected.type))
-                toRet <- c(toRet, paste("Slot '",slot,"$",bla,"' must be a list of lists of ",expected.type,"-Objects", sep="")) 
+             if(any(sapply(slot(object, slot)[[bla]], FUN=function(x){if(bla=="shared"){class(x)} else {sapply(x,class)}})!=expected.type)){
+                toRet <- c(toRet, paste("Slot '",slot,"$",bla,"' must be a list of lists of ",expected.type,"-Objects", sep=""))
              #check for generated and recorded
-             if(any(sapply(slot(object, slot)[[bla]], FUN=function(x){sapply(x,FUN=function(x){x@TSorigin})})!=expected.origin))
-                toRet <- c(toRet, paste("Slot '",slot,"$",bla,"' must be a list of lists of ",expected.origin," Objects (object@TSorigin)", sep="")) 
+             } else  {
+                 innerfun <- function(x){x@TSorigin}
+                 if(any(sapply(slot(object, slot)[[bla]], FUN=function(x){if(bla=="shared"){innerfun(x)} else {sapply(x,FUN=innerfun)}})!=expected.origin))
+                    toRet <- c(toRet, paste("Slot '",slot,"$",bla,"' must be a list of lists of ",expected.origin," Objects (object@TSorigin)", sep="")) 
+             }
              
          }
      }

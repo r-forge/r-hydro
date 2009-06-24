@@ -1,4 +1,4 @@
-topmodel <- function(parameters, inputs, topidx, delay, verbose = F) {
+topmodel <- function(parameters, inputs, topidxx, delay, verbose = FALSE) {
   
   ## check parameters by converting them to HydroTopmodelParameters
 
@@ -10,9 +10,10 @@ topmodel <- function(parameters, inputs, topidx, delay, verbose = F) {
   if(is.null(inputs$prec) || is.null(inputs$PET))
     stop("Inputs should contain members prec and PET")
 
+
   ## if Qobs is given we return NS
   
-  if(is.null(inputs$Qobs)) {NS <- F} else {NS <- T}
+  if(is.null(inputs$Qobs)) {NS <- FALSE} else {NS <- TRUE}
 
   ## check input length
   
@@ -56,12 +57,12 @@ topmodel <- function(parameters, inputs, topidx, delay, verbose = F) {
   result <- .C("topmodel",
                PACKAGE = "RHydro",
                as.double(t(as(parameters, "matrix"))),
-               as.double(as.matrix(topidx)),
+               as.double(as.matrix(topidxx)),
                as.double(as.matrix(delay)),
                as.double(prec),
                as.double(PET),
                as.double(Qobs),
-               as.integer(length(as.double(as.matrix(topidx)))/2),
+               as.integer(length(as.double(as.matrix(topidxx)))/2),
                as.integer(length(prec)),
                as.integer(iterations),
                as.integer(length(delay[,1])),
@@ -75,6 +76,10 @@ topmodel <- function(parameters, inputs, topidx, delay, verbose = F) {
   modelledFluxes <- list(runs = list(), shared = list())
   modelledStates <- list(runs = list(), shared = list())
   
+  for(ts in names(inputs)){
+       inputs[[ts]] <- as(inputs[[ts]], "HydroFlux")
+       inputs[[ts]]@TSorigin <- "recorded"
+  }
   measuredFluxes <- list(runs = list(), shared = inputs)
   measuredStates <- list(runs = list(), shared = list())
 
@@ -118,16 +123,22 @@ topmodel <- function(parameters, inputs, topidx, delay, verbose = F) {
   }
   if(NS) {
     performance <- data.frame(NS = result)
+    for(i in 1:iterations){
+      modelledFluxes$runs[[i]] <- list()
+      modelledStates$runs[[i]] <- list()
+      measuredStates$runs[[i]] <- list()
+      measuredFluxes$runs[[i]] <- list()
+    }
   }
 
   result <- new("HydroModelRun",
-                parameters          = parameters,
+                parameters          = as(parameters, "HydroTopmodelParameters"),
                 modelledFluxes      = modelledFluxes,
                 modelledStates      = modelledStates,
                 measuredFluxes      = measuredFluxes,
                 measuredStates      = measuredStates,
                 performanceMeasures = performance,
-                modelSupportData    = list(topidx = topidx, delay = delay),
+                modelSupportData    = list(topidx = topidxx, delay = delay),
                 call                = "topmodel")
   
   return(result)

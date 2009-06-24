@@ -22,5 +22,5 @@ exportClasses(HydroTS,
               HydroTopmodelParameters,
               HydroWasimParameters)
 
-exportMethods(print, plot)
+exportMethods(print, plot, coerce)
 import(methods, graphics, sp)
