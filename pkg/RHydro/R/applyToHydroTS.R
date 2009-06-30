@@ -38,7 +38,6 @@ applyToHydroTS <- function(x, FUN,
                             } else {
                                toRet <- append(toRet, FUN(hydroTS))
                             }
-                        toRet <- append(toRet,FUN(hydroTS))
                 }
            }
       return(toRet)

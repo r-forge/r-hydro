@@ -47,6 +47,10 @@ validityHydroModelRun <- function(object){
                           FUN=function(hydroTS){if(length(hydroTS@type)==0){ "emptyType"} else hydroTS@type}
      )
      if(any(my.data.types=="emptyType")) toRet <- c(toRet, "type-slot is an empty string for some TS-Objects" )
+     my.units <- applyToHydroTS(x=object,
+                          FUN=function(hydroTS){if(length(hydroTS@units)==0){ "no units"} else hydroTS@units}
+     )
+     if(any(my.units=="no units")) toRet <- c(toRet, "units-slot is an empty string for some TS-Objects" )
      #ToDo Check for consistency between list symbols and data types
     if(length(toRet)!=0){
        return(toRet)
@@ -132,24 +136,48 @@ setMethod("plot",
         to.ret <- list()
             #oldpar <- par(ask=TRUE)
             if("rainfall-runoff" %in% hydro.plot.type){
+                skip.plot=FALSE
                 rain <- get.HydroTS(x, data.class=c("modelledFluxes"), data.types="precipitation", stations=stations, runs=runs)
+                if(is.null(rain)){
+                    rain <- get.HydroTS(x, data.class=c("measuredFluxes"), data.types="precipitation", stations=stations, runs=runs)
+                    if(is.null(rain)){
+                       warning("no rainfall data avialable for rainfall runoff plot")
+                       skip.plot=TRUE
+                    }
+                    warning("no modelled precipitation available for rainfall runoff model - using measured values instead")
+                }
                 q.model <- get.HydroTS(x, data.class=c("modelledFluxes"), data.types="discharge", stations=stations, runs=runs)
+                if(is.null(q.model)){
+                   warning("no modelled discharge data avialable for rainfall runoff plot")
+                   skip.plot=TRUE
+                }
+                
                 q.measured <- get.HydroTS(x, data.class=c("measuredFluxes"), data.types="discharge", stations=stations, runs=runs)
-                for(run in runs){
-                    for(station in get.stations(x,
-                            data.class=c("measuredFluxes"), 
-                            data.types="discharge")){
+                if(!skip.plot){
+                    for(run in runs){
+                        for(station in get.stations(x,
+                                data.class=c("measuredFluxes"), 
+                                data.types="discharge")){
 
-                            sel.rain <- dimnames(rain[[run]]@magnitude)[[2]] %in% station
-                            sel.q.model <- dimnames(q.model[[run]]@magnitude)[[2]] %in% station
-                            sel.q.measured <- dimnames(q.measured[[run]]@magnitude)[[2]] %in% station
-                            plot_rainfall.runoff(rain[[run]]@magnitude[,sel.rain],
-                                 q.model[[run]]@magnitude[,sel.q.model], 
-                                 q.measured[[run]]@magnitude[,sel.q.measured],
-                                 main=paste("Station:", station, "Run:", run),
-                                 q.units=q.model[[run]]@units,
-                                 p.units=rain[[run]]@units
-                                 )
+                                sel.rain <- rain[[run]]@location.name %in% station
+                                q.model.sel <- NULL
+                                q.units <- ""
+                                sel.q.model <- q.model[[run]]@location.name %in% station
+                                q.model.sel <- q.model[[run]]@magnitude[,sel.q.model]
+                                q.units <- q.model[[run]]@units
+                                q.measured.sel <- NULL
+                                if(!is.null(q.measured)){
+                                    sel.q.measured <- q.measured[[run]]@location.name %in% station
+                                    q.measured.sel <- q.measured[[run]]@magnitude[,sel.q.measured]
+                                }
+                                plot_rainfall.runoff(rain[[run]]@magnitude[,sel.rain],
+                                     q.model.sel, 
+                                     q.measured.sel,
+                                     main=paste("Station:", station, "Run:", run),
+                                     q.units=q.units,
+                                     p.units=rain[[run]]@units
+                                     )
+                        }
                     }
                 }
             }
@@ -157,7 +185,7 @@ setMethod("plot",
                  applyToHydroTS(x,
                        FUN=function(hydroTS){
                             if(hydroTS@type %in% data.types){
-                                 select <- dimnames(hydroTS@magnitude)[[2]] %in% stations
+                                 select <- hydroTS@location.name %in% stations
                                  plot(hydroTS@magnitude[,select], main=paste(hydroTS@type, "Run:", run),...)
                             }
                             return(c())
@@ -172,7 +200,7 @@ setMethod("plot",
                                      data.types=data.types,
                                      runs=runs)
                 #Rearrange zoo objects
-                new.zoos <- NULL
+                new.zoos <- list()
                 col.names <- list()
                 for(hydroTS in allTS){
                      if(NCOL(hydroTS@magnitude)>0){
@@ -190,7 +218,7 @@ setMethod("plot",
                    if(length(col.names[[unit]])>1){
                        dimnames(new.zoos[[unit]])[[2]] <- col.names[[unit]]
                        plot(new.zoos[[unit]], plot.type="single", ylab=unit, col=1:length(col.names[[unit]]),main=the.station,...)
-                       legend(legend.position, col.names[[unit]],col=1:length(col.names[[unit]]))
+                       legend(legend.position, col.names[[unit]],col=1:length(col.names[[unit]]), lty=1)
                    } else {
                        plot(new.zoos[[unit]], plot.type="single", ylab=unit, col=1:length(col.names[[unit]]),main=paste(col.names[[unit]], "at", the.station),...)
                    }
@@ -199,93 +227,97 @@ setMethod("plot",
             }
             if("balance" %in% hydro.plot.type){
                 #loop through balance types
-                for(balance.type in balance.types){
-                    #what data.types occur in this balance?
-                    to.ret[[balance.type]] <- list()
-                    b.data.types <- rhydro.data.types$data.type[rhydro.data.types$balance.type==balance.type]
-                    if(identical(stations,get.stations(x, data.class=data.class))){
-                         stations=get.stations(x, data.class="modelledFluxes",  data.types=b.data.types)
-                    }
-                    #loop through runs and stations
-                    for(run in runs){
-                       to.ret[[balance.type]][[run]] <- list()
-                       summary.data.state <- data.frame(name=c(), change=c())
-                       for(station in stations){
-                            color.nr <- 1
-                            #get flux data
-                            allTS <- get.HydroTS(x, data.class="modelledFluxes",
-                                 data.types=b.data.types,
-                                 station=station,
-                                 runs=run)
-                            summary.data.flux <- matrix(nrow=length(allTS), ncol=3) 
-                            dimnames(summary.data.flux)[[2]] <- c("name","change","direction")
-                            
-                            ts.nr <- 1
-                            #calc plot range
-                            y.range <- c(0,
-                               max(sapply(allTS, FUN=function(x){sum(x@magnitude, na.rm=TRUE)}))
-                               )
-                            
-                            #ToDo get better x-range
-                            #bla <-  lapply(allTS, FUN=function(x){as.POSIXlt(max(index(x@magnitude)), na.rm=TRUE)})
-                            #as.POSIXct(sapply(allTS, FUN=function(x){max(index(x@magnitude), na.rm=TRUE)}), origin="1970-01-01", tz="GMT")
-                            #bla2 <- bla[[1]]
-                            #for(i in bla){
-                            #   bla2 <- rbind(bla2, i)
-                            #}
-                            x.range <- lapply(allTS, FUN=function(x){range(index(x@magnitude), na.rm=TRUE)})[[1]]
-                            plot(x.range,y.range, type="n", xlab="time", ylab= allTS[[1]]@units, main=paste(balance.type, "at station", station, "for run", run))
+                for(class in c("measured", "modelled")){
+                        d.class <- paste(class,"Fluxes", sep="")
+                    for(balance.type in balance.types){
+                        #what data.types occur in this balance?
+                        to.ret[[balance.type]] <- list()
+                        b.data.types <- rhydro.data.types$data.type[rhydro.data.types$balance.type==balance.type]
+                        if(identical(stations,get.stations(x, data.class=data.class))){
+                             stations=get.stations(x, data.class=d.class,  data.types=b.data.types)
+                        }
+                        #loop through runs and stations
+                        for(run in runs){
+                           to.ret[[balance.type]][[run]] <- list()
+                           summary.data.state <- data.frame(name=c(), change=c())
+                           for(station in stations){
+                                color.nr <- 1
+                                #get flux data
+                                allTS <- get.HydroTS(x, data.class=d.class,
+                                     data.types=b.data.types,
+                                     station=station,
+                                     runs=run)
+                                summary.data.flux <- matrix(nrow=length(allTS), ncol=3) 
+                                dimnames(summary.data.flux)[[2]] <- c("name","change","direction")
+                                
+                                ts.nr <- 1
+                                #calc plot range
+                                y.range <- c(0,
+                                   max(sapply(allTS, FUN=function(x){sum(x@magnitude, na.rm=TRUE)}))
+                                   )
+                                
+                                #ToDo get better x-range
+                                #bla <-  lapply(allTS, FUN=function(x){as.POSIXlt(max(index(x@magnitude)), na.rm=TRUE)})
+                                #as.POSIXct(sapply(allTS, FUN=function(x){max(index(x@magnitude), na.rm=TRUE)}), origin="1970-01-01", tz="GMT")
+                                #bla2 <- bla[[1]]
+                                #for(i in bla){
+                                #   bla2 <- rbind(bla2, i)
+                                #}
+                                x.range <- lapply(allTS, FUN=function(x){range(index(x@magnitude), na.rm=TRUE)})[[1]]
+                                plot(x.range,y.range, type="n", xlab="time", ylab= allTS[[1]]@units, main=paste(balance.type," (",class, ") at station ", station, " for run ", run, sep=""))
 
-                            for(ts in allTS){
-                                #build sums for flux data
-                                if(NCOL(ts@magnitude)==0){
-                                   warning(paste("No data available for station",station,"run",run," and data type", ts@type))
-                                } else {
-                                   if(any(is.na(ts@magnitude))){
-                                       warning(paste("dropping NA data while calculating cumulative sum for station",station,"run",run," and data type", ts@type))
-                                       ts@magnitude <- ts@magnitude[!is.na(ts@magnitude)]
+                                for(ts in allTS){
+                                    #build sums for flux data
+                                    if(NCOL(ts@magnitude)==0){
+                                       warning(paste("No data available for station",station,"run",run," and data type", ts@type))
+                                    } else {
+                                       if(any(is.na(ts@magnitude))){
+                                           warning(paste("dropping NA data while calculating cumulative sum for station",station,"run",run," and data type", ts@type))
+                                           ts@magnitude <- ts@magnitude[!is.na(ts@magnitude)]
 
-                                   }
-                                   the.sum <- cumsum(ts@magnitude)
-                                    #plot flux data by station and run
-                                    #ToDo: Use smarter colors
-                                    lines(index(ts@magnitude), the.sum, col=color.nr)
-                                    color.nr <- color.nr + 1 
-                                    summary.data.flux[ts.nr,] <- c(ts@type, max(the.sum), ts@direction)
-                                    ts.nr <- ts.nr + 1
-                                    #store total flux change (end sum) (with direction)
+                                       }
+                                       the.sum <- cumsum(ts@magnitude)
+                                        #plot flux data by station and run
+                                        #ToDo: Use smarter colors
+                                        lines(index(ts@magnitude), the.sum, col=color.nr)
+                                        color.nr <- color.nr + 1 
+                                        summary.data.flux[ts.nr,] <- c(ts@type, max(the.sum), ts@direction)
+                                        ts.nr <- ts.nr + 1
+                                        #store total flux change (end sum) (with direction)
+                                    }
                                 }
-                            }
-                            
-                            #get state data
-                            allTS <- get.HydroTS(x, data.class="modelledStates",
-                                 data.types=b.data.types,
-                                 station=station,
-                                 runs=run)
-                            
-                            summary.data.state <- matrix(nrow=length(allTS), ncol=2) 
-                            dimnames(summary.data.state)[[2]] <- c("name","change")
-                            ts.nr <- 1
-                            for(ts in allTS){
-                                #build changes for state data
-                                if(NCOL(ts@magnitude)==0){
-                                   warning(paste("No data available for station",station,"run",run," and data type", ts@type))
-                                } else {
-                                    #plot state data (on different axis?)
-                                    #ToDo: Use smarter colors
-                                    lines(index(ts@magnitude), ts@magnitude, col=color.nr)
-                                    change <- as.numeric(ts@magnitude[length(ts@magnitude)]) - as.numeric(ts@magnitude[1])
-                                    color.nr <- color.nr + 1 
-                                    #store total state change
-                                    summary.data.state[ts.nr,] <-  c(ts@type, change)
-                                    ts.nr <- ts.nr + 1
+                                
+                                #get state data
+                                d.class <- paste(class,"States", sep="")
+                                allTS <- get.HydroTS(x, data.class=d.class,
+                                     data.types=b.data.types,
+                                     station=station,
+                                     runs=run)
+                                
+                                summary.data.state <- matrix(nrow=length(allTS), ncol=2) 
+                                dimnames(summary.data.state)[[2]] <- c("name","change")
+                                ts.nr <- 1
+                                for(ts in allTS){
+                                    #build changes for state data
+                                    if(NCOL(ts@magnitude)==0){
+                                       warning(paste("No data available for station",station,"run",run," and data type", ts@type))
+                                    } else {
+                                        #plot state data (on different axis?)
+                                        #ToDo: Use smarter colors
+                                        lines(index(ts@magnitude), ts@magnitude, col=color.nr)
+                                        change <- as.numeric(ts@magnitude[length(ts@magnitude)]) - as.numeric(ts@magnitude[1])
+                                        color.nr <- color.nr + 1 
+                                        #store total state change
+                                        summary.data.state[ts.nr,] <-  c(ts@type, change)
+                                        ts.nr <- ts.nr + 1
+                                    }
                                 }
-                            }
-                           #create list with summary data
-                           to.ret[[balance.type]][[run]][[station]]  <- list(flux=summary.data.flux, state=summary.data.state)
-                           legend.entries <- c(summary.data.flux[,1], summary.data.state[,1])
-                           legend.entries <- legend.entries[!is.na(legend.entries)]
-                           legend("topleft", cex=0.5, legend.entries, col=1:length(legend.entries), lty=1, inset=0.05) 
+                               #create list with summary data
+                               to.ret[[balance.type]][[run]][[station]]  <- list(flux=summary.data.flux, state=summary.data.state)
+                               legend.entries <- c(summary.data.flux[,1], summary.data.state[,1])
+                               legend.entries <- legend.entries[!is.na(legend.entries)]
+                               legend("topleft", cex=0.5, legend.entries, col=1:length(legend.entries), lty=1, inset=0.05) 
+                           }
                        }
                     }
                 }

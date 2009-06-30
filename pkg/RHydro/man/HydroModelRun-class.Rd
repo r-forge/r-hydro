@@ -57,7 +57,7 @@ file=system.file("controllfile.$$$", package="RHydroWasimData")
 
 object <- wasim.read.ModelRun(file)
 class(object)
-plot(object, wasim.plot.type="rainfall-runoff")
+plot(object, hydro.plot.type="rainfall-runoff")
 show(object)
 print(object)
 summary(object)

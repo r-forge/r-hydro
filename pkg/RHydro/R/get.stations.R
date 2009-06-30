@@ -5,12 +5,15 @@ get.stations <- function(object,
            stations <- applyToHydroTS(x=object,
                           FUN=function(hydroTS){
                                if(hydroTS@type %in% data.types){ 
-                                     dimnames(hydroTS@magnitude)[[2]]
+                                     hydroTS@location.name
                                }
                           },
                           data.class=data.class,
                           runs=runs)
            stations <-  unique(stations)
+           if(is.null(stations)){
+              return(stations)
+           }
            return(stations[order(stations)])
 }
 

@@ -1,6 +1,10 @@
 \name{HydroFlux-class}
 \docType{class}
 \alias{HydroFlux-class}
+\alias{coerce,HydroTS,HydroFlux-method}
+\alias{coerce,numeric,HydroFlux-method}
+\alias{coerce,HydroFlux,numeric-method}
+\alias{coerce,HydroFlux,HydroTS-method}
 
 \title{Class "HydroFlux"  }
 \description{	The HydroFlux class represents a hydrological flux time series. }
@@ -28,6 +32,12 @@ the direction of the flux (e.g. "in", "out", wind direction, ... }
 Class \code{"\linkS4class{HydroTS}"}, directly.
 }
 \section{Methods}{
+  \describe{
+    \item{coerce}{\code{signature(from = "HydroFlux", to = "numeric")}: ... }
+    \item{coerce}{\code{signature(from = "numeric", to = "HydroFlux")}: ... }
+    \item{coerce}{\code{signature(from = "HydroTS", to = "HydroFlux")}: ... }
+    \item{coerce}{\code{signature(from = "HydroFlux", to = "HydroTS")}: ... }
+	 }
 No methods defined with class "HydroFlux" in the signature.
 }
 \references{ thePaper }

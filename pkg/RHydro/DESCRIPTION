@@ -16,3 +16,4 @@ Collate: class.HydroTS.R class.HydroFlux.R class.HydroState.R
 	 wasim.file2HydroTS.R wasim.head2spatial.R applyToHydroTS.R
 	 wasim.read.ModelParameters.R wasim.read.ModelRun.R wasim.read.table.R
 	 topidx.R topidx.classes.R topmodel.R wasim.assemble.date.R
+         listSymbols2Types.R

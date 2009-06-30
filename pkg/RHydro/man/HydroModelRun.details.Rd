@@ -43,6 +43,6 @@ file=system.file("controllfile.$$$", package="RHydroWasimData")
 object <- wasim.read.ModelRun(file)
 get.data.types(object)
 get.stations(object)
-get.HydroTS(object, the.data.types="radiation")
+get.HydroTS(object, data.types="radiation")
 }
 \keyword{ utilities }

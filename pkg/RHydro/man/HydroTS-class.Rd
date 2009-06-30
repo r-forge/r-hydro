@@ -1,6 +1,8 @@
 \name{HydroTS-class}
 \docType{class}
 \alias{HydroTS-class}
+\alias{coerce,HydroTS,numeric-method}
+\alias{coerce,numeric,HydroTS-method}
 \alias{HydroState-class}
 \alias{plot,HydroTS,ANY-method}
 \alias{print,HydroTS-method}
@@ -33,6 +35,8 @@ HydroState extends HydroTS directly, without additional functionality at this mo
   \describe{
     \item{plot}{\code{signature(x = "HydroTS", y = "ANY")}: ... }
     \item{print}{\code{signature(x = "HydroTS")}: ... }
+    \item{coerce}{\code{signature(from = "HydroTS", to = "numeric")}: ... }
+    \item{coerce}{\code{signature(from = "numeric", to = "HydroTS")}: ... }
 	 }
 }
 \author{ Dominik Reusser, Wouter Buytaert }

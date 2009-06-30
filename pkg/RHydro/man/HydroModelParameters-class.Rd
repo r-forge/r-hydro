@@ -2,6 +2,12 @@
 \docType{class}
 \alias{HydroModelParameters-class}
 \alias{HydroWasimParameters-class}
+\alias{coerce,numeric,HydroModelParameters-method}
+\alias{coerce,data.frame,HydroModelParameters-method}
+\alias{coerce,matrix,HydroModelParameters-method}
+\alias{coerce,HydroModelParameters,data.frame-method}
+\alias{coerce,HydroModelParameters,matrix-method}
+\alias{coerce,list,HydroWasimParameters-method}
 \alias{plot,HydroModelParameters,ANY-method}
 \alias{print,HydroModelParameters-method}
 \alias{names,HydroModelParameters-method}
@@ -28,6 +34,12 @@ the specific model }
     \item{plot}{\code{signature(x = "HydroModelParameters", y = "ANY")}: ... }
     \item{print}{\code{signature(x = "HydroModelParameters")}: ... }
     \item{names}{\code{signature(x = "HydroModelParameters")}: ... }
+    \item{coerce}{\code{signature(from = "numeric", to = "HydroModelParameters")}: ... }
+    \item{coerce}{\code{signature(from = "data.frame", to = "HydroModelParameters")}: ... }
+    \item{coerce}{\code{signature(from = "matrix", to = "HydroModelParameters")}: ... }
+    \item{coerce}{\code{signature(from = "HydroModelParameters", to = "data.frame")}: ... }
+    \item{coerce}{\code{signature(from = "HydroModelParameters", to = "matrix")}: ... }
+    \item{coerce}{\code{signature(from = "list", to = "HydroWasimParameters")}: ... }
 	 }
 }
 \references{ thePaper }

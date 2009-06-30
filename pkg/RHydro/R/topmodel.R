@@ -7,37 +7,37 @@ topmodel <- function(parameters, inputs, topidxx, delay, verbose = FALSE) {
   ## check inputs
 
   if(!is(inputs,"list")) stop("Inputs should be a list")
-  if(is.null(inputs$prec) || is.null(inputs$PET))
-    stop("Inputs should contain members prec and PET")
+  if(is.null(inputs$P) || is.null(inputs$ETp))
+    stop("Inputs should contain members P and ETp")
 
 
-  ## if Qobs is given we return NS
+  ## if Q is given we return NS
   
-  if(is.null(inputs$Qobs)) {NS <- FALSE} else {NS <- TRUE}
+  if(is.null(inputs$Q)) {NS <- FALSE} else {NS <- TRUE}
 
   ## check input length
   
-  prec <- as.vector(inputs$prec)
-  PET  <- as.vector(inputs$PET)
-  if(length(PET) != length(prec))
-     stop("Prec and PET should have the same length")
+  P <- as.vector(inputs$P)
+  ETp  <- as.vector(inputs$ETp)
+  if(length(ETp) != length(P))
+     stop("Prec and ETp should have the same length")
      
   if(NS) {
-    Qobs <- as.vector(inputs$Qobs)
-    if(any(Qobs[!is.na(Qobs)]<0))
-      stop("Qobs should not contain negative values")
-    Qobs[is.na(Qobs)] <- -1
-    if(length(Qobs) != length(prec))
-      stop("Qobs should have the same length as prec and PET")
-  } else Qobs <- -9999
+    Q <- as.vector(inputs$Q)
+    if(any(Q[!is.na(Q)]<0))
+      stop("Q should not contain negative values")
+    Q[is.na(Q)] <- -1
+    if(length(Q) != length(P))
+      stop("Q should have the same length as P and ETp")
+  } else Q <- -9999
 
   ## get time index
 
-  if(is(inputs$prec,"HydroTS")) {
-    index <- index(inputs$prec@magnitude)
-  } else if(is(inputs$prec,"zoo")) {
-    index <- index(inputs$prec)
-  } else index <- index(prec)
+  if(is(inputs$P,"HydroTS")) {
+    index <- index(inputs$P@magnitude)
+  } else if(is(inputs$P,"zoo")) {
+    index <- index(inputs$P)
+  } else index <- index(P)
   
   ## deal with verbosity:
 
@@ -50,7 +50,7 @@ topmodel <- function(parameters, inputs, topidxx, delay, verbose = FALSE) {
   ## length of the returned result
 
   if(NS) { lengthResult <- iterations
-  } else { lengthResult <- length(prec) * iterations * v }
+  } else { lengthResult <- length(P) * iterations * v }
 
   ## running the model...
 
@@ -59,11 +59,11 @@ topmodel <- function(parameters, inputs, topidxx, delay, verbose = FALSE) {
                as.double(t(as(parameters, "matrix"))),
                as.double(as.matrix(topidxx)),
                as.double(as.matrix(delay)),
-               as.double(prec),
-               as.double(PET),
-               as.double(Qobs),
+               as.double(P),
+               as.double(ETp),
+               as.double(Q),
                as.integer(length(as.double(as.matrix(topidxx)))/2),
-               as.integer(length(prec)),
+               as.integer(length(P)),
                as.integer(iterations),
                as.integer(length(delay[,1])),
                as.integer(v),
@@ -76,6 +76,7 @@ topmodel <- function(parameters, inputs, topidxx, delay, verbose = FALSE) {
   modelledFluxes <- list(runs = list(), shared = list())
   modelledStates <- list(runs = list(), shared = list())
   
+  #convert inputs to HydroFlux
   for(ts in names(inputs)){
        inputs[[ts]] <- as(inputs[[ts]], "HydroFlux")
        inputs[[ts]]@TSorigin <- "recorded"
@@ -130,6 +131,11 @@ topmodel <- function(parameters, inputs, topidxx, delay, verbose = FALSE) {
       measuredFluxes$runs[[i]] <- list()
     }
   }
+
+  modelledFluxes <- listSymbols2Types(modelledFluxes)
+  modelledStates <- listSymbols2Types(modelledStates)
+  measuredFluxes <- listSymbols2Types(measuredFluxes)
+  measuredStates <- listSymbols2Types(measuredStates)
 
   result <- new("HydroModelRun",
                 parameters          = as(parameters, "HydroTopmodelParameters"),

@@ -3,6 +3,9 @@
 \alias{HydroTopmodelParameters-class}
 \alias{plot,HydroTopmodelParameters,ANY-method}
 \alias{print,HydroTopmodelParameters-method}
+\alias{coerce,numeric,HydroTopmodelParameters-method}
+\alias{coerce,matrix,HydroTopmodelParameters-method}
+\alias{coerce,HydroModelParameters,HydroTopmodelParameters-method}
 
 \title{Class "HydroTopmodelParameters"}
 \description{	 Implementation of
@@ -22,6 +25,9 @@ Class \code{"\linkS4class{HydroModelParameters}"}, directly.
   \describe{
     \item{plot}{\code{signature(x = "HydroTopmodelParameters", y = "ANY")}: ... }
     \item{print}{\code{signature(x = "HydroTopmodelParameters")}: ... }
+    \item{coerce}{\code{signature(from = "numeric", to = "HydroTopmodelParameters")}: ... }
+    \item{coerce}{\code{signature(from = "matrix", to = "HydroTopmodelParameters")}: ... }
+    \item{coerce}{\code{signature(from = "HydroModelParameters", to = "HydroTopmodelParameters")}: ... }
 	 }
 }
 \references{ thePaper }
