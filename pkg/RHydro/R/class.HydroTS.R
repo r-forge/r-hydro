@@ -63,7 +63,7 @@ setMethod("initialize",
 setMethod("plot",
     signature(x = "HydroTS"),
           function(x,y,...)plot(x@magnitude,...)
-    )
+)
 
 setMethod("print",
     signature(x = "HydroTS"),

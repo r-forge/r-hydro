@@ -5,7 +5,7 @@ validityHydroModelRun <- function(object){
      #Check for same number of runs
      if(length(object@measuredStates$runs) != length(object@measuredFluxes$runs)  ||
         length(object@measuredStates$runs) != length(object@modelledFluxes$runs)  ||
-        length(object@measuredStates$runs) != length(object@parameters@parameters) ||
+        length(object@measuredStates$runs) != NROW(object@parameters@parameters) ||
         length(object@measuredStates$runs) != length(object@modelledStates$runs))
         toRet <- "The slots 'measuredStates$runs, measuredFluxes$runs, modelledFluxes$runs, modelledStates$runs, and parameters@parameters' need the same number of entries (length())."
      
@@ -25,17 +25,28 @@ validityHydroModelRun <- function(object){
              } else {
                  expected.origin <- "recorded"
              }
-             if(any(sapply(slot(object, slot)[[bla]], FUN=function(x){if(bla=="shared"){class(x)} else {sapply(x,class)}})!=expected.type)){
-                toRet <- c(toRet, paste("Slot '",slot,"$",bla,"' must be a list of lists of ",expected.type,"-Objects", sep=""))
+             if(length(slot(object, slot)[[bla]]) > 0){
+                 classes <- sapply(slot(object, slot)[[bla]], FUN=function(x){if(bla=="shared"){class(x)} else { if(length(x)>0)sapply(x,class)}})
+                 
+                 empty <- sapply(classes, is.null)
+                 check <- classes !=expected.type && !empty
+                 if(any(check)){
+                    toRet <- c(toRet, paste("Slot '",slot,"$",bla,"' must be a list of lists of ",expected.type,"-Objects", sep=""))
              #check for generated and recorded
-             } else  {
-                 innerfun <- function(x){x@TSorigin}
-                 if(any(sapply(slot(object, slot)[[bla]], FUN=function(x){if(bla=="shared"){innerfun(x)} else {sapply(x,FUN=innerfun)}})!=expected.origin))
-                    toRet <- c(toRet, paste("Slot '",slot,"$",bla,"' must be a list of lists of ",expected.origin," Objects (object@TSorigin)", sep="")) 
+                 } else  {
+                     innerfun <- function(x){x@TSorigin}
+                     if(any(sapply(slot(object, slot)[[bla]], FUN=function(x){if(bla=="shared"){innerfun(x)} else {sapply(x,FUN=innerfun)}})!=expected.origin && !empty))
+                        toRet <- c(toRet, paste("Slot '",slot,"$",bla,"' must be a list of lists of ",expected.origin," Objects (object@TSorigin)", sep="")) 
+                 }
              }
              
          }
      }
+     #check that all data-types are not empty string
+     my.data.types <- applyToHydroTS(x=object,
+                          FUN=function(hydroTS){if(length(hydroTS@type)==0){ "emptyType"} else hydroTS@type}
+     )
+     if(any(my.data.types=="emptyType")) toRet <- c(toRet, "type-slot is an empty string for some TS-Objects" )
      #ToDo Check for consistency between list symbols and data types
     if(length(toRet)!=0){
        return(toRet)
@@ -121,11 +132,11 @@ setMethod("plot",
         to.ret <- list()
             #oldpar <- par(ask=TRUE)
             if("rainfall-runoff" %in% hydro.plot.type){
-                rain <- get.HydroTS(object, data.class=c("modelledFluxes"), data.types="precipitation", stations=stations, runs=runs)
-                q.model <- get.HydroTS(object, data.class=c("modelledFluxes"), data.types="discharge", stations=stations, runs=runs)
-                q.measured <- get.HydroTS(object, data.class=c("measuredFluxes"), data.types="discharge", stations=stations, runs=runs)
+                rain <- get.HydroTS(x, data.class=c("modelledFluxes"), data.types="precipitation", stations=stations, runs=runs)
+                q.model <- get.HydroTS(x, data.class=c("modelledFluxes"), data.types="discharge", stations=stations, runs=runs)
+                q.measured <- get.HydroTS(x, data.class=c("measuredFluxes"), data.types="discharge", stations=stations, runs=runs)
                 for(run in runs){
-                    for(station in get.stations(object,
+                    for(station in get.stations(x,
                             data.class=c("measuredFluxes"), 
                             data.types="discharge")){
 
@@ -143,7 +154,7 @@ setMethod("plot",
                 }
             }
             if("by.data.type" %in% hydro.plot.type){
-                 applyToHydroTS(object,
+                 applyToHydroTS(x,
                        FUN=function(hydroTS){
                             if(hydroTS@type %in% data.types){
                                  select <- dimnames(hydroTS@magnitude)[[2]] %in% stations
@@ -156,7 +167,7 @@ setMethod("plot",
             }
             if("by.station" %in% hydro.plot.type){
               for(the.station in stations){
-                allTS <- get.HydroTS(object, stations=the.station, 
+                allTS <- get.HydroTS(x, stations=the.station, 
                                      data.class=data.class, 
                                      data.types=data.types,
                                      runs=runs)
@@ -202,7 +213,7 @@ setMethod("plot",
                        for(station in stations){
                             color.nr <- 1
                             #get flux data
-                            allTS <- get.HydroTS(object, data.class="modelledFluxes",
+                            allTS <- get.HydroTS(x, data.class="modelledFluxes",
                                  data.types=b.data.types,
                                  station=station,
                                  runs=run)
@@ -247,7 +258,7 @@ setMethod("plot",
                             }
                             
                             #get state data
-                            allTS <- get.HydroTS(object, data.class="modelledStates",
+                            allTS <- get.HydroTS(x, data.class="modelledStates",
                                  data.types=b.data.types,
                                  station=station,
                                  runs=run)

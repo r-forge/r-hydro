@@ -23,4 +23,5 @@ exportClasses(HydroTS,
               HydroWasimParameters)
 
 exportMethods(print, plot, coerce)
-import(methods, graphics, sp)
+import(methods) 
+#unclear what to import, removed graphics, sp
