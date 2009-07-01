@@ -243,6 +243,7 @@ setMethod("plot",
                            for(station in stations){
                                 color.nr <- 1
                                 #get flux data
+                                d.class <- paste(class,"Fluxes", sep="")
                                 allTS <- get.HydroTS(x, data.class=d.class,
                                      data.types=b.data.types,
                                      station=station,
@@ -252,19 +253,22 @@ setMethod("plot",
                                 
                                 ts.nr <- 1
                                 #calc plot range
-                                y.range <- c(0,
-                                   max(sapply(allTS, FUN=function(x){sum(x@magnitude, na.rm=TRUE)}))
-                                   )
-                                
-                                #ToDo get better x-range
-                                #bla <-  lapply(allTS, FUN=function(x){as.POSIXlt(max(index(x@magnitude)), na.rm=TRUE)})
-                                #as.POSIXct(sapply(allTS, FUN=function(x){max(index(x@magnitude), na.rm=TRUE)}), origin="1970-01-01", tz="GMT")
-                                #bla2 <- bla[[1]]
-                                #for(i in bla){
-                                #   bla2 <- rbind(bla2, i)
-                                #}
-                                x.range <- lapply(allTS, FUN=function(x){range(index(x@magnitude), na.rm=TRUE)})[[1]]
-                                plot(x.range,y.range, type="n", xlab="time", ylab= allTS[[1]]@units, main=paste(balance.type," (",class, ") at station ", station, " for run ", run, sep=""))
+                                #ToDo get ranges from both flux and state data
+                                if(!is.null(allTS)){
+                                    y.range <- c(0,
+                                       max(sapply(allTS, FUN=function(x){sum(x@magnitude, na.rm=TRUE)}))
+                                       )
+                                    
+                                    #ToDo get better x-range
+                                    #bla <-  lapply(allTS, FUN=function(x){as.POSIXlt(max(index(x@magnitude)), na.rm=TRUE)})
+                                    #as.POSIXct(sapply(allTS, FUN=function(x){max(index(x@magnitude), na.rm=TRUE)}), origin="1970-01-01", tz="GMT")
+                                    #bla2 <- bla[[1]]
+                                    #for(i in bla){
+                                    #   bla2 <- rbind(bla2, i)
+                                    #}
+                                    x.range <- lapply(allTS, FUN=function(x){range(index(x@magnitude), na.rm=TRUE)})[[1]]
+                                    plot(x.range,y.range, type="n", xlab="time", ylab= allTS[[1]]@units, main=paste(balance.type," (",class, ") at station ", station, " for run ", run, sep=""))
+                                }
 
                                 for(ts in allTS){
                                     #build sums for flux data
@@ -316,7 +320,9 @@ setMethod("plot",
                                to.ret[[balance.type]][[run]][[station]]  <- list(flux=summary.data.flux, state=summary.data.state)
                                legend.entries <- c(summary.data.flux[,1], summary.data.state[,1])
                                legend.entries <- legend.entries[!is.na(legend.entries)]
-                               legend("topleft", cex=0.5, legend.entries, col=1:length(legend.entries), lty=1, inset=0.05) 
+                               if(length(legend.entries >0)){
+                                   legend("topleft", cex=0.5, legend.entries, col=1:length(legend.entries), lty=1, inset=0.05) 
+                               }
                            }
                        }
                     }

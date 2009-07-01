@@ -17,7 +17,7 @@ topidx(DEM, resolution, river = NA)
 \seealso{\code{\link{topmodel}}}
 \examples{
   data(huagrahuma.dem)
-  topidx <- topidx(huagrahuma.dem, resolution= 25)$atb
-  image(topidx)
+  #topidx <- topidx(huagrahuma.dem, resolution= 25)$atb
+  #image(topidx)
 }
 \keyword{models}

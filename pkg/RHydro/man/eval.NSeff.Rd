@@ -24,6 +24,7 @@ attach(huagrahuma)
 
 output <- topmodel(parameters, inputs, topidx, delay)
 Qsim <- get.HydroTS(output, data.type="discharge", data.class="modelledFluxes")
-NSeff(inputs$Q,Qsim)
+#ToDo
+#NSeff(inputs$Q,Qsim)
 }
 \keyword{models}

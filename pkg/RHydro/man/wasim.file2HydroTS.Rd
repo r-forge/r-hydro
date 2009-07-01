@@ -28,7 +28,7 @@ Schulla, J. & Jasper, K. Model Description WaSiM-ETH 2001
 \examples{
 library(RHydroWasimData)
 file=system.file("input/ww100-dhh.txt", package="RHydroWasimData")
-data <- wasim.file2HydroTS(file, is_recorded=TRUE, is_flux=FALSE, units="%", type="rel. humidity")
+data <- wasim.file2HydroTS(file, is_recorded=TRUE, is_flux=FALSE, units="\%", type="rel. humidity")
 plot(data)
 }
 \keyword{ utilities }

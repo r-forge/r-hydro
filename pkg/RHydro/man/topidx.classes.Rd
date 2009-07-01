@@ -12,6 +12,6 @@
 \author{Wouter Buytaert, Imperial College London}
 \seealso{\code{\link{topidx}}, \code{\link{topmodel}}}
 \examples{
- ToDo()
+# ToDo()
 }
 \keyword{models}

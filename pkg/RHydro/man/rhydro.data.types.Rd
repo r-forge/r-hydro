@@ -16,6 +16,6 @@ This data.frame defines names, symbols and default units for RHydro data types. 
   }
 }
 \examples{
-data(rhydro.data.types)
+str(rhydro.data.types)
 }
 \keyword{datasets}

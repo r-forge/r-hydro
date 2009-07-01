@@ -25,7 +25,7 @@ plot_rainfall.runoff(rain, q.model, q.measured, q.units = "mm/h", p.units = "mm/
 data(huagrahuma)
 attach(huagrahuma)
 
-plot_rainfall.runoff(rain = rain, q.model=NULL, q.measured=input$Q, q.units = "mm/ 15min", p.units = "mm/15min")
+plot_rainfall.runoff(rain = zoo(inputs$P), q.model=zoo(inputs$Q), q.units = "mm/ 15min", p.units = "mm/15min")
 }
 \keyword{ utilities }
 \keyword{ hplot }
