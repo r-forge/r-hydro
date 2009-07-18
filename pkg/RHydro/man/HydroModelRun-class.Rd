@@ -1,7 +1,6 @@
 \name{HydroModelRun-class}
 \docType{class}
 \alias{HydroModelRun-class}
-\alias{plot,HydroModelRun,ANY-method}
 \alias{print,HydroModelRun-method}
 
 \title{Class "HydroModelRun" }
@@ -12,7 +11,10 @@ or an import routine for hydrological modelling results from an
 external model.
 
 Objects from this class provide common plotting and evaluation
-functionality. ToDo: More
+functionality. Time series can be plotted in for representations:
+rainfall-runoff-plots, plots sorted by data type or by station and
+time series that help to check the mass or energy balance. Further
+evaluation methods will be added in future versions. 
 }
 \section{Slots}{
 	 \describe{
@@ -28,7 +30,10 @@ functionality. ToDo: More
 }
 \section{Methods}{
   \describe{
-    \item{plot}{\code{signature(x = "HydroModelRun", y = "ANY")}: ... }
+    \item{plot}{\code{signature(x = "HydroModelRun", y = "ANY")}: see
+\code{\link{plot-HydroModelRun}} for more details. 
+    }
+              
     \item{print}{\code{signature(x = "HydroModelRun")}: ... }
 	 }
 }

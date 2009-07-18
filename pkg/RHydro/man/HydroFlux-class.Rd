@@ -25,7 +25,8 @@ the direction of the flux (e.g. "in", "out", wind direction, ... }
     \item{\code{TSorigin}:}{Object of class \code{"character"}. "recorded" or "generated" }
     \item{\code{accuracy}:}{Object of class \code{"character"}. Information about the accuracy }
     \item{\code{units}:}{Object of class \code{"character"}. Units of the time series }
-    \item{\code{type}:}{Object of class \code{"character"}. Type of the time series. Reserved types are: ToDo }
+    \item{\code{type}:}{Object of class \code{"character"}. Type of
+the time series as defined in \code{\link{rhydro.data.types}} }
   }
 }
 \section{Extends}{

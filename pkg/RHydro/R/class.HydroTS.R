@@ -17,8 +17,43 @@ HydroTSvalidity <- function(object){
               error.message = new.message
         }
     }
-    #ToDo: Warning if units differ from prefered units
-    #ToDo: Type dependend validity check
+    #Warning if units can not be checked or differ from prefered units
+    skipcheck = FALSE
+    if(length(object@type)==0){
+        skipcheck = TRUE
+        warning(paste("Skiping data check because type is undefined for time series at location",object@location.name))
+    } else if(any(line <-  rhydro.data.types$data.type ==object@type)){
+        if(rhydro.data.types$prefered.units[line]!=object@units){
+             skipcheck = TRUE
+             warning(paste("Skiping data check because units",object@units," are not standard units (",rhydro.data.types$prefered.units[line],") for time series at location",object@location.name))
+        }
+    } else {
+        warning(paste("Skiping data check because data.type ",object@type,"is not a standard data type defined in rhydro.data.types for time series at location",object@location.name))
+        skipcheck = TRUE
+    }
+    #Type dependend validity check
+    if(!skipcheck){
+        if(!is.na(rhydro.data.types$max.value[line])){
+                if(object@magnitude > rhydro.data.types$max.value[line]){
+                      warning(paste("Data above default range (",rhydro.data.types$max.value[line],") for time series of type",object@type,"and location",object@location.name))
+                }
+        }
+        if(!is.na(rhydro.data.types$min.value[line])){
+                if(object@magnitude < rhydro.data.types$min.value[line]){
+                      warning(paste("Data below default range (",rhydro.data.types$min.value[line],") for time series of type",object@type,"and location",object@location.name))
+                }
+        }
+        if(!is.na(rhydro.data.types$max.slope[line])){
+                if(diff(object@magnitude) > rhydro.data.types$max.slope[line]){
+                      warning(paste("Derivative of data above default range (",rhydro.data.types$max.slope[line],") for time series of type",object@type,"and location",object@location.name))
+                }
+        }
+        if(!is.na(rhydro.data.types$min.slope[line])){
+                if(diff(object@magnitude) < rhydro.data.types$min.slope[line]){
+                      warning(paste("Derivative of data below default range (",rhydro.data.types$min.slope[line],") for time series of type",object@type,"and location",object@location.name))
+                }
+        }
+    }
     if(exists("error.message")){
        return(error.message)
     } else {

@@ -3,7 +3,9 @@
 \docType{data}
 \title{Definitions for default data types for the RHydro package}
 \description{
-This data.frame defines names, symbols and default units for RHydro data types. The data.frame also tells, in which balance the data types are of importance.
+This data.frame defines names, symbols and default units for RHydro
+data types. The data.frame also tells, in which mass or energy balance
+calculations the data types are included.
 }
 %\usage{data(rhydro.data.types)} !Remove to avoid error message from R check
 \format{

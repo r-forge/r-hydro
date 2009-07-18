@@ -1,13 +1,12 @@
 validityHydroModelRun <- function(object){
      toRet <- c()
-     #ToDo use slot(object, theData.class) e.g. get.data.types
-          
      #Check for same number of runs
-     if(length(object@measuredStates$runs) != length(object@measuredFluxes$runs)  ||
-        length(object@measuredStates$runs) != length(object@modelledFluxes$runs)  ||
-        length(object@measuredStates$runs) != NROW(object@parameters@parameters) ||
-        length(object@measuredStates$runs) != length(object@modelledStates$runs))
-        toRet <- "The slots 'measuredStates$runs, measuredFluxes$runs, modelledFluxes$runs, modelledStates$runs, and parameters@parameters' need the same number of entries (length())."
+     num.pars <- NROW(object@parameters@parameters)
+     for(slot in c("modelledFluxes", "modelledStates", "measuredFluxes", "measuredStates")){
+          if(length(slot(object, slot)$runs) != num.pars)
+            toRet <- paste("The slot ",slot,"$runs needs the same number of entries as numbers of parameters stored in the object.", sep="")
+     }
+          
      
      #Check for data types in slots
      for(slot in c("modelledFluxes", "modelledStates", "measuredFluxes", "measuredStates")){
@@ -51,7 +50,18 @@ validityHydroModelRun <- function(object){
                           FUN=function(hydroTS){if(length(hydroTS@units)==0){ "no units"} else hydroTS@units}
      )
      if(any(my.units=="no units")) toRet <- c(toRet, "units-slot is an empty string for some TS-Objects" )
-     #ToDo Check for consistency between list symbols and data types
+     #Check for consistency between list symbols and data types
+     msg <- applyToHydroTS(x=object, FUN=function(hydroTS){
+          symbol <- get("hydroTSname", envir=parent.frame())
+          type <- hydroTS@type
+          expected.symbol <-  rhydro.data.types$symbol[rhydro.data.types$data.type == type]
+          if(symbol != expected.symbol){
+              return(paste("Symbol of HydroTS with type", type, "is", symbol, "however, expected symbol (according to rhydro.data.types) is", expected.symbol))
+          }
+     })
+    if(!is.null(msg)){
+         toRet <- c(toRet, msg)
+    }
     if(length(toRet)!=0){
        return(toRet)
     } else {
@@ -126,7 +136,7 @@ setMethod("plot",
               data.class=c("modelledFluxes", "modelledStates", "measuredFluxes", "measuredStates"),
               data.types=get.data.types(x, data.class=data.class),
               stations=get.stations(x, data.class=data.class),
-              balance.types=unique(unlist(strsplit(rhydro.data.types$balance.type, ", *"))),
+              balance.types=unique(unlist(getBalanceTypes.rhydro.data.types())),
               legend.position="right",
               runs=1:get.runCount(x),
               ...) 
@@ -185,9 +195,7 @@ setMethod("plot",
                  applyToHydroTS(x,
                        FUN=function(hydroTS){
                             if(hydroTS@type %in% data.types){
-                                 if(!exists("run")){
-                                     run <- "ToDo understand why run is not available here"
-                                 }
+                                 run <- get("run", envir=parent.frame())
                                  select <- hydroTS@location.name %in% stations
                                  plot(hydroTS@magnitude[,select], main=paste(hydroTS@type, "Run:", run), ylab=hydroTS@type, ...)
                             }
@@ -236,9 +244,11 @@ setMethod("plot",
                     for(balance.type in balance.types){
                         #what data.types occur in this balance?
                         to.ret[[class]][[balance.type]] <- list()
-                        balance.type.list <- strsplit(rhydro.data.types$balance.type, ", *")
+                        balance.type.list <- getBalanceTypes.rhydro.data.types()
                         balance.type.hit <- sapply(balance.type.list, FUN <- function(x){ any(balance.type %in% x)})
+                        #extract colors
                         b.data.types <- rhydro.data.types$data.type[balance.type.hit]
+                        b.type.color <- getBalanceColor.rhydro.data.types(data.type = b.data.types, balance.type=balance.type)
                         if(identical(stations,get.stations(x, data.class=data.class))){
                              stations=get.stations(x, data.class=d.class,  data.types=b.data.types)
                         }
@@ -247,7 +257,6 @@ setMethod("plot",
                            to.ret[[class]][[balance.type]][[run]] <- list()
                            summary.data.state <- data.frame(name=c(), change=c())
                            for(station in stations){
-                                color.nr <- 1
                                 #calc plot range
                                 rangeTS <- get.HydroTS(x,
                                          data.types=b.data.types,
@@ -265,7 +274,6 @@ setMethod("plot",
                                             the.min <- x.range.list[[listEntry]][2]
                                     }
                                     x.range <- c(the.min,the.max)
-                                    #ToDo use x.range for later get.HydroTS
                                     #calculate y range for correct x-range
                                     rangeTSa <- get.HydroTS(x,
                                          data.class=c("measuredFluxes","modelledFluxes"),
@@ -324,9 +332,8 @@ setMethod("plot",
                                        the.sum <- cumsum(ts@magnitude)
                                        the.sum[nas] <- NA
                                         #plot flux data by station and run
-                                        #ToDo: Use smarter colors
-                                        lines(index(ts@magnitude), the.sum, col=color.nr)
-                                        color.nr <- color.nr + 1 
+                                        col <- b.type.color[ts@type == b.data.types]
+                                        lines(index(ts@magnitude), the.sum, col=col)
                                         summary.data.flux[ts.nr,] <- c(ts@type, max(the.sum, na.rm=TRUE), ts@direction)
                                         ts.nr <- ts.nr + 1
                                         #store total flux change (end sum) (with direction)
@@ -349,10 +356,9 @@ setMethod("plot",
                                        warning(paste("No data available for station",station,"run",run," and data type", ts@type))
                                     } else {
                                         #plot state data (on different axis?)
-                                        #ToDo: Use smarter colors
-                                        lines(index(ts@magnitude), ts@magnitude, col=color.nr)
+                                        col <- b.type.color[ts@type == b.data.types]
+                                        lines(index(ts@magnitude), ts@magnitude, col=col)
                                         change <- as.numeric(ts@magnitude[length(ts@magnitude)]) - as.numeric(ts@magnitude[1])
-                                        color.nr <- color.nr + 1 
                                         #store total state change
                                         summary.data.state[ts.nr,] <-  c(ts@type, change)
                                         ts.nr <- ts.nr + 1
@@ -362,8 +368,9 @@ setMethod("plot",
                                to.ret[[class]][[balance.type]][[run]][[station]]  <- list(flux=summary.data.flux, state=summary.data.state)
                                legend.entries <- c(summary.data.flux[,1], summary.data.state[,1])
                                legend.entries <- legend.entries[!is.na(legend.entries)]
+                               legend.col <- sapply(legend.entries, FUN=function(x){b.type.color[x==b.data.types]})
                                if(length(legend.entries >0)){
-                                   legend("topleft", cex=0.5, legend.entries, col=1:length(legend.entries), lty=1, inset=0.05) 
+                                   legend("topleft", cex=0.5, legend.entries, col=legend.col, lty=1, inset=0.05) 
                                }
                            }
                        }

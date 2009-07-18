@@ -17,28 +17,9 @@ applyToHydroTS <- function(x, FUN,
            for(theData.class in data.class){
                 allRuns <- slot(x, theData.class)
                 for(run in runs){
-                    theList <- allRuns$runs[[run]]
-                    for(hydroTS in theList){
-                        if(!is.null(hydroTS))
-                                if(by.runs & length(runs)>1){
-                                   toRet[[run]] <- append(toRet[[run]], FUN(hydroTS))
-                                } else {
-                                   toRet <- append(toRet, FUN(hydroTS))
-                                }
- 
-                    }
+                    toRet <- processList(allRuns$runs[[run]], run=run, runs=runs, by.runs=by.runs, FUN=FUN, toRet=toRet)
                 }
-                theList <- allRuns$shared
-                for(hydroTS in theList){
-                    if(!is.null(hydroTS))
-                            if(by.runs & length(runs)>1){
-                               for(run in runs){
-                                   toRet[[run]] <- append(toRet[[run]], FUN(hydroTS))
-                               }
-                            } else {
-                               toRet <- append(toRet, FUN(hydroTS))
-                            }
-                }
+                toRet <- processList(allRuns$shared, shared=TRUE, run=NA, runs=runs, by.runs=by.runs, FUN=FUN, toRet=toRet)
            }
       return(toRet)
 }
