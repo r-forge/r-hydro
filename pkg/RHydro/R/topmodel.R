@@ -20,15 +20,15 @@ topmodel <- function(parameters, inputs, topidxx, delay, verbose = FALSE) {
   P <- as.vector(inputs$P)
   ETp  <- as.vector(inputs$ETp)
   if(length(ETp) != length(P))
-     stop("Prec and ETp should have the same length")
-     
+    stop("Prec and ET0 should have the same length")
+  
   if(NS) {
     Q <- as.vector(inputs$Q)
     if(any(Q[!is.na(Q)]<0))
       stop("Q should not contain negative values")
     Q[is.na(Q)] <- -1
     if(length(Q) != length(P))
-      stop("Q should have the same length as P and ETp")
+      stop("Q should have the same length as P and ET0")
   } else Q <- -9999
 
   ## get time index
@@ -50,7 +50,7 @@ topmodel <- function(parameters, inputs, topidxx, delay, verbose = FALSE) {
   ## length of the returned result
 
   if(NS) { lengthResult <- iterations
-  } else { lengthResult <- length(P) * iterations * v }
+         } else { lengthResult <- length(P) * iterations * v }
 
   ## running the model...
 
@@ -76,14 +76,16 @@ topmodel <- function(parameters, inputs, topidxx, delay, verbose = FALSE) {
   modelledFluxes <- list(runs = list(), shared = list())
   modelledStates <- list(runs = list(), shared = list())
   
-  #convert inputs to HydroFlux
+  ## convert inputs to HydroFlux
+
   for(ts in names(inputs)){
-       inputs[[ts]] <- as(inputs[[ts]], "HydroFlux")
-       inputs[[ts]]@TSorigin <- "recorded"
+    inputs[[ts]] <- as(inputs[[ts]], "HydroFlux")
+    inputs[[ts]]@TSorigin <- "recorded"
   }
+
   measuredFluxes <- list(runs = list(), shared = inputs)
   measuredStates <- list(runs = list(), shared = list())
-
+  
   ## Format the results as they are returned from the C function
   ## and add them to modelledFluxes and modelledStates
   

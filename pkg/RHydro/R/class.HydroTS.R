@@ -17,21 +17,21 @@ HydroTSvalidity <- function(object){
               error.message = new.message
         }
     }
-    #Warning if units can not be checked or differ from prefered units
+    #Warning if units can not be checked or differ from preferred units
     skipcheck = FALSE
     if(length(object@type)==0){
         skipcheck = TRUE
-        warning(paste("Skiping data check because type is undefined for time series at location",object@location.name))
+        warning(paste("Skipping data check because type is undefined for time series at location",object@location.name))
     } else if(any(line <-  rhydro.data.types$data.type ==object@type)){
         if(rhydro.data.types$prefered.units[line]!=object@units){
              skipcheck = TRUE
-             warning(paste("Skiping data check because units",object@units," are not standard units (",rhydro.data.types$prefered.units[line],") for time series at location",object@location.name))
+             warning(paste("Skipping data check because units",object@units," are not standard units (",rhydro.data.types$prefered.units[line],") for time series at location",object@location.name))
         }
     } else {
-        warning(paste("Skiping data check because data.type ",object@type,"is not a standard data type defined in rhydro.data.types for time series at location",object@location.name))
+        warning(paste("Skipping data check because data.type ",object@type,"is not a standard data type defined in rhydro.data.types for time series at location",object@location.name))
         skipcheck = TRUE
     }
-    #Type dependend validity check
+    #Type dependent validity check
     if(!skipcheck){
         if(!is.na(rhydro.data.types$max.value[line])){
                 if(object@magnitude > rhydro.data.types$max.value[line]){
