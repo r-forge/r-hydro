@@ -3,7 +3,7 @@ direction=zoo("out"), units, type, generated.header.info=NULL){
     data <- wasim.read.table(file)
     if(is.null(data)) return(NULL)
     if(is_recorded){
-          coordinate <- wasim.head2spatial(attr(data,"head"))
+          coordinate <- wasim.head2spatial(attr(data,"head"), z.line=NA)
     } else {
           if(is.null(generated.header.info) ||
              NCOL(data) - NCOL(generated.header.info@magnitude)>1 ||

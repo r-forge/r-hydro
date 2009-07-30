@@ -22,6 +22,6 @@ exportClasses(HydroTS,
               HydroTopmodelParameters,
               HydroWasimParameters)
 
-exportMethods(print, plot, coerce)
+exportMethods(print, plot, coerce, validity.check)
 import(methods) 
 #unclear what to import, removed graphics, sp

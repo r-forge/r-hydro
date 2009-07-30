@@ -55,8 +55,10 @@ validityHydroModelRun <- function(object){
           symbol <- get("hydroTSname", envir=parent.frame())
           type <- hydroTS@type
           expected.symbol <-  rhydro.data.types$symbol[rhydro.data.types$data.type == type]
-          if(symbol != expected.symbol){
-              return(paste("Symbol of HydroTS with type", type, "is", symbol, "however, expected symbol (according to rhydro.data.types) is", expected.symbol))
+          if(length(expected.symbol)!=0){
+              if(symbol != expected.symbol){
+                  return(paste("Symbol of HydroTS with type", type, "is", symbol, "however, expected symbol (according to rhydro.data.types) is", expected.symbol))
+              }
           }
      })
     if(!is.null(msg)){
@@ -111,6 +113,14 @@ setMethod("print",
       cat("Call: ", x@call,"\n")
     }
 )
+
+setMethod("validity.check",
+    signature(object = "HydroModelRun"),
+    function (object) {
+           applyToHydroTS(object, FUN=validity.check)
+    }
+)
+
 
 setMethod("summary",
     signature(object = "HydroModelRun"),
