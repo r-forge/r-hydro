@@ -107,32 +107,42 @@ topmodel <- function(parameters, inputs, topidx, delay, verbose = FALSE) {
                                          TSorigin = "generated",
                                          location.name="unknown",
                                          coordinate = SpatialPoints(data.frame(x=0,y=0)),
+                                         units = "mm",
                                          direction = direction),
                                        Qb = new("HydroFlux",
                                          magnitude = zoo(Qb[,i],index),
                                          TSorigin = "generated",
                                          location.name="unknown",
                                          coordinate = SpatialPoints(data.frame(x=0,y=0)),
+                                         units = "mm",
                                          direction = direction),
                                        Qos = new("HydroFlux",
                                          magnitude = zoo(Qos[,i],index),
                                          TSorigin = "generated",
                                          location.name="unknown",
                                          coordinate = SpatialPoints(data.frame(x=0,y=0)),
+                                         units = "mm",
                                          direction = direction),
                                        Qoi = new("HydroFlux",
                                          magnitude = zoo(Qoi[,i],index),
                                          TSorigin = "generated",
                                          location.name="unknown",
                                          coordinate = SpatialPoints(data.frame(x=0,y=0)),
+                                         units = "mm",
                                          direction = direction),
                                        ETa = new("HydroFlux",
                                          magnitude = zoo(ETa[,i],index),
                                          TSorigin = "generated",
                                          location.name="unknown",
                                          coordinate = SpatialPoints(data.frame(x=0,y=0)),
+                                         units = "mm",
                                          direction = direction))
-      modelledStates$runs[[i]] <- list(S = zoo(S[,i],index))
+      modelledStates$runs[[i]] <- list(Ss = new("HydroState",
+                                         magnitude = zoo(S[,i],index),
+                                         TSorigin = "generated",
+                                         location.name="unknown",
+                                         coordinate = SpatialPoints(data.frame(x=0,y=0)),
+                                         units = "mm"))
       measuredStates$runs[[i]] <- list()
       measuredFluxes$runs[[i]] <- list()
     }
@@ -151,6 +161,7 @@ topmodel <- function(parameters, inputs, topidx, delay, verbose = FALSE) {
                                          TSorigin = "generated",
                                          location.name="unknown",
                                          coordinate = SpatialPoints(data.frame(x=0,y=0)),
+                                         units = "mm",
                                          direction = direction))
       modelledStates$runs[[i]] <- list()
       measuredStates$runs[[i]] <- list()

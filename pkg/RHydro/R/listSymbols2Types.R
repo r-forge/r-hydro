@@ -1,19 +1,19 @@
 listSymbols2Types <- function(theList){
    innerFUN <- function(sublist){
-       #get names for elements
+       ## get names for elements
        symbols <-  names(sublist)
        for(symbol in symbols){
-            #any matching symbol in rhydro.data.types?
+            ## any matching symbol in rhydro.data.types?
             theMatch <- rhydro.data.types$symbol == symbol
             if(any(theMatch)){
-                 #do replacement
+                 ## do replacement
                  sublist[[symbol]]@type <- rhydro.data.types$data.type[theMatch]
-                 #check whether to set units
+                 ## check whether to set units
                  if(length(sublist[[symbol]]@units)==0){
-                     sublist[[symbol]]@units <- rhydro.data.types$prefered.units[theMatch]  
+                     sublist[[symbol]]@units <- rhydro.data.types$prefered.units[theMatch]
                      cat("Assuming", rhydro.data.types$prefered.units[theMatch], "as units for data type:", rhydro.data.types$data.type[theMatch],"\n")
                  }
-            #if not, set to unknown
+            ## if not, set to unknown
             } else {
                  sublist[[symbol]]@type <- "unknown"
                  if(length(sublist[[symbol]]@units)==0){
