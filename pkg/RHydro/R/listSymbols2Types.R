@@ -11,7 +11,7 @@ listSymbols2Types <- function(theList){
                  #check whether to set units
                  if(length(sublist[[symbol]]@units)==0){
                      sublist[[symbol]]@units <- rhydro.data.types$prefered.units[theMatch]  
-                     warning(paste("Assuming", rhydro.data.types$prefered.units[theMatch], "as units for data type", rhydro.data.types$data.type[theMatch]))
+                     cat("Assuming", rhydro.data.types$prefered.units[theMatch], "as units for data type:", rhydro.data.types$data.type[theMatch],"\n")
                  }
             #if not, set to unknown
             } else {
@@ -29,12 +29,9 @@ listSymbols2Types <- function(theList){
    if(length(theList$shared)>0){
         theList$shared <- innerFUN(theList$shared)
    }
-   for(run in 1:length(theList$runs)){
-       if(length(theList$runs[[run]])>0){
-           #get names for elements
-            theList$runs[[run]] <- innerFUN(theList$runs[[run]])
-       }
-       
+   for(run in seq(along = theList$runs)){
+        #get names for elements
+        theList$runs[[run]] <- innerFUN(theList$runs[[run]])    
    }
    return(theList)
 }

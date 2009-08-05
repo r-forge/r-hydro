@@ -1,4 +1,4 @@
-topmodel <- function(parameters, inputs, topidxx, delay, verbose = FALSE) {
+topmodel <- function(parameters, inputs, topidx, delay, verbose = FALSE) {
   
   ## check parameters by converting them to HydroTopmodelParameters
 
@@ -9,7 +9,6 @@ topmodel <- function(parameters, inputs, topidxx, delay, verbose = FALSE) {
   if(!is(inputs,"list")) stop("Inputs should be a list")
   if(is.null(inputs$P) || is.null(inputs$ETp))
     stop("Inputs should contain members P and ETp")
-
 
   ## if Q is given we return NS
   
@@ -30,6 +29,8 @@ topmodel <- function(parameters, inputs, topidxx, delay, verbose = FALSE) {
     if(length(Q) != length(P))
       stop("Q should have the same length as P and ET0")
   } else Q <- -9999
+  
+  direction <- zoo(rep(1,length(P)))
 
   ## get time index
 
@@ -57,12 +58,12 @@ topmodel <- function(parameters, inputs, topidxx, delay, verbose = FALSE) {
   result <- .C("topmodel",
                PACKAGE = "RHydro",
                as.double(t(as(parameters, "matrix"))),
-               as.double(as.matrix(topidxx)),
+               as.double(as.matrix(topidx)),
                as.double(as.matrix(delay)),
                as.double(P),
                as.double(ETp),
                as.double(Q),
-               as.integer(length(as.double(as.matrix(topidxx)))/2),
+               as.integer(length(as.double(as.matrix(topidx)))/2),
                as.integer(length(P)),
                as.integer(iterations),
                as.integer(length(delay[,1])),
@@ -101,13 +102,39 @@ topmodel <- function(parameters, inputs, topidxx, delay, verbose = FALSE) {
     ETa = as.data.frame(matrix(result[,6], ncol=iterations))
 
     for(i in 1:iterations){
-      modelledFluxes$runs[[i]] <- list(Q   = zoo(Q[,i],index),
-                                       Qb  = zoo(Qb[,i],index),
-                                       Qos = zoo(Qos[,i],index),
-                                       Qoi = zoo(Qoi[,i],index),
-                                       ETa = zoo(ETa[,i],index))
-      
+      modelledFluxes$runs[[i]] <- list(Q = new("HydroFlux",
+                                         magnitude = zoo(Q[,i],index),
+                                         TSorigin = "generated",
+                                         location.name="unknown",
+                                         coordinate = SpatialPoints(data.frame(x=0,y=0)),
+                                         direction = direction),
+                                       Qb = new("HydroFlux",
+                                         magnitude = zoo(Qb[,i],index),
+                                         TSorigin = "generated",
+                                         location.name="unknown",
+                                         coordinate = SpatialPoints(data.frame(x=0,y=0)),
+                                         direction = direction),
+                                       Qos = new("HydroFlux",
+                                         magnitude = zoo(Qos[,i],index),
+                                         TSorigin = "generated",
+                                         location.name="unknown",
+                                         coordinate = SpatialPoints(data.frame(x=0,y=0)),
+                                         direction = direction),
+                                       Qoi = new("HydroFlux",
+                                         magnitude = zoo(Qoi[,i],index),
+                                         TSorigin = "generated",
+                                         location.name="unknown",
+                                         coordinate = SpatialPoints(data.frame(x=0,y=0)),
+                                         direction = direction),
+                                       ETa = new("HydroFlux",
+                                         magnitude = zoo(ETa[,i],index),
+                                         TSorigin = "generated",
+                                         location.name="unknown",
+                                         coordinate = SpatialPoints(data.frame(x=0,y=0)),
+                                         direction = direction))
       modelledStates$runs[[i]] <- list(S = zoo(S[,i],index))
+      measuredStates$runs[[i]] <- list()
+      measuredFluxes$runs[[i]] <- list()
     }
 
     performance <- data.frame()
@@ -117,13 +144,21 @@ topmodel <- function(parameters, inputs, topidxx, delay, verbose = FALSE) {
   if(!NS && v == 1) {
 
     Q <- as.data.frame(matrix(result, ncol=iterations), index)
-    
+      
     for(i in 1:iterations){
-      modelledFluxes$runs[[i]] <- list(Q = zoo(Q[,i],index))
+      modelledFluxes$runs[[i]] <- list(Q = new("HydroFlux",
+                                         magnitude = zoo(Q[,i],index),
+                                         TSorigin = "generated",
+                                         location.name="unknown",
+                                         coordinate = SpatialPoints(data.frame(x=0,y=0)),
+                                         direction = direction))
+      modelledStates$runs[[i]] <- list()
+      measuredStates$runs[[i]] <- list()
+      measuredFluxes$runs[[i]] <- list()      
     }
-
     performance <- data.frame()
   }
+  
   if(NS) {
     performance <- data.frame(NS = result)
     for(i in 1:iterations){
@@ -146,7 +181,7 @@ topmodel <- function(parameters, inputs, topidxx, delay, verbose = FALSE) {
                 measuredFluxes      = measuredFluxes,
                 measuredStates      = measuredStates,
                 performanceMeasures = performance,
-                modelSupportData    = list(topidx = topidxx, delay = delay),
+                modelSupportData    = list(topidx = topidx, delay = delay),
                 call                = "topmodel")
   
   return(result)

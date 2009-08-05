@@ -5,13 +5,13 @@
   This is an implementation of the 1995 Fortran version of the hydrological model TOPMODEL, originally developed by Keith Beven.
 }
 \usage{
-topmodel(parameters, inputs, topidxx, delay, verbose = FALSE)
+topmodel(parameters, inputs, topidx, delay, verbose = FALSE)
 }
 \arguments{
   \item{parameters}{A vector, matrix or HydroModelParameters object containing the input parameters (see below for the exact structure)}
   \item{inputs}{A list of vectors or zoo time series, containing at least a member called ``prec'' (precipitation) and ``PET'' (potential evapotranspiration). ``Qobs'' may also be given, in which the Nash-Sutcliffe efficiency is calculated directly}
   \item{delay}{Delay function for overland flow (see below)}
-  \item{topidxx}{An object returned from the \code{\link{topidx}} method}
+  \item{topidx}{An object returned from the \code{\link{topidx}} method}
   \item{verbose}{If set to TRUE, returns besides predicted discharge also overland flow, base flow and storage}
 }
 \details{

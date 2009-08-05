@@ -1,4 +1,4 @@
-topidx <- function(DEM, resolution, river=NA) {
+topidx <- function(DEM, res, river=NA) {
 
   ## data preparation and checking
   
@@ -10,12 +10,10 @@ topidx <- function(DEM, resolution, river=NA) {
   my.nrow <- dim(DEM)[1]
   my.ncol <- dim(DEM)[2]
 
-  
   if(!is.na(river)) {
     river <- as(river, "matrix")
     if(min(river) < 0) stop("Error: the object 'river' should only contain positive values")
-  }
-  else river = rep(0,my.nrow*my.ncol)
+  } else river = rep(0, my.nrow * my.ncol)
   
   ## calling the function
 
@@ -25,11 +23,11 @@ topidx <- function(DEM, resolution, river=NA) {
                as.integer(river),
                as.integer(my.nrow),
                as.integer(my.ncol),
-               as.double(resolution),
-               as.double(resolution),
+               as.double(res),
+               as.double(res),
                result = double(length(DEM)*2))$result
 
-  ## formatting of the results
+  ## formatting the results
 
   atb  <- matrix(result[1:(my.nrow*my.ncol)],nrow=my.nrow)
   area <- matrix(result[(my.nrow*my.ncol+1):(my.nrow*my.ncol*2)],nrow=my.nrow)
