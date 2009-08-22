@@ -1,4 +1,6 @@
-#generic function for extended validity.checks.
+## generic function for extended validity.checks.
+## is this necessary? This should happen automatically according to V&R, S Programming, p. 109
+
 setGeneric("validity.check", function(object) { standardGeneric("validity.check") })
 
 

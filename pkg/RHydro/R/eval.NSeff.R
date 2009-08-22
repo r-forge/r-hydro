@@ -1,4 +1,4 @@
-NSeff <- function(Qobs,Qsim) {
+NSeff.numeric <- function(Qobs,Qsim) {
 
   ## Qobs should be class that can be coerced to numeric (e.g., HydroTS)
 
@@ -23,3 +23,13 @@ NSeff <- function(Qobs,Qsim) {
   NS <- 1 - ( sum((Qobs - Qsim)^2) / sum((Qobs - mean(Qobs))^2) )
   return(NS)
 }
+
+
+NSeff.HydroModelRun <- function(object) {
+
+}
+
+
+
+setMethod("NSeff", signature(Qobs = "numeric", Qsim = "numeric"), NSeff.numeric)
+setMethod("NSeff", signature(object = "HydroModelRun"), NSeff.HydroModelRun)

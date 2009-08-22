@@ -26,3 +26,5 @@ exportClasses(HydroTS,
 exportMethods(print, plot, coerce, validity.check)
 import(methods) 
 #unclear what to import, removed graphics, sp
+
+
