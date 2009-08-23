@@ -80,10 +80,9 @@ setClass("HydroModelRun",
 				measuredStates="list",
 				performanceMeasures="data.frame",
 				modelSupportData="list",
-				call="character"),
+				call="call"),
        validity =  validityHydroModelRun
 )
-
 
 setMethod("print",
     signature(x = "HydroModelRun"),
@@ -110,7 +109,8 @@ setMethod("print",
       cat("\n")
       cat("Calculated performance measures: ", names(x@performanceMeasures),"\n")
       cat("Model Support Data: ", names(x@modelSupportData),"\n")
-      cat("Call: ", x@call,"\n")
+      cat("Call: ")
+      print(x@call)
     }
 )
 
@@ -394,4 +394,18 @@ setMethod("plot",
 
     }
 )
+
+"$.HydroModelRun" <- function(object, name = c("Qsim","Qobs","pm","performance")) {
+  subset <- match.arg(name)
+  if(subset == "pm" || subset == "performance") return(object@performanceMeasures)
+  if(subset == "NS") return(object@performanceMeasures$NS)
+  if(subset == "Qsim") {
+    mydata <- get.HydroTS(object, data.class=c("modelledFluxes", "modelledStates"), data.types="discharge")
+    toRet <- numeric()
+    for(i in 1:get.runCount(object)) toRet <- cbind(toRet,as(mydata[[i]][[1]],"numeric"))
+    colnames(toRet) <- row.names(objectparameters@parameters)
+    return(toRet)
+  }
+}
+
 

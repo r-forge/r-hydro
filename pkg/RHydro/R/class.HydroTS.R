@@ -1,9 +1,6 @@
-## generic function for extended validity.checks.
-## is this necessary? This should happen automatically according to V&R, S Programming, p. 109
-
 setGeneric("validity.check", function(object) { standardGeneric("validity.check") })
 
-
+setGeneric("print")
 
 HydroTSvalidity <- function(object){
     if(! object@TSorigin %in% c("recorded", "generated"))
@@ -112,7 +109,6 @@ setMethod("validity.check",
     }
 )
 
-
 setMethod("max",
     signature(x = "HydroTS"),
     function (x, ..., na.rm = FALSE) 
@@ -121,7 +117,6 @@ setMethod("max",
     }
 )
 
-
 setMethod("min",
     signature(x = "HydroTS"),
     function (x, ..., na.rm = FALSE) 
@@ -129,7 +124,6 @@ setMethod("min",
           return(min(x@magnitude, ..., na.rm=na.rm))
     }
 )
-
 
 setMethod("range",
     signature(x = "HydroTS"),
@@ -145,6 +139,14 @@ setMethod("initialize",
     {
        .Object <- callNextMethod()
        return(.Object)
+    }
+)
+
+setMethod("length",
+    signature(x = "HydroTS"),
+    function (x) 
+    {
+          return(length(x@magnitude))
     }
 )
 

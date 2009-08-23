@@ -1,6 +1,6 @@
 useDynLib(RHydro)
 
-export( NSeff,
+export(NSeff,
        get.data.types,
        get.stations,
        get.runCount,

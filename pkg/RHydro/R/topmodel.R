@@ -3,16 +3,18 @@ topmodel <- function(parameters,
                      topidx,
                      delay,
                      noS4 = FALSE,
-                     output=c("Q","Qb","Qos","Qoi","ETa","Ss","NS"),
+                     performance = c("NS"),
+                     return.simulations = TRUE,
                      verbose=FALSE) {
 
-  ## check parameters by converting them to HydroTopmodelParameters
+  ## check some arguments and convert if necessary
 
+  if(missing(performance)) performance <- NULL else performance <- match.arg(performance, several.ok=TRUE)
   parameters <- as(parameters, "HydroTopmodelParameters")
 
-  ## check inputs and convert them to HydroFlux
+  if(return.simulations && verbose) v <- 6 else v <- 1
 
-  input <- as(inputs, HydroFlux)
+  ## check inputs and convert them to HydroFlux
 
   if(!is(inputs,"list")) stop("Inputs should be a list")
   if(is.null(inputs$P) || is.null(inputs$ETp))
@@ -22,65 +24,51 @@ topmodel <- function(parameters,
     inputs[[ts]] <- as(inputs[[ts]], "HydroFlux")
     inputs[[ts]]@TSorigin <- "recorded"
   }
- 
-  ## check what we should return:
-
-  returnOnlyNS <- FALSE
-  returnQ  <- FALSE
-  v = 1;
-
-  if("NS" %in% output) returnOnlyNS <- TRUE
-  if("Q" %in% output)  returnQ  <- TRUE
-  if(("Qb" %in% output) || ("Qos" %in% output) || ("Qoi" %in% output) || ("ETa" %in% output) || verbose) v = 6
-  if(("NS" %in% output) && !returnQ && !(v == 6)) returnOnlyNS <- TRUE
   
-  ## if NS is requested, Q should be part of input
+  ## if performance measures are requested, Q should be part of input
 
-  if(("NS" %in% output) && !(Q %in% input)) stop("If NS is requested, observed discharge (Q) must present in input")
+  if(!is.null(performance) && is.null(inputs$Q))
+    stop("If performance measures are requested, observed discharge (Q) must present in input")
 
   ## check input length
-  
-  P <- as.vector(inputs$P)
-  ETp  <- as.vector(inputs$ETp)
-  if(length(ETp) != length(P))
+
+  ntimesteps <- length(inputs$P)
+
+  if(length(inputs$ETp) != ntimesteps)
     stop("Prec and ET0 should have the same length")
   
-  if(returnOnlyNS) {
-    Q2 <- as.vector(inputs$Q)
+  if(!return.simulations) {
+    Q2 <- as(inputs$Q, "numeric")
     if(any(Q2[!is.na(Q2)]<0))
       stop("Q should not contain negative values")
     Q2[is.na(Q2)] <- -1
-    if(length(Q2) != length(P))
+    if(length(Q2) != ntimesteps)
       stop("Q should have the same length as P and ET0")
   } else Q2 <- -9999
   
-  direction <- zoo(rep(1,length(P)))
+  direction <- zoo(rep(1,ntimesteps))
 
   ## get time index
- 
   index <- index(inputs$P@magnitude)
 
   ## number of iterations
-
   iterations <- dim(parameters@parameters)[1]
 
   ## length of the returned result
-
-  if(returnNS) { lengthResult <- iterations
-               } else { lengthResult <- length(P) * iterations * v }
+  lengthResult <- ifelse(return.simulations, ntimesteps * iterations * v, iterations)
 
   ## running the model...
-
+  
   result <- .C("topmodel",
                PACKAGE = "RHydro",
                as.double(t(as(parameters, "matrix"))),
                as.double(as.matrix(topidx)),
                as.double(as.matrix(delay)),
-               as.double(as.numeric(inputs$P)),
-               as.double(as.numeric(inputs$ETp)),
+               as.double(as(inputs$P, "numeric")),
+               as.double(as(inputs$ETp, "numeric")),
                as.double(Q2),
                as.integer(length(as.double(as.matrix(topidx)))/2),
-               as.integer(length(P)),
+               as.integer(ntimesteps),
                as.integer(iterations),
                as.integer(length(delay[,1])),
                as.integer(v),
@@ -91,17 +79,14 @@ topmodel <- function(parameters,
   if(noS4) {
     if(v == 6) {
       result <- matrix(result,ncol=6)
-      result <- list(
-                     Q  = matrix(result[,1], ncol=iterations),
+      result <- list(Q  = matrix(result[,1], ncol=iterations),
                      qo = matrix(result[,2], ncol=iterations),
                      qs = matrix(result[,3], ncol=iterations),
                      S  = matrix(result[,4], ncol=iterations),
                      fex= matrix(result[,5], ncol=iterations),
                      Ea = matrix(result[,6], ncol=iterations)
                      )
-    }
-    
-    if((Qobs == -9999) && (iterations > 1) && (v == 1)) result <- matrix(result, ncol= iterations)
+    } else if(return.simulations && (iterations > 1)) result <- matrix(result, ncol= iterations)
     return(result)
   }
 
@@ -116,7 +101,7 @@ topmodel <- function(parameters,
   ## Format the results as they are returned from the C function
   ## and add them to modelledFluxes and modelledStates
   
-  if(!returnOnlyNS) {
+  if(return.simulations) {
     
     result <- matrix(result, ncol=v)
     
@@ -133,17 +118,15 @@ topmodel <- function(parameters,
       
       modelledFluxes$runs[[i]] <- list()
 
-      if(verbose || ("Q" %in% output)) {
-        modelledFluxes$runs[[i]][["Q"]] = new("HydroFlux",
-                                  magnitude = zoo(Q[,i],index),
-                                  TSorigin = "generated",
-                                  location.name="unknown",
-                                  coordinate = SpatialPoints(data.frame(x=0,y=0)),
-                                  units = "mm",
-                                  direction = direction)
-      }
+      modelledFluxes$runs[[i]][["Q"]] = new("HydroFlux",
+                                magnitude = zoo(Q[,i],index),
+                                TSorigin = "generated",
+                                location.name="unknown",
+                                coordinate = SpatialPoints(data.frame(x=0,y=0)),
+                                units = "mm",
+                                direction = direction)
 
-      if(verbose || ("Qb" %in% output)) {
+      if(verbose) {
         modelledFluxes$runs[[i]][["Qb"]] = new("HydroFlux",
                                   magnitude = zoo(Qb[,i],index),
                                   TSorigin = "generated",
@@ -151,9 +134,7 @@ topmodel <- function(parameters,
                                   coordinate = SpatialPoints(data.frame(x=0,y=0)),
                                   units = "mm",
                                   direction = direction)
-      }
 
-      if(verbose || ("Qos" %in% output)) {
         modelledFluxes$runs[[i]][["Qos"]] = new("HydroFlux",
                                   magnitude = zoo(Qos[,i],index),
                                   TSorigin = "generated",
@@ -161,9 +142,7 @@ topmodel <- function(parameters,
                                   coordinate = SpatialPoints(data.frame(x=0,y=0)),
                                   units = "mm",
                                   direction = direction)
-      }
 
-     if(verbose || ("Qoi" %in% output)) {
         modelledFluxes$runs[[i]][["Qoi"]] = new("HydroFlux",
                                   magnitude = zoo(Qoi[,i],index),
                                   TSorigin = "generated",
@@ -171,35 +150,30 @@ topmodel <- function(parameters,
                                   coordinate = SpatialPoints(data.frame(x=0,y=0)),
                                   units = "mm",
                                   direction = direction)
-      }
 
-     if(verbose || ("ETa" %in% output)) {
-        modelledFluxes$runs[[i]][["Qoi"]] = new("HydroFlux",
+        modelledFluxes$runs[[i]][["ETa"]] = new("HydroFlux",
                                   magnitude = zoo(ETa[,i],index),
                                   TSorigin = "generated",
                                   location.name="unknown",
                                   coordinate = SpatialPoints(data.frame(x=0,y=0)),
                                   units = "mm",
                                   direction = direction)
-      }
-
-      if(verbose || ("Ss" %in% output)) {      
-        modelledStates$runs[[i]] <- list(Ss = new("HydroState",
-                                           magnitude = zoo(S[,i],index),
-                                           TSorigin = "generated",
-                                           location.name="unknown",
-                                           coordinate = SpatialPoints(data.frame(x=0,y=0)),
-                                           units = "mm"))
-      }
+    
+        modelledStates$runs[[i]][["Ss"]] = new("HydroState",
+                                  magnitude = zoo(S[,i],index),
+                                  TSorigin = "generated",
+                                  location.name="unknown",
+                                  coordinate = SpatialPoints(data.frame(x=0,y=0)),
+                                  units = "mm")
+      } else modelledStates$runs[[i]] <- list()
       
       measuredStates$runs[[i]] <- list()
       measuredFluxes$runs[[i]] <- list()
     }
 
     performance <- data.frame()
-  }
-  
-  if(returnOnlyNS) {
+    
+  } else {                                  # no return of simulations
     performance <- data.frame(NS = result)
     for(i in 1:iterations){
       modelledFluxes$runs[[i]] <- list()
@@ -215,16 +189,16 @@ topmodel <- function(parameters,
   measuredStates <- listSymbols2Types(measuredStates)
 
   result <- new("HydroModelRun",
-                parameters          = as(parameters, "HydroTopmodelParameters"),
+                parameters          = parameters,
                 modelledFluxes      = modelledFluxes,
                 modelledStates      = modelledStates,
                 measuredFluxes      = measuredFluxes,
                 measuredStates      = measuredStates,
                 performanceMeasures = performance,
                 modelSupportData    = list(topidx = topidx, delay = delay),
-                call                = "topmodel")
+                call                = match.call())
 
-  if(!returnOnlyNS && ("NS" %in% output)) NSeff(result)
+  if(return.simulations && !is.null(performance)) {}
 
   return(result)
 
