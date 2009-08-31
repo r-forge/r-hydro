@@ -16,8 +16,9 @@ export(NSeff,
        wasim.file2HydroTS)
 
 exportClasses(HydroTS,
-              HydroFlux,
-              HydroState,
+##              HydroFlux,
+##              HydroState,
+              HydroRun,
               HydroModelRun,
               HydroModelParameters,
               HydroTopmodelParameters,
