@@ -2,7 +2,6 @@ topmodel <- function(parameters,
                      inputs,
                      topidx,
                      delay,
-                     noS4 = FALSE,
                      performance = c("NS"),
                      return.simulations = TRUE,
                      verbose=FALSE) {
@@ -14,30 +13,23 @@ topmodel <- function(parameters,
 
   if(return.simulations && verbose) v <- 6 else v <- 1
 
-  ## check inputs and convert them to HydroFlux
+  ## check inputs and convert them to zoo
 
-  if(!is(inputs,"list")) stop("Inputs should be a list")
-  if(is.null(inputs$P) || is.null(inputs$ETp))
-    stop("Inputs should contain members P and ETp")
+  inputs <- zoo(inputs)
 
-  for(ts in names(inputs)){
-    inputs[[ts]] <- as(inputs[[ts]], "HydroFlux")
-    inputs[[ts]]@TSorigin <- "recorded"
-  }
+  if(!("P" %in% names(inputs) && "ETp" %in% names(inputs))) {
+    stop("Inputs should contain members P and ETp") }
   
+  ## number of timesteps
+  
+  ntimesteps <- length(inputs$P)
+
   ## if performance measures are requested, Q should be part of input
 
   if(!is.null(performance) && is.null(inputs$Q))
     stop("If performance measures are requested, observed discharge (Q) must present in input")
 
-  ## check input length
-
-  ntimesteps <- length(inputs$P)
-
-  if(length(inputs$ETp) != ntimesteps)
-    stop("Prec and ET0 should have the same length")
-  
-  if(!return.simulations) {
+  if(!is.null(inputs$Q)) {
     Q2 <- as(inputs$Q, "numeric")
     if(any(Q2[!is.na(Q2)]<0))
       stop("Q should not contain negative values")
@@ -76,130 +68,28 @@ topmodel <- function(parameters,
 
   ## building the object to return
 
-  if(noS4) {
-    if(v == 6) {
-      result <- matrix(result,ncol=6)
-      result <- list(Q  = matrix(result[,1], ncol=iterations),
-                     qo = matrix(result[,2], ncol=iterations),
-                     qs = matrix(result[,3], ncol=iterations),
-                     S  = matrix(result[,4], ncol=iterations),
-                     fex= matrix(result[,5], ncol=iterations),
-                     Ea = matrix(result[,6], ncol=iterations)
-                     )
-    } else if(return.simulations && (iterations > 1)) result <- matrix(result, ncol= iterations)
-    return(result)
-  }
-
-     
-  ## First, construct the list of fluxes and states...
-
-  modelledFluxes <- list(runs = list(), shared = list())
-  modelledStates <- list(runs = list(), shared = list())
-  measuredFluxes <- list(runs = list(), shared = inputs)
-  measuredStates <- list(runs = list(), shared = list())
+  returnObject <- new("HydroRun")
   
   ## Format the results as they are returned from the C function
-  ## and add them to modelledFluxes and modelledStates
+  ## and put them in the right slot of the return object
   
   if(return.simulations) {
-    
-    result <- matrix(result, ncol=v)
-    
-    Q   = as.data.frame(matrix(result[,1], ncol=iterations))
-    if(v == 6) {
-      Qos = as.data.frame(matrix(result[,2], ncol=iterations))
-      Qb  = as.data.frame(matrix(result[,3], ncol=iterations))
-      S   = as.data.frame(matrix(result[,4], ncol=iterations))
-      Qoi = as.data.frame(matrix(result[,5], ncol=iterations))
-      ETa = as.data.frame(matrix(result[,6], ncol=iterations))
-    }
+    result <- matrix(results, ncol=v * iterations)
+    ## prepare the column names
+    names <- c("Q","qo","qs","S","fex","Ea")
+    colnames <- rep(names[1:v],iterations)
+    ## rearrange
+    colnames(result) <- as.vector(t(matrix(colnames,ncol=iterations)))
+    ## make zoo
+    result <- zoo(result, order.by=index)
+    returnObject@ts <- merge(inputs,result)
+  } else returnObject@performanceMeasures <- data.frame(NS = results)
 
-    for(i in 1:iterations) {
-      
-      modelledFluxes$runs[[i]] <- list()
+  ## build the metadata and add them to the return object
 
-      modelledFluxes$runs[[i]][["Q"]] = new("HydroFlux",
-                                magnitude = zoo(Q[,i],index),
-                                TSorigin = "generated",
-                                location.name="unknown",
-                                coordinate = SpatialPoints(data.frame(x=0,y=0)),
-                                units = "mm",
-                                direction = direction)
 
-      if(verbose) {
-        modelledFluxes$runs[[i]][["Qb"]] = new("HydroFlux",
-                                  magnitude = zoo(Qb[,i],index),
-                                  TSorigin = "generated",
-                                  location.name="unknown",
-                                  coordinate = SpatialPoints(data.frame(x=0,y=0)),
-                                  units = "mm",
-                                  direction = direction)
+  
 
-        modelledFluxes$runs[[i]][["Qos"]] = new("HydroFlux",
-                                  magnitude = zoo(Qos[,i],index),
-                                  TSorigin = "generated",
-                                  location.name="unknown",
-                                  coordinate = SpatialPoints(data.frame(x=0,y=0)),
-                                  units = "mm",
-                                  direction = direction)
-
-        modelledFluxes$runs[[i]][["Qoi"]] = new("HydroFlux",
-                                  magnitude = zoo(Qoi[,i],index),
-                                  TSorigin = "generated",
-                                  location.name="unknown",
-                                  coordinate = SpatialPoints(data.frame(x=0,y=0)),
-                                  units = "mm",
-                                  direction = direction)
-
-        modelledFluxes$runs[[i]][["ETa"]] = new("HydroFlux",
-                                  magnitude = zoo(ETa[,i],index),
-                                  TSorigin = "generated",
-                                  location.name="unknown",
-                                  coordinate = SpatialPoints(data.frame(x=0,y=0)),
-                                  units = "mm",
-                                  direction = direction)
-    
-        modelledStates$runs[[i]][["Ss"]] = new("HydroState",
-                                  magnitude = zoo(S[,i],index),
-                                  TSorigin = "generated",
-                                  location.name="unknown",
-                                  coordinate = SpatialPoints(data.frame(x=0,y=0)),
-                                  units = "mm")
-      } else modelledStates$runs[[i]] <- list()
-      
-      measuredStates$runs[[i]] <- list()
-      measuredFluxes$runs[[i]] <- list()
-    }
-
-    performance <- data.frame()
-    
-  } else {                                  # no return of simulations
-    performance <- data.frame(NS = result)
-    for(i in 1:iterations){
-      modelledFluxes$runs[[i]] <- list()
-      modelledStates$runs[[i]] <- list()
-      measuredStates$runs[[i]] <- list()
-      measuredFluxes$runs[[i]] <- list()
-    }
-  }
-
-  modelledFluxes <- listSymbols2Types(modelledFluxes)
-  modelledStates <- listSymbols2Types(modelledStates)
-  measuredFluxes <- listSymbols2Types(measuredFluxes)
-  measuredStates <- listSymbols2Types(measuredStates)
-
-  result <- new("HydroModelRun",
-                parameters          = parameters,
-                modelledFluxes      = modelledFluxes,
-                modelledStates      = modelledStates,
-                measuredFluxes      = measuredFluxes,
-                measuredStates      = measuredStates,
-                performanceMeasures = performance,
-                modelSupportData    = list(topidx = topidx, delay = delay),
-                call                = match.call())
-
-  if(return.simulations && !is.null(performance)) {}
-
-  return(result)
+  return(returnObject)
 
 }
