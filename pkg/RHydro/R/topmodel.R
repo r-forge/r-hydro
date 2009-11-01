@@ -3,14 +3,19 @@ topmodel <- function(parameters,
                      topidx,
                      delay,
                      performance = c("NS"),
-                     return.simulations = TRUE,
+                     ## return.simulations = TRUE,
                      verbose=FALSE) {
 
   ## check some arguments and convert if necessary
-
-  if(missing(performance)) performance <- NULL else performance <- match.arg(performance, several.ok=TRUE)
+  
+  if(missing(performance)) { performance <- NULL
+    } else performance <- match.arg(performance, several.ok=TRUE)
+  
   parameters <- as(parameters, "HydroTopmodelParameters")
 
+  if(is.null(performance)) { return.simulations = TRUE
+    }else return.simulations = FALSE
+  
   if(return.simulations && verbose) v <- 6 else v <- 1
 
   ## check inputs and convert them to zoo
@@ -41,7 +46,7 @@ topmodel <- function(parameters,
   direction <- zoo(rep(1,ntimesteps))
 
   ## get time index
-  index <- index(inputs$P@magnitude)
+  index <- index(inputs)
 
   ## number of iterations
   iterations <- dim(parameters@parameters)[1]
@@ -74,22 +79,59 @@ topmodel <- function(parameters,
   ## and put them in the right slot of the return object
   
   if(return.simulations) {
-    result <- matrix(results, ncol=v * iterations)
+    result <- aperm(array(result,c(ntimesteps,iterations,v)),c(1,3,2))
+    result <- matrix(result, nrow=ntimesteps)
     ## prepare the column names
     names <- c("Q","qo","qs","S","fex","Ea")
-    colnames <- rep(names[1:v],iterations)
-    ## rearrange
-    colnames(result) <- as.vector(t(matrix(colnames,ncol=iterations)))
+    colnames(result) <- rep(names[1:v],iterations)
     ## make zoo
     result <- zoo(result, order.by=index)
-    returnObject@ts <- merge(inputs,result)
-  } else returnObject@performanceMeasures <- data.frame(NS = results)
+  }
 
   ## build the metadata and add them to the return object
 
+  type <- factor(c("flux","flux","flux","state","flux","flux"))
+  dims <- factor(c("m/timestep","m/timestep","m/timestep",
+                   "m","m/timestep","m/timestep"))
+  flux <- c(1,1,1,0,1,1)
 
+  ## 1. metadata input
   
+  metadata_i <- data.frame(ID = NA,
+                           param.ID = NA,
+                           GIS.ID = NA,
+                           type = factor(c("flux")),
+                           name = names(inputs),
+                           flux = NA,
+                           origin = factor(c("measured")),
+                           dimensions = "m/timestep")
+  
+  ## 2. metadata simulations
 
+  if(return.simulations) {
+    
+    param.ID <- 1:iterations
+    if(v > 1) param.ID <- as.vector(matrix(rep(param.ID, v), byrow=T, nrow=v))
+                                    
+    metadata_s <- data.frame(ID = NA,
+                             param.ID = param.ID,
+                             GIS.ID = NA,
+                             type = rep(type[1:v],iterations),
+                             name = names(result),
+                             flux = rep(flux[1:v],iterations),
+                             origin = factor(c("simulated")),
+                             dimensions = rep(dims[1:v],iterations))
+  } else metadata_s <- NULL
+  
+  returnObject@metadata = rbind(metadata_i,metadata_s)
+
+  if(return.simulations) {
+    returnObject@zoo <- merge(inputs,result)
+  } else returnObject@performanceMeasures <- data.frame(NS = result)
+  
+  returnObject@call = match.call()
+  returnObject@parameters = parameters
+  
   return(returnObject)
 
 }
