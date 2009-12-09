@@ -13,13 +13,14 @@ export(NSeff,
        rhydro.data.types,
        plot_rainfall.runoff,
        wasim.read.ModelRun,
-       wasim.file2HydroTS)
+       wasim.file2HydroTS,
+       "$.HydroRun")
 
 exportClasses(HydroTS,
 ##              HydroFlux,
 ##              HydroState,
               HydroRun,
-              HydroModelRun,
+##              HydroModelRun,
               HydroModelParameters,
               HydroTopmodelParameters,
               HydroWasimParameters)

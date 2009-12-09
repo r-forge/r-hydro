@@ -44,14 +44,14 @@ setMethod("print",
     {
       cat("Model ID: ",x@parameters@modelID,"\n")
       cat("\n")
-      cat("Number of model runs: ", max(x@metadata$run),"\n")
+      cat("Number of model runs: ", dim(x@parameters@parameters)[1],"\n")
       cat("Number of parameters: ", dim(x@parameters@parameters)[2],"\n")
       cat("Parameter names: ", names(x@parameters),"\n")
       cat("\n")
-      cat("Modelled fluxes: ", unique(x@metadata$name[x@metadata$origin == "simulated" && x@metadata$type == "flux"],"\n"))
-      cat("Modelled states: ", unique(x@metadata$name[x@metadata$origin == "simulated" && x@metadata$type == "state"],"\n"))
-      cat("Measured fluxes: ", unique(x@metadata$name[x@metadata$origin == "measured" && x@metadata$type == "flux"],"\n"))
-      cat("Measured states: ", unique(x@metadata$name[x@metadata$origin == "measured" && x@metadata$type == "state"],"\n"))
+      cat("Modelled fluxes: ", as.character(unique(x@metadata$name[x@metadata$origin == "simulated" & x@metadata$type == "flux"])),"\n")
+      cat("Modelled states: ", as.character(unique(x@metadata$name[x@metadata$origin == "simulated" & x@metadata$type == "state"])),"\n")
+      cat("Measured fluxes: ", as.character(unique(x@metadata$name[x@metadata$origin == "measured" & x@metadata$type == "flux"])),"\n")
+      cat("Measured states: ", as.character(unique(x@metadata$name[x@metadata$origin == "measured" & x@metadata$type == "state"])),"\n")
       cat("\n")
       cat("Calculated performance measures: ", names(x@performanceMeasures),"\n")
       cat("Model Support Data: ", names(x@modelSupportData),"\n")
@@ -79,8 +79,8 @@ setMethod("show",
 "$.HydroRun" <- function(object, name = c("Qsim","Qobs","pm","performance")) {
   subset <- match.arg(name)
   if(subset == "pm" || subset == "performance") return(object@performanceMeasures)
-  if(subset == "Qsim") return(object@ts[,object@metadata$origin == "simulated" && object@metadata$name == "discharge"])
-  if(subset == "Qobs") return(object@ts[,object@metadata$origin == "measured" && object@metadata$name == "discharge"])
+  if(subset == "Qsim") return(object@ts[,object@metadata$origin == "simulated" & object@metadata$name == "discharge"])
+  if(subset == "Qobs") return(object@ts[,object@metadata$origin == "measured" & object@metadata$name == "discharge"])
 }
 
 
