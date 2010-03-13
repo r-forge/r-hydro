@@ -14,7 +14,7 @@
 
 setClass("HydroRun",
          representation = representation(parameters="HydroModelParameters",
-                                         zoo = "zoo",
+                                         ts = "zoo",
                                          metadata = "data.frame",
                                          GIS = "list",
                                          performanceMeasures="data.frame",
@@ -22,7 +22,7 @@ setClass("HydroRun",
                                          call="call"),
  ##        validity =  validityHydroRun,
          prototype = prototype(parameters = new("HydroModelParameters"),
-                               zoo = zoo(),
+                               ts = zoo(),
                                metadata = data.frame(ID = numeric(),
                                                      param.ID = numeric(),
                                                      GIS.ID = numeric(),
@@ -79,8 +79,8 @@ setMethod("show",
 "$.HydroRun" <- function(object, name = c("Qsim","Qobs","pm","performance")) {
   subset <- match.arg(name)
   if(subset == "pm" || subset == "performance") return(object@performanceMeasures)
-  if(subset == "Qsim") return(object@ts[,object@metadata$origin == "simulated" & object@metadata$name == "discharge"])
-  if(subset == "Qobs") return(object@ts[,object@metadata$origin == "measured" & object@metadata$name == "discharge"])
+  if(subset == "Qsim") return(object@ts[,object@metadata$origin == "simulated" & object@metadata$name == "Q"])
+  if(subset == "Qobs") return(object@ts[,object@metadata$origin == "measured" & object@metadata$name == "Q"])
 }
 
 

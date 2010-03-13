@@ -20,7 +20,7 @@ topmodel <- function(parameters,
 
   ## check inputs and convert them to zoo
 
-  inputs <- zoo(inputs)
+  inputs <- try.xts(inputs, error = FALSE)
 
   if(!("P" %in% names(inputs) && "ETp" %in% names(inputs))) {
     stop("Inputs should contain members P and ETp") }
@@ -34,9 +34,9 @@ topmodel <- function(parameters,
   if(!is.null(performance) && is.null(inputs$Q))
     stop("If performance measures are requested, observed discharge (Q) must present in input")
 
-  if(!is.null(inputs$Q)) {
+  if(!is.null(performance)) {
     Q2 <- as(inputs$Q, "numeric")
-    if(any(Q2[!is.na(Q2)]<0))
+    if(min(Q2, na.rm=T) < 0)
       stop("Q should not contain negative values")
     Q2[is.na(Q2)] <- -1
     if(length(Q2) != ntimesteps)
@@ -52,7 +52,8 @@ topmodel <- function(parameters,
   iterations <- dim(parameters@parameters)[1]
 
   ## length of the returned result
-  lengthResult <- ifelse(return.simulations, ntimesteps * iterations * v, iterations)
+  lengthResult <- ifelse(return.simulations, ntimesteps * iterations * v,
+                                             iterations)
 
   ## running the model...
   
@@ -122,11 +123,13 @@ topmodel <- function(parameters,
                              origin = factor(c("simulated")),
                              dimensions = rep(dims[1:v],iterations))
   } else metadata_s <- NULL
+
+  ## 3. combine both
   
   returnObject@metadata = rbind(metadata_i,metadata_s)
 
   if(return.simulations) {
-    returnObject@zoo <- merge(inputs,result)
+    returnObject@ts <- merge(inputs,result)
   } else returnObject@performanceMeasures <- data.frame(NS = result)
   
   returnObject@call = match.call()

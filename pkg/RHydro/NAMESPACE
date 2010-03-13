@@ -16,7 +16,8 @@ export(NSeff,
        wasim.file2HydroTS,
        "$.HydroRun")
 
-exportClasses(HydroTS,
+exportClasses(
+##              HydroTS,
 ##              HydroFlux,
 ##              HydroState,
               HydroRun,
