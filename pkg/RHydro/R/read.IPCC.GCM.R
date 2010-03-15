@@ -34,6 +34,7 @@ read.IPCC.GCM <- function(file) {
   map <- cbind(mappoints, data)
   coordinates(map) = ~x + y
   proj4string <- CRS("+proj=latlong +datum=WGS84")
+  close.ncdf(nc)
   
   return(map)
 }
