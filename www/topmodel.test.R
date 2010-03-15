@@ -17,8 +17,6 @@ test$pm
 
 ## 2. return discharge
 
-inputs <- zoo(inputs)                    ### !!!!!! convert inputs to zoo
-
 test <- topmodel(parameters, inputs, topidx, delay)
 test
 test$Qsim
