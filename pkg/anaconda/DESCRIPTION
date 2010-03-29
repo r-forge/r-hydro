@@ -1,0 +1,12 @@
+Package: RHydro
+Type: Package
+Title: Large scale hydrological modelling
+Version: 0.1
+Date: 2010-03-26
+Author: Wouter Buytaert
+Maintainer:  Wouter Buytaert <w.buytaert@imperial.ac.uk>
+Depends: R (>= 2.4.0), xts, sp
+Suggests: ncdf
+Description: Experimental functions for large scale hydrological modelling
+License: GPL
+Collate: read.IPCC.GCM.R 

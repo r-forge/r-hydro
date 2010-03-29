@@ -18,9 +18,14 @@ topmodel <- function(parameters,
   
   if(return.simulations && verbose) v <- 6 else v <- 1
 
-  ## check inputs and convert them to zoo
+  ## check whether inputs can be converted to xts
+  ## this means that they are real time series (i.e. with a lag)
+  ## then convert them to regular zoo series
 
   inputs <- try.xts(inputs, error = FALSE)
+  inputs <- as.zooreg(inputs)
+
+  deltat <- deltat(inputs) / 60 / 60
 
   if(!("P" %in% names(inputs) && "ETp" %in% names(inputs))) {
     stop("Inputs should contain members P and ETp") }
@@ -42,8 +47,6 @@ topmodel <- function(parameters,
     if(length(Q2) != ntimesteps)
       stop("Q should have the same length as P and ET0")
   } else Q2 <- -9999
-  
-  direction <- zoo(rep(1,ntimesteps))
 
   ## get time index
   index <- index(inputs)
@@ -59,7 +62,7 @@ topmodel <- function(parameters,
   
   result <- .C("topmodel",
                PACKAGE = "RHydro",
-               as.double(t(as(parameters, "matrix"))),
+               as.double(t(cbind(as(parameters, "matrix"), deltat))),
                as.double(as.matrix(topidx)),
                as.double(as.matrix(delay)),
                as.double(as(inputs$P, "numeric")),
@@ -129,7 +132,7 @@ topmodel <- function(parameters,
   returnObject@metadata = rbind(metadata_i,metadata_s)
 
   if(return.simulations) {
-    returnObject@ts <- merge(inputs,result)
+    returnObject@ts <- merge(as.zoo(inputs),result)
   } else returnObject@performanceMeasures <- data.frame(NS = result)
   
   returnObject@call = match.call()

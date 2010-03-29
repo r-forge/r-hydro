@@ -14,8 +14,7 @@ export(NSeff,
        plot_rainfall.runoff,
        wasim.read.ModelRun,
        wasim.file2HydroTS,
-       "$.HydroRun",
-       read.IPCC.GCM)
+       "$.HydroRun")
 
 exportClasses(
 ##              HydroTS,

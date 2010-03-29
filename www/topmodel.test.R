@@ -7,6 +7,7 @@ data(huagrahuma)
 attach(huagrahuma)
 
 source("/Users/wouter/rhydro/pkg/RHydro/R/topmodel.R")
+source("/Users/wouter/rhydro/pkg/RHydro/R/class.HydroTopmodelParameters.R")
 
 #### SINGLE RUN ####
 
@@ -19,7 +20,7 @@ test$pm
 
 test <- topmodel(parameters, inputs, topidx, delay)
 test
-test$Qsim
+plot(test$Qsim)
 
 ## 3. return verbose
 
@@ -39,7 +40,8 @@ td    <- runif(runs, min = 0, max = 3)
 vr    <- runif(runs, min = 100, max = 2500)
 k0    <- runif(runs, min = 0, max = 10)
 CD    <- runif(runs, min = 0, max = 5)
-dt    <- 0.25
+
+parameters <- cbind(qs0, lnTe, m, Sr0, Srmax, td, vr, k0, CD)
 
 ## 1. return NS
 
