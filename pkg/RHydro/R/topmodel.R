@@ -19,7 +19,7 @@ topmodel <- function(parameters,
   if(return.simulations && verbose) v <- 6 else v <- 1
 
   ## check whether inputs can be converted to xts
-  ## this means that they are real time series (i.e. with a lag)
+  ## this means that they are real time series (i.e. with a constant deltat)
   ## then convert them to regular zoo series
 
   inputs <- try.xts(inputs, error = FALSE)

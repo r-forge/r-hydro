@@ -1,4 +1,4 @@
-useDynLib(RHydro)
+##useDynLib(RHydro)
 
 export(read.IPCC.GCM)
 exportClasses()
