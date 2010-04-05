@@ -3,7 +3,9 @@ listSymbols2Types <- function(theList){
        ## get names for elements
        symbols <-  names(sublist)
        for(symbol in symbols){
-            ## any matching symbol in rhydro.data.types?
+            #check if list entry is hydroTS
+            browser()
+            #any matching symbol in rhydro.data.types?
             theMatch <- rhydro.data.types$symbol == symbol
             if(any(theMatch)){
                  ## do replacement

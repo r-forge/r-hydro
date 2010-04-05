@@ -16,7 +16,7 @@ setClass("HydroRun",
          representation = representation(parameters="HydroModelParameters",
                                          ts = "zoo",
                                          metadata = "data.frame",
-                                         GIS = "list",
+                                         GIS = "Spatial",
                                          performanceMeasures="data.frame",
                                          modelSupportData="list",
                                          call="call"),
@@ -30,13 +30,118 @@ setClass("HydroRun",
                                                      name = factor(),
                                                      flux = numeric(),
                                                      origin = factor(levels=c("simulated","measured")),
-                                                     dimensions = character()),
-                               GIS = list(),
+                                                     dimensions = character(),
+						     run.ID = numeric()),
+                               GIS = NULL,
                                performanceMeasures=data.frame(),
                                modelSupportData = list(),
                                call = new("call")
          )    
 )
+
+setMethod("merge",
+    signature(x= "HydroRun", y="HydroRun"),
+    function(x, y, ...)
+    {
+	    #args: all, fill as in zoo
+	    #Merge parameters
+	    if(length(x@parameters@parameters)!=0 ||
+	       length(y@parameters@parameters)!=0){
+		    print("toDo: Implement Merging of parameters in class.HydroRun")
+		    browser()
+            } else {
+		    new.parameters <- x@parameters
+	    }
+
+	    #Merge ts
+	    no.x <- FALSE
+	    no.y <- FALSE
+	    if(length(x@ts)==0){
+		    new.ts <- y@ts
+		    no.x <- TRUE
+	    } else if(length(y@ts)==0){
+		    new.ts <- x@ts
+		    no.y <- TRUE
+	    } else {
+		    new.ts <- merge(x@ts,y@ts)
+	    }
+	    #Merge GIS
+	    if(no.x) {
+		    new.GIS <- y@GIS
+	    } else if(no.y){
+		    new.GIS <- x@GIS
+	    } else {
+		    #use all x-data first and add y-data later
+		    new.GIS <- x@GIS
+		    map <- data.frame(x=c(),y=c())
+		    for(x.dim in 1:NROW(coordinates(x@GIS))){
+		       for(y.dim in 1:NROW(coordinates(y@GIS))){
+			       if(identical(x@GIS[x.dim],y@GIS[y.dim])){
+				       map <- rbind(map,data.frame(x=x.dim,y=y.dim))
+			       }
+		       }
+		    }
+		    #combine GIS-Data
+		    for(y.dim in 1:NROW(coordinates(y@GIS))){
+			    if(y.dim %in% map$y){
+				    #replace gis.ID in metadata
+                                    col.repl <- y@metadata$GIS.ID == y.dim
+                                    y@metadata$GIS.ID[col.repl] <- map$x[map$y==y.dim]
+
+			    } else {
+				    #add data point and change ID
+				    new.GIS <- rbind(new.GIS, y@GIS[y.dim])
+				    new.ID <- NROW(coordinates(new.GIS))
+                                    col.repl <- y@metadata$GIS.ID == y.dim
+                                    y@metadata$GIS.ID[col.repl] <- new.ID
+			    }
+		    }
+	    }
+	    #Merge metadata
+	    if(no.x) {
+		new.metadata <- y@metadata
+	    } else if(no.y){
+		new.metadata <- x@metadata
+	    } else {
+		    if(any(c(!is.na(x@metadata$param.ID), !is.na(y@metadata$param.ID)))){
+			    print("toDo: adjusting metadata to changing param.ID")
+			    browser()
+	            }
+		    if(any(c(!is.na(x@metadata$run.ID), !is.na(y@metadata$run.ID)))){
+			    print("toDo: adjusting metadata to changing run.ID")
+			    browser()
+	            }
+		new.metadata <- rbind(x@metadata,y@metadata)
+	    }
+	    #Merge performanceMeasures
+	    if(no.x) {
+		    new.performanceMeasures <- y@performanceMeasures
+	    } else if(no.y){
+		    new.performanceMeasures <- x@performanceMeasures
+	    } else {
+		    if(length(x@performanceMeasures) != 0 ||
+                       length(y@performanceMeasures) != 0){
+			    print("toDo: Implement Merging of ... in class.HydroRun")
+			    browser()
+		    } else {
+		         new.performanceMeasures <- x@performanceMeasures
+		    }
+	    }
+	    #Merge modelSupportData
+	    new.modelSupportData <- c(x@modelSupportData, y@modelSupportData)
+	    #Merge call
+	    new.call <- match.call()
+            return(new("HydroRun", 
+                       parameters = new.parameters,
+                               ts = new.ts,
+                               metadata = new.metadata,
+                               GIS = new.GIS,
+                               performanceMeasures=new.performanceMeasures,
+                               modelSupportData = new.modelSupportData,
+                               call = new.call))
+    }
+    )
+
 
 setMethod("print",
     signature(x = "HydroRun"),

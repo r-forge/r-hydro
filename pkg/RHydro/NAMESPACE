@@ -13,6 +13,7 @@ export(NSeff,
        rhydro.data.types,
        plot_rainfall.runoff,
        wasim.read.ModelRun,
+       wasim.read.Run,
        wasim.file2HydroTS,
        "$.HydroRun")
 
@@ -26,8 +27,8 @@ exportClasses(
               HydroTopmodelParameters,
               HydroWasimParameters)
 
-exportMethods(print, plot, coerce, validity.check)
-import(methods) 
+exportMethods(print, plot, merge, coerce, validity.check)
+import(methods, sp) 
 #unclear what to import, removed graphics, sp
 
 
