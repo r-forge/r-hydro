@@ -1,16 +1,18 @@
 get.stations <- function(object, 
-              data.class=c("modelledFluxes", "modelledStates", "measuredFluxes", "measuredStates"),
-              data.types=get.data.types(object, data.class=data.class),
-              runs=1:get.runCount(object) ){
-           stations <- applyToHydroTS(x=object,
-                          FUN=function(hydroTS){
-                               if(hydroTS@type %in% data.types){ 
-                                     hydroTS@location.name
-                               }
-                          },
-                          data.class=data.class,
-                          runs=runs)
-           stations <-  unique(stations)
+            type = factor(c("flux","state")),
+            origin = factor(c("simulated","measured")),
+              data.types=get.data.types(object, type=type, origin=origin),
+              runs=1:max(object@metadata$run.ID) ){
+                     
+               sel <- object@metadata$run.ID %in% runs &
+	             object@metadata$origin %in% origin & 
+	             object@metadata$type %in% type &
+		     object@metadata$name %in% data.types
+
+	       GIS.ID <- unique(object@metadata$GIS.ID[sel])
+
+	      stations <-  dimnames(coordinates(object@GIS[GIS.ID]))[[1]] 
+
            if(is.null(stations)){
               return(stations)
            }

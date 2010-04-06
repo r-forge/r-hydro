@@ -1,4 +1,4 @@
 get.runCount <- function(object){
-           stopifnot(class(object)=="HydroModelRun")
-           return(dim(object@parameters@parameters)[1])
+           stopifnot(class(object)=="HydroRun")
+           return(max(object@metadata$run.ID))
 }

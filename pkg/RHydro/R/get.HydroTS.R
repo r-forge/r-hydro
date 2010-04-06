@@ -1,32 +1,35 @@
 get.HydroTS <- function(object, 
-              data.class=c("modelledFluxes", "modelledStates", "measuredFluxes", "measuredStates"),
-              data.types=get.data.types(object, data.class=data.class),
-              stations=get.stations(object, data.class=data.class),
-              runs = 1:get.runCount(object),
-              x.range = NULL
+            type = factor(c("flux","state")),
+            origin = factor(c("simulated","measured")),
+            data.types=get.data.types(object, type=type, origin=origin),
+            stations=get.stations(object, type=type, origin=origin),
+            runs = 1:max(object@metadata$run.ID),
+            start = NULL, end = NULL
               ){
-           return(applyToHydroTS(x=object,
-                          data.class=data.class,
-                          runs=runs, by.runs=TRUE,
-                          FUN=function(hydroTS){
-                               if(hydroTS@type %in% data.types){ 
-                                   selection <- hydroTS@location.name %in% stations
-                                   if(any(selection)){
-                                       hydroTS@magnitude <- hydroTS@magnitude[,selection]
-                                       if(!is.null(x.range)){
-                                           hydroTS@magnitude <- window(hydroTS@magnitude, start = x.range[1], end=x.range[2]) 
-                                       }
-                                       hydroTS@coordinate <- hydroTS@coordinate[selection]
-                                       hydroTS@location.name <- hydroTS@location.name[selection]
-                                       return(hydroTS)
-                                   } else {
-                                       #no location match
-                                       return(NULL)
-                                   }
-                               }
-                          }
-                          )
+       
+		  sel <- object@metadata$run.ID %in% runs &
+	             object@metadata$origin %in% origin & 
+	             object@metadata$type %in% type  &
+		     object@metadata$name %in% data.types
+
+           GIS.ID <- dimnames(coordinates(object@GIS))[[1]] %in% stations
+
+	   sel <- sel & object@metadata$GIS.ID %in% GIS.ID
+
+	   if(sum(sel)>1){
+		  print("ToDo: convert to HydroTS for multi-selection")
+		 browser() 
+	 } else {
+             md <- object@metadata[sel,]
+             toRet <- new("HydroFlux", magnitude = object@ts[,sel], 
+                         location.name = dimnames(coordinates(object@GIS))[[1]][md$GIS.ID],
+                         coordinate= object@GIS[md$GIS.ID],
+                         TSorigin = as.character(md$origin),
+                         accuracy = "unknown",
+                         units = as.character(md$dimension),
+                         type = as.character(md$name), direction=zoo("out")
              )
+	 }
 
 }
 

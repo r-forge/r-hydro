@@ -3,8 +3,8 @@ setGeneric("validity.check", function(object) { standardGeneric("validity.check"
 setGeneric("print")
 
 HydroTSvalidity <- function(object){
-    if(! object@TSorigin %in% c("recorded", "generated"))
-        error.message = "TSorigin must be either 'recorded' or 'generated'"
+    if(! object@TSorigin %in% c("simulated", "measured"))
+        error.message = "TSorigin must be either 'simulated' or 'measured'"
     if(length(object@location.name) !=  NROW(object@coordinate@coords)){
         new.message <- "expecting length(object@location.name) == NROW(object@coordinate@coords)"
         if(exists("error.message")){
@@ -49,7 +49,7 @@ setAs("numeric", "HydroTS",
               new("HydroTS", magnitude = zoo(from),
                   location.name="unknown",
                   coordinate = SpatialPoints(data.frame(x=0,y=0)),
-                  TSorigin = "generated")
+                  TSorigin = "simulated")
         }
 )
 
