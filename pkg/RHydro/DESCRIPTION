@@ -12,7 +12,7 @@ License: GPL
 Collate: class.HydroTS.R class.HydroFlux.R class.HydroState.R
 	 class.HydroModelParameters.R class.HydroModelRun.R class.HydroRun.R
 	 class.HydroTopmodelParameters.R class.HydroWasimParameters.R
-	 get.data.types.R get.stations.R get.runCount.R get.HydroTS.R get.performanceMeasures.R
+	 get.data.types.R get.stations.R get.runCount.R get.HydroTS.R get.performanceMeasures.R get.names.R
 	 eval.NSeff.R plot_rainfall.runoff.R
 	 wasim.file2HydroTS.R 
          wasim.file2HydroRun.R

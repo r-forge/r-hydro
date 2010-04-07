@@ -177,6 +177,50 @@ setMethod("summary",
     }
 )
 
+setMethod("subset",
+    signature(x= "HydroRun"),
+    function(x, 
+            type = factor(c("flux","state")),
+            origin = factor(c("simulated","measured")),
+            data.types=get.data.types(x, type=type, origin=origin),
+	    dimension=unique(x@metadata$dimension),
+            stations=get.stations(x, type=type, origin=origin),
+            runs = 1:max(x@metadata$run.ID),
+            start = NULL, end = NULL
+              ){
+       
+		  sel <- x@metadata$run.ID %in% runs &
+	             x@metadata$origin %in% origin & 
+	             x@metadata$dimension %in% dimension & 
+	             x@metadata$type %in% type  &
+		     x@metadata$name %in% data.types
+
+           GIS.ID <- which(dimnames(coordinates(x@GIS))[[1]] %in% stations)
+	   
+
+	   sel <- sel & x@metadata$GIS.ID %in% GIS.ID
+
+	   #Transform GIS.ID's
+	   ID.map <- data.frame(old.ID = 1:NROW(coordinates(x@GIS)), new.ID=NA)
+	   ID.map[GIS.ID,]$new.ID <- 1:length(GIS.ID)
+	   new.metadata <- x@metadata[sel,] 
+	   new.metadata$GIS.ID <- ID.map$new.ID[new.metadata$GIS.ID]
+
+
+	   if(sum(sel)==0) return(NULL)
+
+           return(new("HydroRun", 
+                       parameters = x@parameters, #ToDo: remove irrelevant
+                               ts = window(x@ts[,sel], start=start, end=end),
+                               metadata = new.metadata,
+                               GIS = x@GIS[GIS.ID],
+                               performanceMeasures=x@performanceMeasures[sel,],
+                               modelSupportData = x@modelSupportData,
+                               call = match.call()))
+   }
+)
+
+
 setMethod("show",
     signature(object = "HydroRun"),
     function (object) 
@@ -185,11 +229,29 @@ setMethod("show",
     }
 )
 
-"$.HydroRun" <- function(object, name = c("Qsim","Qobs","pm","performance")) {
+"$.HydroRun" <- function(object, name = get.names(object)) {
   subset <- match.arg(name)
-  if(subset == "pm" || subset == "performance") return(object@performanceMeasures)
-  if(subset == "Qsim") return(object@ts[,object@metadata$origin == "simulated" & object@metadata$name == "Q"])
-  if(subset == "Qobs") return(object@ts[,object@metadata$origin == "measured" & object@metadata$name == "Q"])
+  parts <- strsplit(subset, ".", fixed=TRUE)[[1]]
+  #treat fixed (non-automatic names)
+  if(length(parts)==1){
+	  if(parts == "Qobs") parts <- c("Q","obs")
+	  if(parts == "Qsim") parts <- c("Q","sim")
+          if(parts == "pm" || parts == "performance") return(object@performanceMeasures)
+  }
+  sym <- merge(object@metadata, rhydro.data.types, by.x="name", by.y="data.type", all.x=TRUE)[,c("symbol","origin","run.ID")]
+	sym$or <- "sim"
+	sym$or[sym$origin=="measured"] <- "obs"
+
+  #select by symbol only
+  if(length(parts)==1){
+      return(object@ts[,sym$symbol==parts])
+  }
+  if(length(parts)==2){
+      return(object@ts[,sym$symbol==parts[1] & sym$or==parts[2]])
+  }
+  if(length(parts)==3){
+      return(object@ts[,sym$symbol==parts[1] & sym$or==parts[2]& sym$run.ID==parts[3]])
+  }
 }
 
 setMethod("plot",
@@ -218,94 +280,58 @@ setMethod("plot",
                                 type="flux", origin="measured", 
                                 data.types="discharge")){
 
-	                        print("ToDo create subset of HydroRun")
-				browser()
 				rain <- subset(x, type="flux", origin="simulated",  data.types="precipitation", stations=station, runs=run)
 				if(is.null(rain)){
-				    rain <- get.HydroTS(x, type="flux", origin="measured" , data.types="precipitation", stations=station, runs=run)
+				    rain <- subset(x, type="flux", origin="measured" , data.types="precipitation", stations=station, runs=run)
 				    if(is.null(rain)){
 				       warning("no rainfall data avialable for rainfall runoff plot")
 				       skip.plot=TRUE
 				    }
 				    warning("no modelled precipitation available for rainfall runoff model - using measured values instead")
 				}
-				q.model <- get.HydroTS(x, type="flux", origin="simulated",  data.types="discharge", stations=station, runs=run)
+				q.model <- subset(x, type="flux", origin="simulated",  data.types="discharge", stations=station, runs=run)
 				if(is.null(q.model)){
 				   warning("no modelled discharge data avialable for rainfall runoff plot")
 				   skip.plot=TRUE
 				}
 				
-				q.measured <- get.HydroTS(x, type="flux", origin="measured" , data.types="discharge", stations=stations, runs=runs)
-                                sel.rain <- rain[[run]]@location.name %in% station
-                                q.model.sel <- NULL
-                                q.units <- ""
-                                sel.q.model <- q.model[[run]]@location.name %in% station
-                                q.model.sel <- q.model[[run]]@magnitude[,sel.q.model]
-                                q.units <- q.model[[run]]@units
-                                q.measured.sel <- NULL
+				q.measured <- subset(x, type="flux", origin="measured" , data.types="discharge", stations=stations, runs=runs)
                                 if(!is.null(q.measured)){
-                                    sel.q.measured <- q.measured[[run]]@location.name %in% station
-                                    q.measured.sel <- q.measured[[run]]@magnitude[,sel.q.measured]
                                 }
-                                plot_rainfall.runoff(rain[[run]]@magnitude[,sel.rain],
-                                     q.model.sel, 
-                                     q.measured.sel,
+                                plot_rainfall.runoff(rain@ts,
+                                     q.model@ts, 
+                                     q.measured@ts,
                                      main=paste("Station:", station, "Run:", run),
-                                     q.units=q.units,
-                                     p.units=rain[[run]]@units
+                                     q.units=q.model@metadata$dimension,
+                                     p.units=rain@metadata$dimension
                                      )
                         }
                     }
                 }
             }
             if("by.data.type" %in% hydro.plot.type){
-		 print("ToDo: create subset and plot it")
-		 browser()
-                 applyToHydroTS(x,
-                       FUN=function(hydroTS){
-                            if(hydroTS@type %in% data.types){
-                                 run <- get("run", envir=parent.frame())
-                                 select <- hydroTS@location.name %in% stations
-                                 plot(hydroTS@magnitude[,select], main=paste(hydroTS@type, "Run:", run), ylab=hydroTS@type, ...)
-                            }
-                            return(c())
-                       },
-                       type=type, origin=origin ,
-                       runs=runs)
+		 for(data.type in data.types){
+		    for(run in runs){
+			    ss <- subset(x,data.types=data.type, origin=origin , runs=run, station=stations )
+			    plot(ss@ts, main=paste(data.type, "Run:", run), ylab=paste(get.stations(ss,unique=FALSE), ss@metadata$dimension), ...)
+	            }
+		 }
+
             }
             if("by.station" %in% hydro.plot.type){
               for(the.station in stations){
-                allTS <- get.HydroTS(x, stations=the.station, 
-                       type=type, origin=origin ,
-                                     data.types=data.types,
-                                     runs=runs)
-                #Rearrange zoo objects
-                new.zoos <- list()
-                col.names <- list()
-                for(hydroTS in allTS){
-                     if(NCOL(hydroTS@magnitude)>0){
-                         if(is.null(new.zoos[[hydroTS@units]])){
-                              new.zoos[[hydroTS@units]] <-  hydroTS@magnitude
-                              col.names[[hydroTS@units]] <- hydroTS@type
-                         } else {
-                              new.zoos[[hydroTS@units]] <- merge(new.zoos[[hydroTS@units]], hydroTS@magnitude)
-                              col.names[[hydroTS@units]] <- c(col.names[[hydroTS@units]],hydroTS@type)
-                         }
-                     }
-                }
-                #Plot zoo objects by units
-                for(unit in names(new.zoos)){
-                   if(length(col.names[[unit]])>1){
-                       dimnames(new.zoos[[unit]])[[2]] <- col.names[[unit]]
-                       plot(new.zoos[[unit]], plot.type="single", ylab=unit, col=1:length(col.names[[unit]]),main=the.station,...)
-                       legend(legend.position, col.names[[unit]],col=1:length(col.names[[unit]]), lty=1)
-                   } else {
-                       plot(new.zoos[[unit]], plot.type="single", ylab=unit, col=1:length(col.names[[unit]]),main=paste(col.names[[unit]], "at", the.station),...)
-                   }
-                }
-              }
+		     for(dimension in unique(x@metadata$dimension)){
+			    ss <- subset(x,data.types=data.types, origin=origin , runs=runs, station=the.station, dimension=dimension )
+			    if(!is.null(ss)){
+				    plot(ss@ts, plot.type="single", ylab=dimension, col=1:length(ss@metadata),main=the.station,...)
+				    legend(legend.position, as.character(ss@metadata$name),col=1:length(ss@metadata), lty=1)
+		            }
+	             } 
+	      }
             }
             if("balance" %in% hydro.plot.type){
+		 print("ToDo: create subset and plot it")
+		 browser()
                 #loop through balance types
                 for(class in c("measured", "modelled")){
                         d.class <- paste(class,"Fluxes", sep="")

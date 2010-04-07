@@ -5,6 +5,7 @@ export(NSeff,
        get.stations,
        get.runCount,
        get.HydroTS,
+       get.names,
        get.performanceMeasures,
        topidx,
        topidx.classes,
@@ -27,8 +28,8 @@ exportClasses(
               HydroTopmodelParameters,
               HydroWasimParameters)
 
-exportMethods(print, plot, merge, coerce, validity.check)
-import(methods, sp) 
+exportMethods(print, plot, merge, coerce, validity.check, subset)
+import(methods) 
 #unclear what to import, removed graphics, sp
 
 

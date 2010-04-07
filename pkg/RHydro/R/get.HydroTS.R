@@ -6,19 +6,13 @@ get.HydroTS <- function(object,
             runs = 1:max(object@metadata$run.ID),
             start = NULL, end = NULL
               ){
+
+            data.part <- subset(object, type=type, origin=origin, data.types=data.types, stations=stations, runs=runs,start=start,end=end)
        
-		  sel <- object@metadata$run.ID %in% runs &
-	             object@metadata$origin %in% origin & 
-	             object@metadata$type %in% type  &
-		     object@metadata$name %in% data.types
-
-           GIS.ID <- dimnames(coordinates(object@GIS))[[1]] %in% stations
-
-	   sel <- sel & object@metadata$GIS.ID %in% GIS.ID
+	  print("ToDo: convert HydroRun to  HydroTS ")
+	 browser() 
 
 	   if(sum(sel)>1){
-		  print("ToDo: convert to HydroTS for multi-selection")
-		 browser() 
 	 } else {
              md <- object@metadata[sel,]
              toRet <- new("HydroFlux", magnitude = object@ts[,sel], 
