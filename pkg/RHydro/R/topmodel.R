@@ -89,7 +89,7 @@ topmodel <- function(parameters,
     names <- c("Q","qo","qs","S","fex","Ea")
     colnames(result) <- rep(names[1:v],iterations)
     ## make zoo
-    result <- zoo(result, order.by=index)
+    #result <- zoo(result, order.by=index)
   }
 
   ## build the metadata and add them to the return object
@@ -121,7 +121,7 @@ topmodel <- function(parameters,
                              param.ID = param.ID,
                              GIS.ID = NA,
                              type = rep(type[1:v],iterations),
-                             name = names(result),
+                             name = colnames(result),
                              flux = rep(flux[1:v],iterations),
                              origin = factor(c("simulated")),
                              dimensions = rep(dims[1:v],iterations))
@@ -132,7 +132,7 @@ topmodel <- function(parameters,
   returnObject@metadata = rbind(metadata_i,metadata_s)
 
   if(return.simulations) {
-    returnObject@ts <- merge(as.zoo(inputs),result)
+    returnObject@ts <- zoo(cbind(as.matrix(inputs), result), order.by=index)
   } else returnObject@performanceMeasures <- data.frame(NS = result)
   
   returnObject@call = match.call()
