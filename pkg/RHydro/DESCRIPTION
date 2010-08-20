@@ -20,3 +20,4 @@ Collate: class.HydroTS.R class.HydroFlux.R class.HydroState.R
 	 wasim.read.ModelParameters.R wasim.read.Run.R wasim.read.ModelRun.R wasim.read.table.R
 	 topidx.R topidx.classes.R topmodel.R wasim.assemble.date.R
          listSymbols2Types.R getBalanceTypes.rhydro.data.types.R getBalanceColor.rhydro.data.types.R
+	long.wave.radiation.balance.R sat.vap.pres.R
