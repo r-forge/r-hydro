@@ -44,7 +44,6 @@ All temperatures in degree C. If t.snow is set to zero, it is estimated as min(t
  \item{L.out}{from snow cover emitted radiation}
  \item{e.at}{estimated emissivity of the atmosphere}
 }
-}
 \references{
 Dingman, S. L. (2002): Physical hydrology,Waveland Press, Long Grove, Ill.
 }
