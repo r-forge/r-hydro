@@ -4,13 +4,13 @@ Title: Classes for hydrological modelling and analysis, similar to ArcHydro
 Version: 0.1
 Date: 2010-03-13
 Author: Dominik Reusser, Wouter Buytaert
-Maintainer: Dominik Reusser <dreusser@uni-potsdam.de>, Wouter Buytaert <w.buytaert@imperial.ac.uk>
+Maintainer: Dominik Reusser <dreusser@pik-potsdam.de>, Wouter Buytaert <w.buytaert@imperial.ac.uk>
 Depends: R (>= 2.4.0), methods, xts, sp, methods, graphics
 Suggests: ncdf
 Description: This package provides classes and functions for hydrological analysis
 License: GPL
 Collate: class.HydroTS.R class.HydroFlux.R class.HydroState.R
-	 class.HydroModelParameters.R class.HydroModelRun.R class.HydroRun.R
+	 class.HydroModelParameters.R  class.HydroRun.R
 	 class.HydroTopmodelParameters.R class.HydroWasimParameters.R
 	 get.data.types.R get.stations.R get.runCount.R get.HydroTS.R get.performanceMeasures.R get.names.R
 	 eval.NSeff.R plot_rainfall.runoff.R

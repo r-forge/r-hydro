@@ -22,10 +22,10 @@ NSeff <- function(object,Qsim) {
   return(NS)
 }
 
-NSeff.HydroModelRun <- function(object) {
+NSeff.HydroRun <- function(object) {
   if(!is.null(object@performanceMeasure$NS)) return(object@performanceMeasure$NS)
   ## TODO
   return()
 }
 
-setMethod("NSeff", signature(object = "HydroModelRun", Qsim = "missing"), NSeff.HydroModelRun)
+setMethod("NSeff", signature(object = "HydroRun", Qsim = "missing"), NSeff.HydroRun)

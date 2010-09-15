@@ -2,10 +2,10 @@
 \alias{NSeff}
 \title{Calculation of the Nash-Sutcliffe efficiency}
 \description{Calculation of the Nash-Sutcliffe efficiency}
-\usage{NSeff(Qobs,Qsim)}
+\usage{NSeff(object,Qsim)}
 
 \arguments{
-  \item{Qobs}{Vector with observed discharges}
+  \item{object}{Object with observed discharges}
   \item{Qsim}{Vector with simulated discharges of the same length as Qobs}
 }
 

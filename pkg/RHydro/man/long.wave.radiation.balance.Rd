@@ -20,7 +20,7 @@ long.wave.radiation.balance(t.air, t.atm = t.air, t.snow = NULL, sigma = 4.9 * 1
    zoo-object of snow temperatures.
 }
   \item{sigma}{
-   Boltzman constant in MJ * 1/m²*1/day*1/K^4
+   Boltzman constant in MJ * 1/m^2*1/day*1/K^4
 }
   \item{vap.pres}{
    zoo object of vapour pressure in kPa

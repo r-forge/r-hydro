@@ -11,6 +11,7 @@ get.HydroTS <- function(object,
        
 	  print("ToDo: convert HydroRun to  HydroTS ")
 	 browser() 
+	 sel <- NULL #since moving from HydroModelRun to HydroRun
 
 	   if(sum(sel)>1){
 	 } else {

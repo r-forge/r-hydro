@@ -31,6 +31,6 @@ setClass("HydroWasimParameters",
 #setAs("HydroModelParameters", "data.frame", function(from) from@parameters)
 #setAs("HydroModelParameters", "matrix", function(from) as.matrix(from@parameters))
 
-setAs("list","HydroWasimParameters",  function(from) new(HydroWasimParameters))
+#setAs("list","HydroWasimParameters",  function(from) new(HydroWasimParameters))
 
 

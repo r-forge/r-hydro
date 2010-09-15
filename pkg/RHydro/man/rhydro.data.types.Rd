@@ -13,6 +13,10 @@ calculations the data types are included.
   \describe{
     \item{\code{data.type}}{character vector with names}
     \item{\code{symbol}}{character vector with short symbols}
+    \item{\code{max.slope}}{parameter for consistency check}
+    \item{\code{max.value}}{parameter for consistency check}
+    \item{\code{min.slope}}{parameter for consistency check}
+    \item{\code{min.value}}{parameter for consistency check}
     \item{\code{prefered.units}}{character vector with prefered units}
     \item{\code{balance.type}}{character vector with comma separated list of balance types in whicht the data.type is of importance}
   }

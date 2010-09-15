@@ -9,12 +9,12 @@ WaSiM control file.
 \format{
   A data frame with observations on the following 6 variables.
   \describe{
-    \item{\code{par_block}}{name of the parameter block (marked by \[\])}
     \item{\code{block_position}}{line within the parameter block}
-    \item{\code{is_flux}}{boolean indicating whether data is a state or a flux}
-    \item{\code{is_recorded}}{boolean indicating whether data is recorded or generated}
-    \item{\code{units}}{units of the data}
+    \item{\code{origin}}{ToDo}
+    \item{\code{parameter.name}}{ToDo}
+    \item{\code{par_block}}{name of the parameter block (marked by \[\])}
     \item{\code{type}}{name of the data. For types with special meaning see \code{\linkS4class{HydroModelRun}} }
+    \item{\code{units}}{units of the data}
   }
 }
 \references{
