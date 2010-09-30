@@ -1,4 +1,5 @@
 \name{wasim.read.ModelRun}
+\alias{wasim.read.Run}
 \alias{wasim.read.ModelRun}
 \title{ Read WaSiM data for a model run }
 \description{
@@ -6,11 +7,13 @@
 }
 \usage{
 wasim.read.ModelRun(files)
+wasim.read.Run(files)
 }
 \arguments{
   \item{files}{ vector of paths to a WaSiM \$\$\$-files (The parsed control file). }
 }
 \details{
+  ToDo: Check if correct for wasim.read.Run
   A data.frame defining the data to be read must be stored as \code{\link{wasim.data.types}}. RHydro comes with a default definition for this data.frame 
 
   If files points to multiple WaSiM \$\$\$-files, each is added as seperate run.

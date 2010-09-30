@@ -17,7 +17,7 @@ calculations the data types are included.
     \item{\code{max.value}}{parameter for consistency check}
     \item{\code{min.slope}}{parameter for consistency check}
     \item{\code{min.value}}{parameter for consistency check}
-    \item{\code{prefered.units}}{character vector with prefered units}
+    \item{\code{preferred.units}}{character vector with prefered units}
     \item{\code{balance.type}}{character vector with comma separated list of balance types in whicht the data.type is of importance}
   }
 }

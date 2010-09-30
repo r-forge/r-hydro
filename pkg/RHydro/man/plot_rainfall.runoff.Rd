@@ -14,7 +14,6 @@ plot_rainfall.runoff(rain, q.model, q.measured = NULL, myColors =
   \item{rain}{ \code{\link[zoo]{zoo}}-object with rainfall data }
   \item{q.model}{ \code{\link[zoo]{zoo}}-object with modelled discharge data }
   \item{q.measured}{ \code{\link[zoo]{zoo}}-object with measured discharge data }
-  \item{rain}{ \code{\link[zoo]{zoo}}-object with measured rainfall }
   \item{myColors}{ data.frame defining colors for plotting }
   \item{q.units}{ character: units of the discharge: used for axis label }
   \item{p.units}{ character: units of the rainfall: used for axis label }

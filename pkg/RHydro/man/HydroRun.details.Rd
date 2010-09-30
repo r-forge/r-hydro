@@ -2,6 +2,8 @@
 \alias{HydroRun.details}
 \alias{get.data.types}
 \alias{get.stations}
+\alias{get.names}
+\alias{validity.check}
 \alias{get.runCount}
 \alias{get.HydroTS}
 \title{ Extract details from HydroRun object }
@@ -12,6 +14,8 @@
 \code{get.HydroTS} extracts \code{\linkS4class{HydroTS}} objects from.
 }
 \usage{
+get.names(object, ...)
+validity.check(object)
 get.data.types(object, type = factor(c("flux", "state")),
  		origin = factor(c("simulated", "measured")), 
 		runs = 1:max(object@metadata$run.ID))
@@ -31,7 +35,12 @@ get.HydroTS(object, type = factor(c("flux", "state")), origin =
 }
 \arguments{
   \item{object}{ a \code{\linkS4class{HydroModelRun}} object }
-  \item{data.class}{ List of strings indicating from which data class(es) to collect the information }
+  \item{type}{ ToDo }
+  \item{origin}{ ToDo }
+  \item{unique}{ ToDo }
+  \item{start}{ ToDo }
+  \item{end}{ ToDo }
+  \item{...}{ Optional arguments for the get.names function  }
   \item{data.types}{ List of strings with the data.types for which to obtain information}
   \item{stations}{ List of strings with the stations for which to obtain information}
   \item{runs}{ Vector of run-indizes for which to get information}

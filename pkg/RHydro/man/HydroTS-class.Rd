@@ -6,12 +6,17 @@
 \alias{HydroState-class}
 \alias{plot,HydroTS,ANY-method}
 \alias{print,HydroTS-method}
+\alias{length,HydroTS-method}
+\alias{max,HydroTS-method}
+\alias{min,HydroTS-method}
+\alias{range,HydroTS-method}
+\alias{validity.check,HydroTS-method}
 
 \title{Class "HydroTS" }
 \description{	The HydroTS class represents a hydrological time series. }
 \section{Objects from the Class}{
-Objects can be created by calls of the form \code{new("HydroTS", ...)}
-and \code{new("HydroState", ...)}.
+Objects can be created by calls of the form \code{new("HydroTS", ToDo)}
+and \code{new("HydroState", ToDo)}.
 
 They consist of a \code{zoo} time series and a \code{Spatial} object, combined with
 slots for the origin, accuracy, units and type (modelled or observed) of the
@@ -33,10 +38,15 @@ HydroState extends HydroTS directly, without additional functionality at this mo
 }
 \section{Methods}{
   \describe{
-    \item{plot}{\code{signature(x = "HydroTS", y = "ANY")}: ... }
-    \item{print}{\code{signature(x = "HydroTS")}: ... }
-    \item{coerce}{\code{signature(from = "HydroTS", to = "numeric")}: ... }
-    \item{coerce}{\code{signature(from = "numeric", to = "HydroTS")}: ... }
+    \item{plot}{\code{signature(x = "HydroTS", y = "ANY")}: ToDo }
+    \item{print}{\code{signature(x = "HydroTS")}: ToDo }
+    \item{length}{\code{signature(x = "HydroTS")}: ToDo }
+    \item{max}{\code{signature(x = "HydroTS")}: ToDo }
+    \item{min}{\code{signature(x = "HydroTS")}: ToDo }
+    \item{range}{\code{signature(x = "HydroTS")}: ToDo }
+    \item{validity.check}{\code{signature(x = "HydroTS")}: ToDo }
+    \item{coerce}{\code{signature(from = "HydroTS", to = "numeric")}: ToDo }
+    \item{coerce}{\code{signature(from = "numeric", to = "HydroTS")}: ToDo }
 	 }
 }
 \author{ Dominik Reusser, Wouter Buytaert }
