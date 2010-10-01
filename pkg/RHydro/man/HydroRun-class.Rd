@@ -62,13 +62,14 @@ showClass("HydroRun")
 data(huagrahuma)
 attach(huagrahuma)
 
-output <- topmodel(parameters, inputs, topidx, delay)
+output <- topmodel(parameters[1:9], inputs, topidx, delay)
 
+detach(huagrahuma)
 
 library(RHydroWasimData)
 file=system.file("controllfile.$$$", package="RHydroWasimData")
 
-object <- wasim.read.ModelRun(file)
+object <- wasim.read.Run(file)
 class(object)
 plot(object, hydro.plot.type="rainfall-runoff")
 show(object)

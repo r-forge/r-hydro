@@ -24,7 +24,7 @@ wasim.file2HydroTS(file, is_recorded, is_flux, direction = zoo("out"), units, ty
 Schulla, J. & Jasper, K. Model Description WaSiM-ETH 2001
  }
 \author{ Dominik Reusser, University of Potsdam }
-\seealso{  \code{\link{wasim.read.ModelRun}} }
+\seealso{  \code{\link{wasim.read.Run}} }
 \examples{
 library(RHydroWasimData)
 file=system.file("input/ww100-dhh.txt", package="RHydroWasimData")

@@ -26,12 +26,12 @@ get.stations(object, type = factor(c("flux", "state")),
                  runs = 1:max(object@metadata$run.ID), unique = TRUE)
 
 get.runCount(object)
-get.HydroTS(object, type = factor(c("flux", "state")), origin =
-                 factor(c("simulated", "measured")), data.types =
-                 get.data.types(object, type = type, origin = origin),
-                 stations = get.stations(object, type = type, origin =
-                 origin), runs = 1:max(object@metadata$run.ID), start =
-                 NULL, end = NULL)
+#get.HydroTS(object, type = factor(c("flux", "state")), origin =
+#                 factor(c("simulated", "measured")), data.types =
+#                 get.data.types(object, type = type, origin = origin),
+#                 stations = get.stations(object, type = type, origin =
+#                 origin), runs = 1:max(object@metadata$run.ID), start =
+#                 NULL, end = NULL)
 }
 \arguments{
   \item{object}{ a \code{\linkS4class{HydroModelRun}} object }
@@ -54,7 +54,7 @@ get.HydroTS(object, type = factor(c("flux", "state")), origin =
 library(RHydroWasimData)
 file=system.file("controllfile.$$$", package="RHydroWasimData")
 
-object <- wasim.read.ModelRun(file)
+object <- wasim.read.Run(file)
 get.data.types(object)
 get.stations(object)
 get.HydroTS(object, data.types="radiation")

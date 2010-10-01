@@ -23,7 +23,7 @@ direction=zoo("out"), units, type, generated.header.info=NULL){
               }
           }
     }
-    origin <- if(is_recorded) "recorded" else "generated"
+    origin <- if(is_recorded) "measured" else "simulated"
     if(is_flux){
         to.ret <- new("HydroFlux", magnitude = data,
 TSorigin=origin, coordinate=coordinate, direction=direction,

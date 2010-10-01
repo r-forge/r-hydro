@@ -390,6 +390,7 @@ setMethod("plot",
 				       sum(rangeTSa@ts, na.rm=TRUE)
                                        )
                                     }
+				    #range of state data
                                     rangeTSa <- subset(x,
 				         type="state",
                                          data.types=b.data.types,
@@ -411,36 +412,41 @@ setMethod("plot",
 				    #ToDo: Smarter treatment of units
                                     plot(x.range,y.range, type="n", xlab="time", ylab= rangeTS@metadata$dimension[1], main=paste(balance.type," (",the.class, ") at station ", station, " for run ", run, sep=""))
                                 }
+
                                 #get flux data
                                 allTS <- subset(x, origin=the.class,
 				     type="flux",
                                      data.types=b.data.types,
                                      station=station,
                                      runs=run)
-                                summary.data.flux <- matrix(nrow=NROW(allTS@metadata), ncol=3) 
-                                dimnames(summary.data.flux)[[2]] <- c("name","change","direction")
-                                
-                                ts.nr <- 1
+		                if(!is.null(allTS)){
+					summary.data.flux <- matrix(nrow=NROW(allTS@metadata), ncol=3) 
+					dimnames(summary.data.flux)[[2]] <- c("name","change","direction")
+					
+					ts.nr <- 1
 
-                                for(ts.col in 1:NCOL(allTS@ts)){
-                                    #build sums for flux data
-				    ts <- allTS@ts[,ts.col]
-				       ts.name <- as.character(allTS@metadata$name[ts.col])
-                                       nas <- is.na(ts)
-                                       if(any(nas)){
-                                           warning(paste("setting NA data to 0 while calculating cumulative sum for station",station,"run",run," and data type", ts.name))
-                                           ts[nas] <- 0
+					for(ts.col in 1:NCOL(allTS@ts)){
+					    #build sums for flux data
+					    ts <- allTS@ts[,ts.col]
+					       ts.name <- as.character(allTS@metadata$name[ts.col])
+					       nas <- is.na(ts)
+					       if(any(nas)){
+						   warning(paste("setting NA data to 0 while calculating cumulative sum for station",station,"run",run," and data type", ts.name))
+						   ts[nas] <- 0
 
-                                       }
-                                       the.sum <- cumsum(ts)
-                                       the.sum[nas] <- NA
-                                        #plot flux data by station and run
-                                        col <- b.type.color[ts.name == b.data.types]
-                                        lines(index(ts), the.sum, col=col)
-                                        summary.data.flux[ts.nr,] <- c(ts.name, max(the.sum, na.rm=TRUE), allTS@metadata$flux[ts.col])
-                                        ts.nr <- ts.nr + 1
-                                        #store total flux change (end sum) (with direction)
-                                }
+					       }
+					       the.sum <- cumsum(ts)
+					       the.sum[nas] <- NA
+						#plot flux data by station and run
+						col <- b.type.color[ts.name == b.data.types]
+						lines(index(ts), the.sum, col=col)
+						summary.data.flux[ts.nr,] <- c(ts.name, max(the.sum, na.rm=TRUE), allTS@metadata$flux[ts.col])
+						ts.nr <- ts.nr + 1
+						#store total flux change (end sum) (with direction)
+					}
+			       } else {
+				       summary.data.flux <- NULL
+			       }
                                 
                                 #get state data
                                 allTS <- subset(x, origin=the.class,
@@ -448,30 +454,36 @@ setMethod("plot",
                                      data.types=b.data.types,
                                      station=station,
                                      runs=run)
+		                if(!is.null(allTS)){
                                 
-                                summary.data.state <- matrix(nrow=NROW(allTS@metadata), ncol=2) 
-                                dimnames(summary.data.state)[[2]] <- c("name","change")
-                                ts.nr <- 1
-                                for(ts.col in 1:NCOL(allTS@ts)){
-				    ts <- allTS@ts[,ts.col]
-				    ts.name <- as.character(allTS@metadata$name[ts.col])
-                                    #build changes for state data
-                                        #plot state data (on different axis?)
-                                        col <- b.type.color[ts.name == b.data.types]
-                                        lines(ts, col=col)
-                                        change <- as.numeric(ts[length(ts)]) - as.numeric(ts[1])
-                                        #store total state change
-                                        summary.data.state[ts.nr,] <-  c(ts.name, change)
-                                        ts.nr <- ts.nr + 1
-                                }
+					summary.data.state <- matrix(nrow=NROW(allTS@metadata), ncol=2) 
+					dimnames(summary.data.state)[[2]] <- c("name","change")
+					ts.nr <- 1
+					for(ts.col in 1:NCOL(allTS@ts)){
+					    ts <- allTS@ts[,ts.col]
+					    ts.name <- as.character(allTS@metadata$name[ts.col])
+					    #build changes for state data
+						#plot state data (on different axis?)
+						col <- b.type.color[ts.name == b.data.types]
+						lines(ts, col=col)
+						change <- as.numeric(ts[length(ts)]) - as.numeric(ts[1])
+						#store total state change
+						summary.data.state[ts.nr,] <-  c(ts.name, change)
+						ts.nr <- ts.nr + 1
+					}
+			       } else {
+				       summary.data.state <- NULL
+			       }
                                #create list with summary data
                                to.ret[[the.class]][[balance.type]][[run]][[station]]  <- list(flux=summary.data.flux, state=summary.data.state)
                                legend.entries <- c(summary.data.flux[,1], summary.data.state[,1])
-                               legend.entries <- legend.entries[!is.na(legend.entries)]
-                               legend.col <- sapply(legend.entries, FUN=function(x){b.type.color[x==b.data.types]})
-                               if(length(legend.entries >0)){
-                                   legend("topleft", cex=0.5, legend=legend.entries, col=legend.col, lty=1, inset=0.05) 
-                               }
+			       if(!is.null(legend.entries)){
+				       legend.entries <- legend.entries[!is.na(legend.entries)]
+				       legend.col <- sapply(legend.entries, FUN=function(x){b.type.color[x==b.data.types]})
+				       if(length(legend.entries >0)){
+					   legend("topleft", cex=0.5, legend=legend.entries, col=legend.col, lty=1, inset=0.05) 
+				       }
+		       		}
                            }
                        }
                     }

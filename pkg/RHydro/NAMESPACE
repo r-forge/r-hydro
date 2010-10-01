@@ -12,7 +12,6 @@ export(NSeff,
        wasim.data.types,
        rhydro.data.types,
        plot_rainfall.runoff,
-       wasim.read.ModelRun,
        wasim.read.Run,
        wasim.file2HydroTS,
        "$.HydroRun")

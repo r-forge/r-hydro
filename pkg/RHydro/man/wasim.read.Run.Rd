@@ -1,12 +1,10 @@
-\name{wasim.read.ModelRun}
+\name{wasim.read.Run}
 \alias{wasim.read.Run}
-\alias{wasim.read.ModelRun}
 \title{ Read WaSiM data for a model run }
 \description{
   Functionality to process input data and results for a WaSiM model run.
 }
 \usage{
-wasim.read.ModelRun(files)
 wasim.read.Run(files)
 }
 \arguments{
@@ -30,7 +28,7 @@ Schulla, J. & Jasper, K. Model Description WaSiM-ETH 2001
 library(RHydroWasimData)
 file=system.file("controllfile.$$$", package="RHydroWasimData")
 
-object <- wasim.read.ModelRun(file)
+object <- wasim.read.Run(file)
 plot(object, hydro.plot.type="rainfall-runoff")
 plot(object, hydro.plot.type="balance")
 

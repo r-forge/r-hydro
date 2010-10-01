@@ -66,7 +66,7 @@ See also \url{http://source.ggy.bris.ac.uk/wiki/Hydrology_in_R} for a more elabo
 data(huagrahuma)
 attach(huagrahuma)
 
-output <- topmodel(parameters, inputs, topidx, delay)
+output <- topmodel(parameters[1:9], inputs, topidx, delay)
 
 }
 \keyword{models}
