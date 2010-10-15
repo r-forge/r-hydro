@@ -86,7 +86,7 @@ topmodel <- function(parameters,
     result <- aperm(array(result,c(ntimesteps,iterations,v)),c(1,3,2))
     result <- matrix(result, nrow=ntimesteps)
     ## prepare the column names
-    names <- c("Q","qo","qs","S","fex","Ea")
+    names <- c("discharge","overland flow","snow melt flow","interflow storage","fex","actual evapotranspiration")
     colnames(result) <- rep(names[1:v],iterations)
     ## make zoo
     #result <- zoo(result, order.by=index)
@@ -100,15 +100,19 @@ topmodel <- function(parameters,
   flux <- c(1,1,1,0,1,1)
 
   ## 1. metadata input
+
+
+  names.from.symbols <- merge(data.frame(names(inputs)),rhydro.data.types, by.y="symbol", by.x="names.inputs.")$data.type
   
   metadata_i <- data.frame(ID = NA,
                            param.ID = NA,
                            GIS.ID = NA,
                            type = factor(c("flux")),
-                           name = names(inputs),
+                           name = names.from.symbols,
                            flux = NA,
                            origin = factor(c("measured")),
-                           dimensions = "m/timestep")
+                           dimensions = "m/timestep",
+			   run.ID=NA)
   
   ## 2. metadata simulations
 
@@ -124,7 +128,8 @@ topmodel <- function(parameters,
                              name = colnames(result),
                              flux = rep(flux[1:v],iterations),
                              origin = factor(c("simulated")),
-                             dimensions = rep(dims[1:v],iterations))
+                             dimensions = rep(dims[1:v],iterations),
+			     run.ID = rep(iterations, each=v))
   } else metadata_s <- NULL
 
   ## 3. combine both

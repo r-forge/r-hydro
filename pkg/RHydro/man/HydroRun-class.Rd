@@ -5,6 +5,7 @@
 \alias{print,HydroRun-method}
 \alias{get.names,HydroRun-method}
 \alias{subset,HydroRun-method}
+\alias{validity.check,HydroRun-method}
 \alias{merge,HydroRun,HydroRun-method}
 \alias{NSeff,HydroRun,missing-method}
 \alias{plot,HydroRun,ANY-method}
@@ -27,7 +28,7 @@ evaluation methods will be added in future versions.
 	 \describe{
     \item{\code{parameters}:}{Object of class \code{\linkS4class{HydroModelParameters}}  }
     \item{\code{GIS}:}{ ToDo }
-    \item{\code{metadata}:}{ToDo }
+    \item{\code{metadata}:}{data.frame with columns  "ID",        "param.ID",  "GIS.ID",    "type",      "name",      "flux",     "origin",    "dimension", and "run.ID"}
     \item{\code{ts}:}{ToDo}
     \item{\code{performanceMeasures}:}{\code{"data.frame"} of performance measures - one data set each run. }
     \item{\code{modelSupportData}:}{List of additional data required for the model to run - usually spatial data}
@@ -42,6 +43,7 @@ evaluation methods will be added in future versions.
     \item{print}{\code{signature(x = "HydroRun")}: ... }
     \item{get.names}{\code{signature(object = "HydroRun")}: Obtain list of names that can be accessed with $ }
     \item{subset}{\code{signature(x = "HydroRun")}: select a subset of the data ToDo: Improve documentation  }
+    \item{validitiy.check}{\code{signature(x = "HydroRun")}: run validity checks on data ToDo: implement and improve documentation  }
     \item{NSeff}{\code{signature(x = "HydroRun", y="missing")}: Return the \code{\link{NSeff}} for the HydroRun Object.  }
 	 }
 }

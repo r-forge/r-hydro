@@ -11,7 +11,27 @@
 ##
 ## - we need to think about the structure of the metadata.
 ##   See current structure in prototype as a suggestion
+setGeneric("validity.check", function(object) { standardGeneric("validity.check") })
 
+setOldClass("zoo")
+
+validityHydroRun <- function(object){
+	#Check that name %in% rhydro.data.types$data.type
+	#if(any(invalid  <- !object@metadata$name %in% rhydro.data.types$data.type)){
+	#	print(paste("all metadata$name must be one of the types listed in rhydro.data.types$data.type\r This is not true for entry ", which(invalid),":",object@metadata$name[invalid] ))
+	#	ToDo:Make a warning here
+	#	stop()
+	#}
+	#Check for correct column names of metadata
+	required.columns <- c( "ID",        "param.ID",  "GIS.ID",    "type",      "name",      "flux",     "origin",    "dimension", "run.ID")
+	if(any(missing <- !required.columns %in% names(object@metadata))){
+		print(paste("metadata is missing the column", required.columns[missing]))
+		stop()
+	}
+
+	#print("validityHydroRun")
+	#browser()
+}
 setClass("HydroRun",
          representation = representation(parameters="HydroModelParameters",
                                          ts = "zoo",
@@ -20,7 +40,7 @@ setClass("HydroRun",
                                          performanceMeasures="data.frame",
                                          modelSupportData="list",
                                          call="call"),
- ##        validity =  validityHydroRun,
+         validity =  validityHydroRun,
          prototype = prototype(parameters = new("HydroModelParameters"),
                                ts = zoo(),
                                metadata = data.frame(ID = numeric(),
@@ -38,7 +58,13 @@ setClass("HydroRun",
                                call = new("call")
          )    
 )
-
+setMethod("validity.check",
+    signature(object = "HydroRun"),
+    function (object) 
+    {
+	    stop("ToDo: Not implemented")
+    }
+)
 setMethod("merge",
     signature(x= "HydroRun", y="HydroRun"),
     function(x, y, ...)
@@ -246,8 +272,8 @@ setMethod("show",
     }
 )
 
-"$.HydroRun" <- function(object, name = get.names(object)) {
-  subset <- match.arg(name)
+"$.HydroRun" <- function(object, name) {
+  subset <- match.arg(name, choices=get.names(object))
   parts <- strsplit(subset, ".", fixed=TRUE)[[1]]
   #treat fixed (non-automatic names)
   if(length(parts)==1){

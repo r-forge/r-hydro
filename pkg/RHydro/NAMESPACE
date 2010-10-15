@@ -4,7 +4,6 @@ export(NSeff,
        get.data.types,
        get.stations,
        get.runCount,
-       get.HydroTS,
        get.names,
        topidx,
        topidx.classes,
@@ -13,15 +12,13 @@ export(NSeff,
        rhydro.data.types,
        plot_rainfall.runoff,
        wasim.read.Run,
-       wasim.file2HydroTS,
-       "$.HydroRun")
+       "$.HydroRun",
+	long.wave.radiation.balance,
+        sat.vap.pres
+	)
 
 exportClasses(
-##              HydroTS,
-##              HydroFlux,
-##              HydroState,
               HydroRun,
-##              HydroModelRun,
               HydroModelParameters,
               HydroTopmodelParameters,
               HydroWasimParameters)

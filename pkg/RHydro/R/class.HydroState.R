@@ -1,4 +1,0 @@
-setClass("HydroState",
-    contains = "HydroTS"
-    )
-
