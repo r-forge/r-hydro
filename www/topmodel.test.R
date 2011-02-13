@@ -4,28 +4,37 @@
 
 library(RHydro)
 data(huagrahuma)
-attach(huagrahuma)
 
-source("/Users/wouter/rhydro/pkg/RHydro/R/topmodel.R")
-source("/Users/wouter/rhydro/pkg/RHydro/R/class.HydroTopmodelParameters.R")
+source("/Users/wous/rhydro/pkg/RHydro/R/topmodel.R")
+source("/Users/wous/rhydro/pkg/RHydro/R/class.HydroTopmodelParameters.R")
+
+data <- list(topidx = huagrahuma$topidx, delay = huagrahuma$delay)
+params <- huagrahuma$parameters[1:9]
+inputs <- huagrahuma$inputs
 
 #### SINGLE RUN ####
 
-## 1. return NS
+## 1. return Qsim and NS
 
-test <- topmodel(parameters, inputs, topidx, delay, performance=c("NS"))
-test$pm
+test <- topmodel(params, inputs, data, performance=c("NS"))
 
-## 2. return discharge
 
-test <- topmodel(parameters, inputs, topidx, delay)
+## 2. return Qsim
+
+test <- topmodel(params, input, data)
 test
 plot(test$Qsim)
 
 ## 3. return verbose
 
-test <- topmodel(parameters, inputs, topidx, delay, verbose = TRUE)
-test
+test <- topmodel(params, inputs, data, verbose = TRUE)
+plot(test)
+
+## 4. return all
+
+test <- topmodel(params, inputs, data, performance = "NS", verbose = TRUE)
+str(test)
+plot(test$simulations)
 
 #### MULTIPLE RUN ####
 
@@ -45,17 +54,17 @@ parameters <- cbind(qs0, lnTe, m, Sr0, Srmax, td, vr, k0, CD)
 
 ## 1. return NS
 
-test <- topmodel(parameters, inputs, topidx, delay, performance=c("NS"))
-test$pm
+test <- topmodel(parameters, inputs, data, return.simulations = F, performance=c("NS"))
+str(test)
 
 
 ## 2. return discharge
 
-test <- topmodel(parameters, inputs, topidx, delay)
-test
-test$Qsim[1:10,]
+test <- topmodel(parameters, inputs, data)
+str(test)
+test[1:10,]
 
-## 3. return verbose
+## 3. return everything
 
-test <- topmodel(parameters, inputs, topidx, delay, verbose=T)
-test$Qsim[1:10,]
+test <- topmodel(parameters, inputs, data, performance = c("NS"), verbose=T)
+str(test)
