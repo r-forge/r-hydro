@@ -5,6 +5,7 @@ export(NSeff,
        get.stations,
        get.runCount,
        get.names,
+       rhydro,
        topidx,
        topidx.classes,
        topmodel,
@@ -19,12 +20,15 @@ export(NSeff,
 
 exportClasses(
               HydroRun,
+              RHydro,
               HydroModelParameters,
               HydroTopmodelParameters,
               HydroWasimParameters)
 
-exportMethods(print, plot, merge, coerce, validity.check, subset)
-import(methods) 
+exportMethods(print, plot, merge, coerce, validity.check, subset, simulate)
+# import packages that define generics for the exported methods
+# (e.g. stats for simulate)
+import(methods, stats) 
 #unclear what to import, removed graphics, sp
 importFrom("graphics", "plot")
 
