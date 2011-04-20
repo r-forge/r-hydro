@@ -13,13 +13,13 @@ export(NSeff,
        rhydro.data.types,
        plot_rainfall.runoff,
        wasim.read.Run,
-       "$.HydroRun",
+##       "$.HydroRun",
 	long.wave.radiation.balance,
         sat.vap.pres
 	)
 
 exportClasses(
-              HydroRun,
+##              HydroRun,
               RHydro,
               HydroModelParameters,
               HydroTopmodelParameters,

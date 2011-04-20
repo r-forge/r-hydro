@@ -2,10 +2,10 @@ Package: RHydro
 Type: Package
 Title: Classes for hydrological modelling and analysis, similar to ArcHydro
 Version: 0.1
-Date: 2011-02-13
+Date: 2011-04-20
 Author: Dominik Reusser, Wouter Buytaert
 Maintainer: Dominik Reusser <dreusser@pik-potsdam.de>, Wouter Buytaert <w.buytaert@imperial.ac.uk>
-Depends: R (>= 2.4.0), methods, xts, sp, methods, graphics, zoo, stats
+Depends: R (>= 2.4.0), methods, xts, sp, graphics, stats
 Suggests: ncdf
 Description: This package provides classes and functions for hydrological analysis
 License: GPL
