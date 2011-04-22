@@ -5,19 +5,21 @@
 library(RHydro)
 data(huagrahuma)
 
-source("/Users/wous/rhydro/pkg/RHydro/R/topmodel.R")
-source("/Users/wous/rhydro/pkg/RHydro/R/class.HydroTopmodelParameters.R")
+source("r-hydro/pkg/RHydro/R/topmodel.R")
+source("r-hydro/pkg/RHydro/R/class.HydroTopmodelParameters.R")
 
-data <- list(topidx = huagrahuma$topidx, delay = huagrahuma$delay)
+topidx = huagrahuma$topidx
+delay = huagrahuma$delay
 params <- huagrahuma$parameters[1:9]
-inputs <- huagrahuma$inputs
+data <- huagrahuma$inputs
 
 #### SINGLE RUN ####
 
 ## 1. return Qsim and NS
 
-test <- topmodel(params, inputs, data, performance=c("NS"))
+test <- topmodel(params, data, delay, topidx, pm=c("NS"))
 
+###### FROM HERE: change names arguments #######
 
 ## 2. return Qsim
 

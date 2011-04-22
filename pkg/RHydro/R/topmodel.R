@@ -1,48 +1,48 @@
 topmodel <- function(parameters,
-                     inputs,
                      data,
-                     performance = c("NS"),
+                     delay,
+                     topidx,
+                     pm = c("NS"),
                      return.simulations = TRUE,
                      verbose = FALSE) {
 
   ## sort out the requested peformance measures
   perf.NS <- 0
-  if(missing(performance)) {
-    performance <- NULL
+  if(missing(pm)) {
+    pm <- NULL
   } else {
-    performance <- match.arg(performance, several.ok=TRUE)
-    if("NS" %in% performance) perf.NS <- 1
-  }
-    
+    pm <- match.arg(pm, several.ok=TRUE)
+    if("NS" %in% pm) perf.NS <- 1
+  } 
   parameters <- as(parameters, "HydroTopmodelParameters")
  
   v <- 0
   if(return.simulations) v <- 1
   if(return.simulations && verbose) v <- 6
 
-  ## check whether inputs can be converted to xts
+  ## check whether data can be converted to xts
   ## this means that they are real time series (i.e. with a constant deltat)
   ## then convert them to regular zoo series
 
-  inputs <- try.xts(inputs, error = FALSE)
-  inputs <- as.zooreg(inputs)
-  index <- index(inputs)
+  data <- try.xts(data, error = FALSE)
+  data <- as.zooreg(data)
+  index <- index(data)
 
-  deltat <- deltat(inputs) / 60 / 60
+  deltat <- deltat(data) / 60 / 60
 
-  if(!("P" %in% names(inputs) && "ETp" %in% names(inputs))) {
-    stop("Inputs should contain members P and ETp") }
+  if(!("P" %in% names(data) && "ETp" %in% names(data))) {
+    stop("Data should contain members P and ETp") }
   
   ## number of timesteps
-  ntimesteps <- length(inputs$P)
+  ntimesteps <- length(data$P)
 
   ## if performance measures are requested, Q should be part of input
-  if(!is.null(performance) && is.null(inputs$Q))
+  if(!is.null(pm) && is.null(data$Q))
     stop("If performance measures are requested, observed discharge (Q) must present in input")
 
   ## format Q
-  if(!is.null(performance)) {
-    Q2 <- as(inputs$Q, "numeric")
+  if(!is.null(pm)) {
+    Q2 <- as(data$Q, "numeric")
     if(min(Q2, na.rm=T) < 0)
       stop("Q should not contain negative values")
     Q2[is.na(Q2)] <- -1
@@ -57,15 +57,15 @@ topmodel <- function(parameters,
   result <- .C("topmodel",
                PACKAGE = "RHydro",
                as.double(t(cbind(as(parameters, "matrix"), deltat))),
-               as.double(as.matrix(data$topidx)),
-               as.double(as.matrix(data$delay)),
-               as.double(as(inputs$P, "numeric")),
-               as.double(as(inputs$ETp, "numeric")),
+               as.double(as.matrix(topidx)),
+               as.double(as.matrix(delay)),
+               as.double(as(data$P, "numeric")),
+               as.double(as(data$ETp, "numeric")),
                as.double(Q2),
-               as.integer(length(as.double(as.matrix(data$topidx)))/2),
+               as.integer(length(as.double(as.matrix(topidx)))/2),
                as.integer(ntimesteps),
                as.integer(iterations),
-               as.integer(length(data$delay[,1])),
+               as.integer(length(delay[,1])),
                as.integer(c(v, perf.NS)), # what to return?
                perf.NS = double(perf.NS * iterations),
                result = double(v * ntimesteps * iterations))

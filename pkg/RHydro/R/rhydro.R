@@ -1,17 +1,18 @@
 
 ## construct an rhydro object ready for simulation
 
-rhydro <- function(parameters, data, supportdata = NULL, model,
-                   performance = NULL, ...){
+rhydro <- function(model, parameters, data, ...){
   new("RHydro",
       ## todo: make a function that gets the right Hydro*Parameters object here
-      parameters=as("HydroModelParameters",parameters)
-      data = data,
-      supportdata = supportdata,
+      parameters=as(parameters, "HydroModelParameters"),
+      data = try.xts(data),
       model = model,
-      performance = performance,
-      options = list(...))
+      dots = as.list(substitute(list(...)))[-1])
 }
+
+
+
+
 
 
 

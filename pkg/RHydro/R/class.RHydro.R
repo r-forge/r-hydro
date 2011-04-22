@@ -12,28 +12,27 @@ validityRHydro <- function(object) {return()}
 setClass("RHydro",
          representation = representation(parameters="HydroModelParameters",
                                          data = "xts",
-                                         simulations = "xts",
+                                         simulations = "list",
                                          metadata = "data.frame",
                                          performance = "data.frame",
-                                         supportdata="list",
                                          model = "character",
-                                         options = "list"),
+                                         dots = "list"),
          validity =  validityRHydro,
          prototype = prototype(parameters = new("HydroModelParameters"),
                                data = xts(),
-                               simulations = xts(),
+                               simulations = list(),
                                metadata = data.frame(),
                                performance = data.frame(),
-                               supportdata = list(),
                                model = character()
          )    
 )
 
-setMethod("simulate",
+setMethod("predict",
           signature(object = "RHydro"),
-          function (object) 
+          function (object, ...) 
           {
-	    stop("ToDo: Not implemented")
+            sims <- do.call(object@model, c(list(object@parameters, object@data),
+                        model@dots), ...)
           }
 )
 
@@ -45,6 +44,7 @@ setMethod("print",
     {
       ##cat("Model ID: ",x@parameters@modelID,"\n")
       cat("\n")
+      cat("Model: ", x@model, "\n")
       cat("Number of model runs: ", nrow(x@parameters@parameters),"\n")
       cat("Number of parameters: ", ncol(x@parameters@parameters),"\n")
       cat("Parameter names: ", names(x@parameters),"\n")
@@ -53,8 +53,6 @@ setMethod("print",
       cat("Simulations: ", names(x@simulations),"\n")
       cat("\n")
       cat("Calculated performance measures: ", names(x@performance),"\n")
-      cat("Model Support Data: ", names(x@supportdata),"\n")
-      cat("Model: ", x@model, "\n")
     }
 )
 
