@@ -2,17 +2,17 @@ Package: RHydro
 Type: Package
 Title: Classes for hydrological modelling and analysis, similar to ArcHydro
 Version: 0.1
-Date: 2011-04-20
+Date: 2011-04-23
 Author: Dominik Reusser, Wouter Buytaert
 Maintainer: Dominik Reusser <dreusser@pik-potsdam.de>, Wouter Buytaert <w.buytaert@imperial.ac.uk>
 Depends: R (>= 2.4.0), methods, xts, sp, graphics, stats
 Suggests: ncdf
 Description: This package provides classes and functions for hydrological analysis
 License: GPL
-Collate: class.HydroModelParameters.R  class.HydroRun.R class.RHydro.R
+Collate: class.HydroModelParameters.R  class.HydroRun.R class.HydroModel.R
 	 class.HydroTopmodelParameters.R class.HydroWasimParameters.R
 	 get.data.types.R get.stations.R get.runCount.R 
-	 eval.NSeff.R plot_rainfall.runoff.R rhydro.R
+	 eval.NSeff.R plot_rainfall.runoff.R HydroModel.R
          wasim.file2HydroRun.R
          wasim.head2spatial.R  processList.R
 	 wasim.read.ModelParameters.R wasim.read.Run.R  wasim.read.table.R

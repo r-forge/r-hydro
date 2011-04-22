@@ -23,20 +23,20 @@ test <- topmodel(params, data, delay, topidx, pm=c("NS"))
 
 ## 2. return Qsim
 
-test <- topmodel(params, input, data)
+test <- topmodel(params, data, delay, topidx)
 test
-plot(test$Qsim)
+plot(test$Q)
 
 ## 3. return verbose
 
-test <- topmodel(params, inputs, data, verbose = TRUE)
+test <- topmodel(params, data, delay, topidx, verbose = TRUE)
 plot(test)
 
 ## 4. return all
 
-test <- topmodel(params, inputs, data, performance = "NS", verbose = TRUE)
+test <- topmodel(params, data, delay, topidx, pm = "NS", verbose = TRUE)
 str(test)
-plot(test$simulations)
+plot(test$simulations$Q)
 
 #### MULTIPLE RUN ####
 
@@ -56,17 +56,17 @@ parameters <- cbind(qs0, lnTe, m, Sr0, Srmax, td, vr, k0, CD)
 
 ## 1. return NS
 
-test <- topmodel(parameters, inputs, data, return.simulations = F, performance=c("NS"))
+test <- topmodel(parameters, data, delay, topidx, return.simulations = F, pm=c("NS"))
 str(test)
 
 
 ## 2. return discharge
 
-test <- topmodel(parameters, inputs, data)
+test <- topmodel(parameters, data, delay, topidx)
 str(test)
-test[1:10,]
+test$Q[1:10,]
 
 ## 3. return everything
 
-test <- topmodel(parameters, inputs, data, performance = c("NS"), verbose=T)
+test <- topmodel(parameters, data, delay, topidx, pm = c("NS"), verbose=T)
 str(test)

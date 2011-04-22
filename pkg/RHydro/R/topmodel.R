@@ -74,11 +74,10 @@ topmodel <- function(parameters,
   reval <- NULL
 
   if(return.simulations) {
-    retval <- aperm(array(result$result,c(ntimesteps,iterations,v)),c(1,3,2))
-    retval <- matrix(retval, nrow=ntimesteps)
-    ## prepare the column names
-    colnames(retval) <- rep(c("Q","Qo","Qs","Qi", "Qie","ETa")[1:v],iterations)
-    retval <- zoo(retval, order.by=index)
+    results <- array(result$result,c(ntimesteps,iterations,v))
+    vars <- c("Q","Qo","Qs","Qi","Qie","ETa")[1:v]
+    retval <- list()
+    for(i in 1:length(vars)) retval[[vars[i]]] <- zoo(results[,,i], order.by=index)
     if(perf.NS) retval <- list(simulations = retval, NS = result$perf.NS)
   } else if(perf.NS) retval <- result$perf.NS
   
