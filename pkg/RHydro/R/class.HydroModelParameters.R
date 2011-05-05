@@ -1,22 +1,34 @@
 
 setClass("HydroModelParameters",
-         representation(parameters= "data.frame",
+         representation(parameters = "data.frame",
+                        call = "call",  # to generate 
+                        n = "numeric",
                         modelID = "character"),
          prototype = prototype(parameters = data.frame(),
                                modelID = character())
          )
 
 setAs("data.frame", "HydroModelParameters",
-      function(from) new("HydroModelParameters", parameters = from))
+      function(from) new("HydroModelParameters",
+                         parameters = from,
+                         n = nrow(from)))
 
 setAs("matrix", "HydroModelParameters",
-      function(from) new("HydroModelParameters", parameters = as.data.frame(from)))
+      function(from) as(as.data.frame(from), "HydroModelParameters"))
 
 setAs("numeric", "HydroModelParameters",
       function(from) new("HydroModelParameters",
                          parameters = as.data.frame(t(from))))
 
-setAs("HydroModelParameters", "data.frame", function(from) from@parameters)
+setAs("list", "HydroModelParameters",
+      function(from) new("HydroModelParameters", call = as.call(from)))
+
+setAs("HydroModelParameters", "data.frame",
+      function(from) {
+        if(nrow(from@parameters) == 0) resample(from)
+        from@parameters
+      })
+      
 setAs("HydroModelParameters", "matrix", function(from) as.matrix(from@parameters))
 
 setMethod("print",

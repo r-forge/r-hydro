@@ -5,6 +5,12 @@ data(huagrahuma)
 source("r-hydro/pkg/RHydro/R/class.HydroModel.R")
 source("r-hydro/pkg/RHydro/R/HydroModel.R")
 
+min <- c(1E-4, -2, 0, 0, 0, 0, 100, 0, 0)
+max <- c(2.5E-4,3,0.1,0.2,0.1,3,2500,10,5)
+
+params <- as(list(runif, n = 9, min = min, max = max), "HydroModelParameters")
+resample(params, n = 100)
+
 parameters <- huagrahuma$parameters[1:9]
 
 runs <- 100
