@@ -32,5 +32,5 @@ delay = huagrahuma$delay
 model <- HydroModel("topmodel", parameters, data,
                     delay = huagrahuma$delay, topidx = huagrahuma$topidx)
 
-predictions <- predict(model)
+predictions <- predict(model, probs = c(0.05, 0.95))
 
