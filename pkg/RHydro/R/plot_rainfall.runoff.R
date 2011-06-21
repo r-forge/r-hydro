@@ -1,6 +1,6 @@
 plot_rainfall.runoff <- function(rain, q.model, q.measured=NULL,
 myColors=data.frame(measured=c("grey"), modelled=c("black"), rain=c("black")),
-q.units="mm/h", p.units="mm/h", mar=c(3,4,2,4)+0.1, ...){
+q.units="mm/h", p.units="mm/h", mar=c(3,4,2,4)+0.1, cex.rain=1, ...){
     data.count <- 3
     theXRange <- NA
     theQRange <- NA
@@ -64,7 +64,7 @@ q.units="mm/h", p.units="mm/h", mar=c(3,4,2,4)+0.1, ...){
         }
         if(show.rain.axis){
             axis(4)
-            mtext(side=4, line=2, paste("preciptiation", p.units))
+            mtext(side=4, line=2, paste("preciptiation", p.units), cex=cex.rain)
         }
     }
     legend("topright", inset=0.1, c("measured","modell"), lty=1, col=c(as.character(myColors$measured),as.character(myColors$modelled)))
