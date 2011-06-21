@@ -78,6 +78,7 @@ getID <- function(table, value#, allowNoValue=FALSE
 			}
 		}
 		if(NROW(entry)==0){
+			all.table <- NULL # to avoid warnings during check
 			command <- paste('all.table <- Iget',table,'(options("odm.handler")[[1]])', sep='')
 			eval(parse(text=command))
 
