@@ -9,13 +9,13 @@ setGeneric("IgetSite", function(object, ID=NULL, Code=NULL, Name=NULL, x=NULL, y
 setGeneric("IgetUnits", function(object, ID=NULL, Name=NULL, Type=NULL, Abbreviation=NULL, exact=FALSE ) { standardGeneric("IgetUnits")}) 
 setGeneric("IaddUnits", function(object, ID, Name, Type, Abbreviation ) { standardGeneric("IaddUnits")}) 
 setGeneric("IgetVariable", function(object, ID=NULL, Code=NULL, Name=NULL, Speciation=NULL, Unit=NULL, Medium=NULL,exact=FALSE, ...  ) { standardGeneric("IgetVariable")}) 
-setGeneric("IgetQualifier", function(object, ID=NULL, Code=NULL, Description=NULL, ...  ) { standardGeneric("IgetQualifier")}) 
-setGeneric("IgetMethod", function(object, ID=NULL, Description=NULL, ...  ) { standardGeneric("IgetMethod")}) 
-setGeneric("IgetOffsetType", function(object, ID=NULL, Description=NULL, Units=NULL, ...  ) { standardGeneric("IgetOffsetType")}) 
-setGeneric("IgetSample", function(object, ID=NULL, LabSampleCode=NULL, ...  ) { standardGeneric("IgetSample")}) 
+setGeneric("IgetQualifiers", function(object, ID=NULL, Code=NULL, Description=NULL, ...  ) { standardGeneric("IgetQualifiers")}) 
+setGeneric("IgetMethods", function(object, ID=NULL, Description=NULL, ...  ) { standardGeneric("IgetMethods")}) 
+setGeneric("IgetOffsetTypes", function(object, ID=NULL, Description=NULL, Units=NULL, ...  ) { standardGeneric("IgetOffsetTypes")}) 
+setGeneric("IgetSamples", function(object, ID=NULL, LabSampleCode=NULL, ...  ) { standardGeneric("IgetSamples")}) 
 setGeneric("IgetSource", function(object, ID=NULL, Organization=NULL, Description=NULL, Citation=NULL, ...  ) { standardGeneric("IgetSource")}) 
 setGeneric("IgetISOMetadata", function(object, ID=NULL, Title=NULL, Abstract=NULL, TopicCategory=NULL, ...  ) { standardGeneric("IgetISOMetadata")}) 
-setGeneric("IgetQualityControlLevel", function(object, ID=NULL, Code=NULL, Definition=NULL, Explanation=NULL, ...  ) { standardGeneric("IgetQualityControlLevel")}) 
+setGeneric("IgetQualityControlLevels", function(object, ID=NULL, Code=NULL, Definition=NULL, Explanation=NULL, ...  ) { standardGeneric("IgetQualityControlLevels")}) 
 
 for(i in CVtables()){
 	code <- paste('setGeneric("Iget',i,'", function(object, Term=NULL,  Definition=NULL, exact=FALSE, ...  ) { standardGeneric("Iget',i,'")})', sep="")
@@ -32,7 +32,7 @@ for(i in CVtables()){
 
  
 setGeneric("IgetDataValues", function(object,ID=NULL, from=NULL, to=NULL, SiteID=NULL, VariableID=NULL, Offset=NULL, OffsetTypeID=NULL, CensorCode=NULL, QualifierID=NULL, MethodID=NULL, SourceID=NULL, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID=NULL, ...  ) { standardGeneric("IgetDataValues")}) 
-setGeneric("IgetSpatialReference", function(object,ID=NULL, SRSID=NULL, SRSName=NULL, IsGeographic=NULL, Notes=NULL, exact=FALSE) { standardGeneric("IgetSpatialReference")}) 
+setGeneric("IgetSpatialReferences", function(object,ID=NULL, SRSID=NULL, SRSName=NULL, IsGeographic=NULL, Notes=NULL, exact=FALSE) { standardGeneric("IgetSpatialReferences")}) 
 setGeneric("IgetOldDataValues", function(object,ID=NULL, from=NULL, to=NULL, SiteID=NULL, VariableID=NULL, Offset=NULL, OffsetTypeID=NULL, CensorCode=NULL, QualifierID=NULL, MethodID=NULL, SourceID=NULL, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID=NULL, VersionID, exact,...  ) { standardGeneric("IgetOldDataValues")}) 
 setGeneric("IaddDataValues", function(object, localDateTime, values, TZ, SiteID, VariableID, Offset=NULL, OffsetTypeID=NULL, CensorCode, QualifierID=NULL, MethodID, SourceID, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID, exact, ...  ) { standardGeneric("IaddDataValues")}) 
 setGeneric("IaddSite", function(object, Code, Name, Latitude, Longitude, LatLongDatum, Elevation=NULL, VerticalDatum=NULL, LocalX=NULL,LocalY=NULL, LocalProjection=NULL, PosAccuracy=NULL, State=NULL, County=NULL, Comments=NULL) {standardGeneric("IaddSite")})
@@ -50,11 +50,6 @@ setGeneric("IgetCV", function(object, table, term, definition, exact=FALSE){stan
 setGeneric("IaddSynonym", function(object, phrase, table, id){standardGeneric("IaddSynonym")})
 setGeneric("IgetSynonymID", function(object, phrase, table){standardGeneric("IgetSynonymID")})
 
-#setGeneric("IgetNoOffsetType", function(object) {standardGeneric("IgetNoOffsetType")})
-#setGeneric("IgetNoVerticalDatum", function(object) {standardGeneric("IgetNoVerticalDatum")})
-#setGeneric("IgetNoSpatialReferenceID", function(object) {standardGeneric("IgetNoSpatialReferenceID")})
-#setGeneric("IgetNoQualifier", function(object) {standardGeneric("IgetNoQualifier")})
-#setGeneric("IgetNoSample", function(object) {standardGeneric("IgetNoSample")})
 setGeneric("IgetNo", function(object, table) {standardGeneric("IgetNo")})
 
 #copy set generic from above
@@ -63,22 +58,23 @@ setGeneric("IgetNo", function(object, table) {standardGeneric("IgetNo")})
 # :'<,'>s/,.*/, signature(object = NULL), h.m)   
 
 setMethod("IgetCV", signature(object = "NULL"), h.m)
+setMethod("IgetSynonymID", signature(object = "NULL"), h.m)
 setMethod("IdbState", signature(object = "NULL"), h.m)
 setMethod("IaddCV", signature(object = "NULL"), h.m)
 setMethod("IgetSite", signature(object = "NULL"), h.m)
 setMethod("IgetUnits", signature(object = "NULL"), h.m)
 setMethod("IaddUnits", signature(object = "NULL"), h.m)
 setMethod("IgetVariable", signature(object = "NULL"), h.m)
-setMethod("IgetQualifier", signature(object = "NULL"), h.m)
-setMethod("IgetMethod", signature(object = "NULL"), h.m)
-setMethod("IgetOffsetType", signature(object = "NULL"), h.m)
-setMethod("IgetSample", signature(object = "NULL"), h.m)
+setMethod("IgetQualifiers", signature(object = "NULL"), h.m)
+setMethod("IgetMethods", signature(object = "NULL"), h.m)
+setMethod("IgetOffsetTypes", signature(object = "NULL"), h.m)
+setMethod("IgetSamples", signature(object = "NULL"), h.m)
 setMethod("IgetSource", signature(object = "NULL"), h.m)
 setMethod("IgetISOMetadata", signature(object = "NULL"), h.m)
-setMethod("IgetQualityControlLevel", signature(object = "NULL"), h.m)
+setMethod("IgetQualityControlLevels", signature(object = "NULL"), h.m)
 setMethod("IgetCensorCode", signature(object = "NULL"), h.m)
 setMethod("IgetDataValues", signature(object = "NULL"), h.m)
-setMethod("IgetSpatialReference", signature(object = "NULL"), h.m)
+setMethod("IgetSpatialReferences", signature(object = "NULL"), h.m)
 setMethod("IgetOldDataValues", signature(object = "NULL"), h.m)
 setMethod("IaddDataValues", signature(object = "NULL"), h.m)
 setMethod("IaddSite", signature(object = "NULL"), h.m)
@@ -141,7 +137,7 @@ setMethod("IgetISOMetadata",
 			query <- paste("SELECT * FROM ISOMetadata", where.clause)
 			res <- run.query(object, query )
 			#ToDo: Define standard return values and order
-			if(NROW(res)>0) {names(res)[1] <- c("ID")}
+			if(NCOL(res)>0) {names(res)[1] <- c("ID")}
 			return(res)
 		}
 	)
@@ -162,7 +158,7 @@ setMethod("IgetUnits",
 			query <- paste("SELECT * FROM Units", where.clause)
 			res <- run.query(object, query )
 			#ToDo: Define standard return values and order
-			if(NROW(res)>0) {names(res)[1:4] <- c("ID", "Name", "Type", "Abbreviation")}
+			if(NCOL(res)>0) {names(res)[1:4] <- c("ID", "Name", "Type", "Abbreviation")}
 			return(res)
 		}
 	)
@@ -196,7 +192,7 @@ setMethod("IgetSite",
 			query <- paste("SELECT * FROM Sites ", where.clause)
 			res <- run.query(object, query )
 			#ToDo: Define standard return values and order
-			if(NROW(res)>0) {names(res)[1:3] <- c("ID", "Code", "Name")}
+			if(NCOL(res)>0) {names(res)[1:3] <- c("ID", "Code", "Name")}
 			return(res)
 		}
 	)
@@ -224,36 +220,28 @@ setMethod("IgetVariable",
 			query <- paste("SELECT * FROM Variables ", where.clause)
 			res <- run.query(object, query )
 			#ToDo: Define standard return values and order
-			if(NROW(res)>0) {names(res)[1:3] <- c("ID", "Code", "Name")}
+			if(NCOL(res)>0) {names(res)[1:3] <- c("ID", "Code", "Name")}
 			return(res)
 		}
 	)
-setMethod("IgetQualifier", 
+setMethod("IgetQualifiers", 
 		signature(object = "odm1_1"),
 		function(object,  ID=NULL, Code=NULL, Description=NULL, ...){
-			where.clause <- ""
-			the.and  <- ""
-			if(!is.null(ID)){
-				where.clause <- paste(where.clause, the.and, "QualifierID like '%", ID, "%'", sep="")
-				the.and <- " AND "
-			}
-			if(!is.null(Code)){
-				where.clause <- paste(where.clause, the.and, "QualifierCode like '%", Code, "%'", sep="")
-				the.and <- " AND "
-			}
-			if(!is.null(Description)){
-				where.clause <- paste(where.clause, the.and, "QualifierDescription like '%", Description, "%'", sep="")
-				the.and <- " AND "
-			}
-			query <- paste("SELECT * FROM Qualifiers WHERE ", where.clause)
+		  	w.o <- list(where.clause = "", the.and  = "")
+			w.o <- expand.where(w.o, ID, "QualifierID", exact=TRUE)
+			w.o <- expand.where(w.o, Code, "QualifierCode", exact=TRUE)
+			w.o <- expand.where(w.o, Description, "QualifierDescription", exact=FALSE)
+			where.clause <- w.o$where.clause
+			if(where.clause!="") where.clause <- paste(" WHERE ", where.clause)
+			query <- paste("SELECT * FROM Qualifiers ", where.clause)
 			res <- run.query(object, query )
 			#ToDo: Define standard return values and order
-			if(NROW(res)>0) {names(res)[1:3] <- c("ID", "Code", "Descritption")}
+			if(NCOL(res)>0) {names(res)[1:3] <- c("ID", "Code", "Description")}
 			return(res)
 		}
 	)
 
-setMethod("IgetSpatialReference",
+setMethod("IgetSpatialReferences",
 	       signature(object = "odm1_1"),
        	       function(object,ID=NULL, SRSID=NULL, SRSName=NULL, IsGeographic=NULL, Notes=NULL,exact=FALSE) { 
 
@@ -271,126 +259,90 @@ setMethod("IgetSpatialReference",
 			query <- paste("SELECT * FROM SpatialReferences", where.clause)
 			res <- run.query(object, query )
 			#ToDo: Define standard return values and order
-			if(NROW(res)>0) {names(res)[1] <- c("ID")}
+			if(NCOL(res)>0) {names(res)[1] <- c("ID")}
 			return(res)
 	       }) 
-setMethod("IgetQualityControlLevel", 
+setMethod("IgetQualityControlLevels", 
 		signature(object = "odm1_1"),
 		function(object,  ID=NULL, Code=NULL, Definition=NULL, Explanation=NULL, ...){
-			where.clause <- ""
-			the.and  <- ""
-			if(!is.null(ID)){
-				where.clause <- paste(where.clause, the.and, "QualityControlLevelID like '%", ID, "%'", sep="")
-				the.and <- " AND "
-			}
-			if(!is.null(Code)){
-				where.clause <- paste(where.clause, the.and, "QualityControlLevelCode like '%", Code, "%'", sep="")
-				the.and <- " AND "
-			}
-			if(!is.null(Definition)){
-				where.clause <- paste(where.clause, the.and, "Definition like '%", Definition, "%'", sep="")
-				the.and <- " AND "
-			}
-			if(!is.null(Explanation)){
-				where.clause <- paste(where.clause, the.and, "Explanation like '%", Explanation, "%'", sep="")
-				the.and <- " AND "
-			}
-			query <- paste("SELECT * FROM QualityControlLevels WHERE ", where.clause)
+		  	w.o <- list(where.clause = "", the.and  = "")
+			w.o <- expand.where(w.o, ID, "QualityControlLevelID", exact=TRUE)
+			w.o <- expand.where(w.o, Code, "QualityControlLevelCode", exact=FALSE)
+			w.o <- expand.where(w.o, Definition, "Definition", exact=FALSE)
+			w.o <- expand.where(w.o, Explanation, "Explanation", exact=FALSE)
+			where.clause <- w.o$where.clause
+			if(where.clause!="") where.clause <- paste(" WHERE ", where.clause)
+			query <- paste("SELECT * FROM QualityControlLevels ", where.clause)
 			res <- run.query(object, query )
 			#ToDo: Define standard return values and order
-			if(NROW(res)>0) {names(res)[1:3] <- c("ID", "Code", "Descritption")}
+			if(NCOL(res)>0) {names(res)[1:2] <- c("ID", "Code")}
 			return(res)
 		}
 	)
-setMethod("IgetSample", 
+setMethod("IgetSamples", 
 		signature(object = "odm1_1"),
 		function(object,  ID=NULL, LabSampleCode=NULL, ...){
-			where.clause <- ""
-			the.and  <- ""
-			if(!is.null(ID)){
-				where.clause <- paste(where.clause, the.and, "SampleID like '%", ID, "%'", sep="")
-				the.and <- " AND "
-			}
-			if(!is.null(LabSampleCode)){
-				where.clause <- paste(where.clause, the.and, "LabSampleCode like '%", LabSampleCode, "%'", sep="")
-				the.and <- " AND "
-			}
-			query <- paste("SELECT * FROM Samples WHERE ", where.clause)
+		  	w.o <- list(where.clause = "", the.and  = "")
+
+			w.o <- expand.where(w.o, ID, "SampleID", exact=TRUE)
+			w.o <- expand.where(w.o, LabSampleCode, "LabSampleCode", exact=FALSE)
+			where.clause <- w.o$where.clause
+			if(where.clause!="") where.clause <- paste(" WHERE ", where.clause)
+			query <- paste("SELECT * FROM Samples ", where.clause)
 			res <- run.query(object, query )
 			#ToDo: Define standard return values and order
-			if(NROW(res)>0) {names(res)[1] <- c("ID")}
+			if(NCOL(res)>0) {names(res)[1] <- c("ID")}
 			return(res)
 		}
 	)
-setMethod("IgetOffsetType", 
+setMethod("IgetOffsetTypes", 
 		signature(object = "odm1_1"),
 		function(object,  ID=NULL, Description=NULL, Units=NULL, ...){
-			where.clause <- ""
-			the.and  <- ""
-			if(!is.null(ID)){
-				where.clause <- paste(where.clause, the.and, "OffsetTypeID like '%", ID, "%'", sep="")
-				the.and <- " AND "
-			}
-			if(!is.null(Description)){
-				where.clause <- paste(where.clause, the.and, "OffsetDescription like '%", Description, "%'", sep="")
-				the.and <- " AND "
-			}
-			if(!is.null(Units)){
-				where.clause <- paste(where.clause, the.and, "OffsetUnits like '%", Units, "%'", sep="")
-				the.and <- " AND "
-			}
-			query <- paste("SELECT * FROM OffsetTypes WHERE ", where.clause)
+		  	w.o <- list(where.clause = "", the.and  = "")
+
+			w.o <- expand.where(w.o, ID, "OffsetTypeID", exact=TRUE)
+			w.o <- expand.where(w.o, Description, "OffsetDescription", exact=FALSE)
+			w.o <- expand.where(w.o, Units, "OffsetUnits", exact=FALSE)
+
+			where.clause <- w.o$where.clause
+			if(where.clause!="") where.clause <- paste(" WHERE ", where.clause)
+			query <- paste("SELECT * FROM OffsetTypes ", where.clause)
 			res <- run.query(object, query )
 			#ToDo: Define standard return values and order
-			if(NROW(res)>0) {names(res)[1:3] <- c("ID", "UnitsID", "Descritption")}
+			if(NCOL(res)>0) {names(res)[1:3] <- c("ID", "UnitsID", "Description")}
 			return(res)
 		}
 	)
-setMethod("IgetMethod", 
+setMethod("IgetMethods", 
 		signature(object = "odm1_1"),
 		function(object,  ID=NULL, Description=NULL, ...){
-			where.clause <- ""
-			the.and  <- ""
-			if(!is.null(ID)){
-				where.clause <- paste(where.clause, the.and, "MethodID like '%", ID, "%'", sep="")
-				the.and <- " AND "
-			}
-			if(!is.null(Description)){
-				where.clause <- paste(where.clause, the.and, "MethodDescription like '%", Description, "%'", sep="")
-				the.and <- " AND "
-			}
-			query <- paste("SELECT * FROM Methods WHERE ", where.clause)
+		  	w.o <- list(where.clause = "", the.and  = "")
+			w.o <- expand.where(w.o, ID, "MethodID", exact=TRUE)
+			w.o <- expand.where(w.o, Description, "MethodDescription", exact=FALSE)
+			where.clause <- w.o$where.clause
+			if(where.clause!="") where.clause <- paste(" WHERE ", where.clause)
+			query <- paste("SELECT * FROM Methods ", where.clause)
 			res <- run.query(object, query )
 			#ToDo: Define standard return values and order
-			if(NROW(res)>0) {names(res)[1:3] <- c("ID", "Code", "Descritption")}
+			if(NCOL(res)>0) {names(res)[1:3] <- c("ID", "Code", "Description")}
 			return(res)
 		}
 	)
 setMethod("IgetSource", 
 		signature(object = "odm1_1"),
 		function(object,  ID=NULL, Organization=NULL, Description=NULL, Citation=NULL, ...){
-			where.clause <- ""
-			the.and  <- ""
-			if(!is.null(ID)){
-				where.clause <- paste(where.clause, the.and, "SourceID like '%", ID, "%'", sep="")
-				the.and <- " AND "
-			}
-			if(!is.null(Organization)){
-				where.clause <- paste(where.clause, the.and, "Organization like '%", Organization, "%'", sep="")
-				the.and <- " AND "
-			}
-			if(!is.null(Description)){
-				where.clause <- paste(where.clause, the.and, "SourceDescription like '%", Description, "%'", sep="")
-				the.and <- " AND "
-			}
-			if(!is.null(Citation)){
-				where.clause <- paste(where.clause, the.and, "Citation like '%", Citation, "%'", sep="")
-				the.and <- " AND "
-			}
-			query <- paste("SELECT * FROM Sources WHERE ", where.clause)
+		  	w.o <- list(where.clause = "", the.and  = "")
+			w.o <- expand.where(w.o, ID, "SourceID", exact=TRUE)
+			w.o <- expand.where(w.o, Organization, "Organization", exact=FALSE)
+			w.o <- expand.where(w.o, Citation, "Citation", exact=FALSE)
+			w.o <- expand.where(w.o, Description, "SourceDescription", exact=FALSE)
+			where.clause <- w.o$where.clause
+			if(where.clause!="") where.clause <- paste(" WHERE ", where.clause)
+
+			query <- paste("SELECT * FROM Sources ", where.clause)
 			res <- run.query(object, query )
 			#ToDo: Define standard return values and order
-			if(NROW(res)>0) {names(res)[1:3] <- c("ID", "Code", "Descritption")}
+			if(NCOL(res)>0) {names(res)[1:3] <- c("ID", "Organization", "Description")}
 			return(res)
 		}
 	)
@@ -714,6 +666,8 @@ setMethod("IgetNo",
 	  			  "OffsetTypes", "OffsetDescription", "OffsetUnitsID", "1", "OffsetTypeID",
 				  "Qualifiers", "QualifierCode", "QualifierDescription", "'No Qualifier - to enable optional fields with foreign keys'", "QualifierID" ,
 				  "Samples", "LabSampleCode", "SampleType, LabMethodID", "'no', 1", "SampleID",
+				  "Methods", "MethodDescription", "MethodLink", "''", "MethodID",
+				  "QualityControlLevels", "QualityControlLevelCode", "Definition, Explanation, QualityControlLevelID", "'No Code', 'Default entry if no code is available', 999", "QualityControlLevelID",
 				  "ISOMetadata", "Title", "TopicCategory", "'Unknown'", "MetadataID"
 				),
 		  	byrow=TRUE, ncol=5)
@@ -724,7 +678,7 @@ setMethod("IgetNo",
 		tab.def <- as.data.frame(tab.def, stringsAsFactors=FALSE)
 		names(tab.def) <- c("tab", "col", "other.fields", "default.values", "primary.key")
 		tab.def.bak <- tab.def
-		tab.def <- tab.def[tab.def$tab==table,]
+		tab.def <- tab.def[tab.def$tab %in% c(table, paste(table,"CV",sep="")),]
 		if(NROW(tab.def)!=1){
 			cat("Existing tables:\n")
 			print(tab.def.bak$tab)
@@ -797,65 +751,3 @@ setMethod("IgetSynonymID",
 			return(res$RecID)
 
 	       })
-#setMethod("IgetNoVerticalDatum", 
-
-#		signature(object = "odm1_1"),
-#		function(object){
-#
-#			query <- "SELECT * FROM VerticalDatumCV WHERE Definition='No Datum'" 
-#			res <- run.query(object, query)
-#			if(length(res)==0){
-#				ins.query <- "INSERT INTO VerticalDatumCV (Term, Definition) Values ('No','No Datum')" 
-#				res <- run.query(object, ins.query)
-#				res <- run.query(object, query)
-#
-#			}
-#			return(res$Term)
-#		})
-#
-#setMethod("IgetNoOffsetType", 
-#		signature(object = "odm1_1"),
-#		function(object){
-#
-#			query <- "SELECT * FROM OffsetTypes WHERE OffsetDescription='No Offset'" 
-#			res <- run.query(object, query)
-#			if(length(res)==0){
-#				query <- "INSERT INTO OffsetTypes (OffsetUnitsID, OffsetDescription) Values (1,'No Offset')" 
-#				res <- run.query(object, query)
-#				query <- "SELECT * FROM OffsetTypes WHERE OffsetDescription='No Offset'" 
-#				res <- run.query(object, query)
-#
-#			}
-#			return(res$OffsetTypeID)
-#		})
-#setMethod("IgetNoQualifier", 
-#		signature(object = "odm1_1"),
-#		function(object){
-#
-#			query <- "SELECT * FROM Qualifiers WHERE QualifierCode='NoQualifier'" 
-#			if(getOption("verbose.queries", default=FALSE)) print(query)
-#			res <- dbGetQuery(object, query)
-#			if(length(res)==0){
-#				query <- "INSERT INTO Qualifiers (QualifierCode, QualifierDescription) Values ('NoQualifier', 'No Qualifier - to enable optional fields with foreign keys')"
-#				if(getOption("verbose.queries", default=FALSE)) print(query)
-#				res <- dbSendQuery(object,  query)
-#				query <- "SELECT * FROM Qualifiers WHERE QualifierCode='NoQualifier'" 
-#				if(getOption("verbose.queries", default=FALSE)) print(query)
-#				res <- dbGetQuery(object, query)
-#
-#			}
-#			return(res$QualifierID)
-#		})
-#setMethod("IgetNoSample", 
-#		signature(object = "odm1_1"),
-#		function(object){
-#
-#			res <- run.query(object, "SELECT * FROM Samples WHERE LabSampleCode='No Sample'" )
-#			if(length(res)==0){
-#				#ToDo: Set real default values
-#				res <- run.query(object, "INSERT INTO Samples (SampleType, LabSampleCode, LabMethodID) Values ('bla', 'No Sample', 1)" )
-#				res <- run.query(object, "SELECT * FROM Samples WHERE LabSampleCode='No Sample'" )
-#
-#			}
-#			return(res$SampleID)
-#		})

@@ -1,5 +1,12 @@
-h.m <- function(object) #handler.message
-	stop("Please define the RODM Handler using an appropriate database connection.\nFor example\n\n\tlibrary(RSQLite) \n\tm <- dbDriver('SQLite') \n\tcon <- dbConnect(m, dbname = 'odm2.db') \n\tsqhandler <-  new('odm1_1Ver', con=con) \n\toptions(odm.handler=sqhandler)\n")
+h.m <- function(object){ #handler.message
+	require(RSQLite)
+	m <- dbDriver("SQLite")
+	con <- dbConnect(m, dbname = "RODM.db")
 
+	#dbGetQuery(con, "SELECT * FROM Versions")
+	sqhandler <-  new("odm1_1Ver", con=con)
+	options(odm.handler=sqhandler)
+        stop("Setting default database scheme (odm1_1 with version managament) and file RODM.db\nExecute command again")
 
+}
 

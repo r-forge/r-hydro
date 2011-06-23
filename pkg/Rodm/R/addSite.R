@@ -3,12 +3,12 @@ addSite <- function(Code, Name, x, y, Elevation=NULL, LatLongDatum, LocalProject
 
 	#check from referencetables: SpatialReferences -> LatLongDatum, LocalProjection
 	stopifnot(length(LatLongDatum) == length(Code))
-	SpatialReferenceID <- getID("SpatialReference", LatLongDatum)
+	SpatialReferenceID <- getID("SpatialReferences", LatLongDatum)
 
 
 	if(!is.null(LocalProjection)){
 		stopifnot(length(LocalProjection) == length(Code))
-		SpatialReferenceID2 <- getID("SpatialReference", LocalProjection)
+		SpatialReferenceID2 <- getID("SpatialReferences", LocalProjection)
 	} else {
 		#ToDo
 		SpatialReferenceID2 <- rep(1, length(Code))

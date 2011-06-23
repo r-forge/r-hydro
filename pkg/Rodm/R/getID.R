@@ -2,15 +2,15 @@ getID <- function(table, value#, allowNoValue=FALSE
 		  #allowNoValue does not make sense as it is implemented
 		  ){
 # Generate Table where to search for information - this could be done once only
-	lookup <- list(SpatialReference = c("ID", "SRSName", "SRSID"), 
+	lookup <- list(SpatialReferences = c("ID", "SRSName", "SRSID"), 
 		       Site=c('ID', 'Name','Code'),
-		       Method=c('ID','Description'),
-		       Qualifier=c('ID','Description','Code'),
-		       QualityControlLevel=c('ID','Definition','Explanation', 'Code'),
-		       Sample=c('ID','LabSampleCode'),
+		       Methods=c('ID','Description'),
+		       Qualifiers=c('ID','Description','Code'),
+		       QualityControlLevels=c('ID','Definition','Explanation', 'Code'),
+		       Samples=c('ID','LabSampleCode'),
 		       Source=c('ID','Organization','Description','Citation'),
 		       Variable=c('ID','Name','Code'),
-		       OffsetType=c('ID', 'Description'),
+		       OffsetTypes=c('ID', 'Description'),
 		       Units=c('ID', 'Name', 'Abbreviation'),
 		       ISOMetadata=c('ID', 'Title','Abstract')
 		       )
@@ -49,7 +49,7 @@ getID <- function(table, value#, allowNoValue=FALSE
 					#stop if we found too many results
 					if(NROW(entry)>1){ 
 						print(entry)
-						cat("Term '",uvalue[i],"' returns more than 1 vaules in table ",table , "\n")
+						cat("Term '",uvalue[i],"' returns more than 1 vaules in table ",table , "\n", sep="")
 						cat("\n\n Please select matching row or hit 0 to stop\n")
 						choice <- "impossible"
 						while(choice == "impossible"){
@@ -82,9 +82,18 @@ getID <- function(table, value#, allowNoValue=FALSE
 			command <- paste('all.table <- Iget',table,'(options("odm.handler")[[1]])', sep='')
 			eval(parse(text=command))
 
-			if(!all(lookup[[table]] %in% names(all.table))) stop(paste("getID error: lookup not defined correctly, missing fields for table ", table, ":", paste(lookup[[table]][!lookup[[table]] %in% names(all.table)], collapse="; ") ))
+			if(!all(lookup[[table]] %in% names(all.table))){
+				fields <- paste(lookup[[table]][!lookup[[table]] %in% names(all.table)], collapse="; ")
+				existing <- paste(names(all.table), collapse="; ")
+			       	stop(paste("getID error: lookup not defined correctly, missing fields for table ", table, ":", fields, ". Existing fields are:", existing ))
+			}
 			if(NROW(all.table)==0){
-				stop("Table ", table, " has no entries. Please enter a record for '", value, "'")
+				if(value=='No' | value=="Unknown"){
+					uvalueID[i] <- IgetNo(options("odm.handler")[[1]], table)
+					next
+				} else {
+					stop("Table ", table, " has no entries. Please enter a record for '", value, "'")
+				}
 			}
 
 

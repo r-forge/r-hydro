@@ -2,7 +2,7 @@ Package: RODM
 Type: Package
 Title: R-Interface to the observations Data Model 
 Version: 10-06
-Date: 2011-06-21
+Date: 2011-06-23
 Author: Dominik Reusser
 Maintainer: Dominik Reusser <reusser@pik-potsdam.de>
 Depends: R (>= 2.11.0), zoo, DBI, vwr 

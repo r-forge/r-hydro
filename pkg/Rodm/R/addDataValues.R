@@ -1,4 +1,4 @@
-addDataValues <- function(DataZoo=NULL, Date=NULL, Value=NULL, ValueAccuracy=rep(NA, NCOL(DataZoo)), Site, Variable, Offset=rep(NA, NCOL(DataZoo)), OffsetType=rep('No', NCOL(DataZoo)), CensorCode = rep("nc", NCOL(DataZoo)), Qualifier=rep(NA, NCOL(DataZoo)), Method=rep(0, NCOL(DataZoo)), Source, Sample=rep("No", NCOL(DataZoo)), DerivedFrom=NULL, QualityControlLevel, tolerance=0){
+addDataValues <- function(DataZoo=NULL, Date=NULL, Value=NULL, ValueAccuracy=rep(NA, NCOL(DataZoo)), Site, Variable, Offset=rep(NA, NCOL(DataZoo)), OffsetType=rep('No', NCOL(DataZoo)), CensorCode = rep("No", NCOL(DataZoo)), Qualifier=rep("No", NCOL(DataZoo)), Method=rep('No', NCOL(DataZoo)), Source, Sample=rep("No", NCOL(DataZoo)), DerivedFrom=NULL, QualityControlLevel, tolerance=0){
 	#mandatory: DataValue,  Site, Variable, CensorCode, Method, Source, QualityControlLevel
 
 	todo("UnitConversion")
@@ -17,13 +17,13 @@ addDataValues <- function(DataZoo=NULL, Date=NULL, Value=NULL, ValueAccuracy=rep
 	SiteID <- expandVar(Site, nrow=NROW(Value), ncol=NCOL(Value), checkID=TRUE, table="Site")
 	VariableID <- expandVar(Variable, nrow=NROW(Value), ncol=NCOL(Value), checkID=TRUE, table="Variable")
 	stopifnot(length(Offset)==NCOL(Value))
-	OffsetTypeID <- expandVar(OffsetType, nrow=NROW(Value), ncol=NCOL(Value), checkID=TRUE, table="OffsetType")
-	QualifierID <- expandVar(Qualifier, nrow=NROW(Value), ncol=NCOL(Value), checkID=TRUE, table="Qualifier")
-	MethodID <- expandVar(Method, nrow=NROW(Value), ncol=NCOL(Value), checkID=TRUE, table="Method")
+	OffsetTypeID <- expandVar(OffsetType, nrow=NROW(Value), ncol=NCOL(Value), checkID=TRUE, table="OffsetTypes")
+	QualifierID <- expandVar(Qualifier, nrow=NROW(Value), ncol=NCOL(Value), checkID=TRUE, table="Qualifiers")
+	MethodID <- expandVar(Method, nrow=NROW(Value), ncol=NCOL(Value), checkID=TRUE, table="Methods")
 	CensorCodeNum <- expandVar(CensorCode, nrow=NROW(Value), ncol=NCOL(Value), checkID=TRUE, table="CensorCode")
 	SourceID <- expandVar(Source, nrow=NROW(Value), ncol=NCOL(Value), checkID=TRUE, table="Source")
-	SampleID <- expandVar(Sample, nrow=NROW(Value), ncol=NCOL(Value), checkID=TRUE, table="Sample")
-	QualityControlLevelID <- expandVar(QualityControlLevel, nrow=NROW(Value), ncol=NCOL(Value), checkID=TRUE, table="QualityControlLevel")
+	SampleID <- expandVar(Sample, nrow=NROW(Value), ncol=NCOL(Value), checkID=TRUE, table="Samples")
+	QualityControlLevelID <- expandVar(QualityControlLevel, nrow=NROW(Value), ncol=NCOL(Value), checkID=TRUE, table="QualityControlLevels")
 
 	#Adjust Dimension for Values without foreign key
 	Offset <- expandVar(Offset, nrow=NROW(Value), ncol=NCOL(Value))
