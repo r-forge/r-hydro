@@ -437,13 +437,13 @@ setMethod("IaddDataVersion",
 			# Eintrag in VersionsTabelle ValidUntilDate zum alten Datensatz
 			the.query <- paste("UPDATE Versions SET ValidUntil = ", sqlnow(object) ," WHERE VersionID =", IgetCurrentDataVersion(object))
 			run.query(object, the.query )
-			# Neuer Eintrag in VersionsTabelle mit neuer Begründung
+			# Neuer Eintrag in VersionsTabelle mit neuer Begruendung
 			the.query <- paste("INSERT INTO Versions (VersionComment) Values ('",reason,"')", sep="")
 			run.query(object, the.query )
 
 			# Achtung: beim Abholen von der Versionshistory 
-			#	muss die Begründung für die Änderung jeweils 
-			#	bei der nächsten Versionsnummer nachgeschaut werden.
+			#	muss die Begruendung für die Aenderung jeweils 
+			#	bei der naechsten Versionsnummer nachgeschaut werden.
 			the.query <- "SELECT LAST_INSERT_ID()"
 			to.ret <- run.query(object, the.query )
 			return(as.numeric(to.ret))
