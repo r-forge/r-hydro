@@ -94,6 +94,9 @@ check.version <- function(object, version){
 			query = "SELECT * FROM ODMVersion"
 		        if(getOption("verbose.queries", default=FALSE)) print(query)
 			res <- dbGetQuery(object@con, query)
+			if(NROW(res)==0){
+				stop("No Database Version stored in table ODMVersion. Please specify the version (e.g. 'dbGetQuery(options('odm.handler')[[1]]@con, 'INSERT INTO ODMVersion (VersionNumber) values (\"1.1Ver\")') ).\n")
+			}
 			if(res$VersionNumber!=version){
 				stop("Invalid Database version. Expected ",version,", obtained ",res$VersionNumber)
 			}
