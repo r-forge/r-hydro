@@ -68,5 +68,10 @@ attach(huagrahuma)
 
 output <- topmodel(parameters[1:9], inputs, topidx, delay)
 
+#Use HydroModel structure:
+mymodel <- HydroModel("topmodel", parameters, data, delay = delay, topidx = topidx)
+predictions <- predict(model, probs=c(0.05, 0.95))
+
+
 }
 \keyword{models}

@@ -15,7 +15,8 @@ export(NSeff,
        wasim.read.Run,
 ##       "$.HydroRun",
 	long.wave.radiation.balance,
-        sat.vap.pres
+        sat.vap.pres,
+      hbv, abc, hbv.prerun, lhs.abc, lhs.hbv
 	)
 
 exportClasses(
