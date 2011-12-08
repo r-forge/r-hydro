@@ -49,7 +49,7 @@ getID <- function(table, value#, allowNoValue=FALSE
 					#stop if we found too many results
 					if(NROW(entry)>1){ 
 						print(entry)
-						cat("Term '",uvalue[i],"' returns more than 1 vaules in table ",table , "\n", sep="")
+						cat("Term '",uvalue[i],"' returns more than 1 values in table ",table , "\n", sep="")
 						cat("\n\n Please select matching row or hit 0 to stop\n")
 						choice <- "impossible"
 						while(choice == "impossible"){
@@ -88,7 +88,7 @@ getID <- function(table, value#, allowNoValue=FALSE
 			       	stop(paste("getID error: lookup not defined correctly, missing fields for table ", table, ":", fields, ". Existing fields are:", existing ))
 			}
 			if(NROW(all.table)==0){
-				if(value=='No' | value=="Unknown"){
+				if(uvalue[i]=='No' | uvalue[i]=="Unknown"){
 					uvalueID[i] <- IgetNo(options("odm.handler")[[1]], table)
 					next
 				} else {

@@ -8,6 +8,7 @@ setGeneric("IdbState", function(object) {standardGeneric("IdbState")})
 setGeneric("IgetSite", function(object, ID=NULL, Code=NULL, Name=NULL, x=NULL, y=NULL, Elevation=NULL, LatLongDatum=NULL, exact=FALSE ) { standardGeneric("IgetSite")}) 
 setGeneric("IgetUnits", function(object, ID=NULL, Name=NULL, Type=NULL, Abbreviation=NULL, exact=FALSE ) { standardGeneric("IgetUnits")}) 
 setGeneric("IaddUnits", function(object, ID, Name, Type, Abbreviation ) { standardGeneric("IaddUnits")}) 
+setGeneric("IaddSpatialReferences", function(object, ID, SRSName, SRSID, IsGeographic, Notes ) { standardGeneric("IaddSpatialReferences")}) 
 setGeneric("IgetVariable", function(object, ID=NULL, Code=NULL, Name=NULL, Speciation=NULL, Unit=NULL, Medium=NULL,exact=FALSE, ...  ) { standardGeneric("IgetVariable")}) 
 setGeneric("IgetQualifiers", function(object, ID=NULL, Code=NULL, Description=NULL, ...  ) { standardGeneric("IgetQualifiers")}) 
 setGeneric("IgetMethods", function(object, ID=NULL, Description=NULL, ...  ) { standardGeneric("IgetMethods")}) 
@@ -64,6 +65,7 @@ setMethod("IaddCV", signature(object = "NULL"), h.m)
 setMethod("IgetSite", signature(object = "NULL"), h.m)
 setMethod("IgetUnits", signature(object = "NULL"), h.m)
 setMethod("IaddUnits", signature(object = "NULL"), h.m)
+setMethod("IaddSpatialReferences", signature(object = "NULL"), h.m)
 setMethod("IgetVariable", signature(object = "NULL"), h.m)
 setMethod("IgetQualifiers", signature(object = "NULL"), h.m)
 setMethod("IgetMethods", signature(object = "NULL"), h.m)
@@ -102,10 +104,12 @@ check.version <- function(object, version){
 			}
 		} else {
 			warning("Creating database structure")
-			run.sql.script(object@con, system.file("odm1_1_raw.sql", package="RODM"))
+			run.sql.script(object@con, system.file("odm1_1_raw.sql", package="RObsDat"))
 			if(version=="1.1Ver"){
-			     run.sql.script(object@con, system.file("odm1_1_addVersion.sql", package="RODM"))
+			     run.sql.script(object@con, system.file("odm1_1_addVersion.sql", package="RObsDat"))
 			}
+			warning("Updating controlled vocabularies")
+			updateCV()
 		}
 		if(!dbExistsTable(object@con, "Synonyms")){
 			warning("Creating synonym table")
@@ -441,7 +445,7 @@ setMethod("IaddDataVersion",
 			the.query <- paste("UPDATE Versions SET ValidUntil = ", sqlnow(object) ," WHERE VersionID =", IgetCurrentDataVersion(object))
 			run.query(object, the.query )
 			# Neuer Eintrag in VersionsTabelle mit neuer Begruendung
-			the.query <- paste("INSERT INTO Versions (VersionComment) Values ('",reason,"')", sep="")
+			the.query <- paste("INSERT INTO Versions (VersionComment) Values (\"",reason,"\")", sep="")
 			run.query(object, the.query )
 
 			# Achtung: beim Abholen von der Versionshistory 
@@ -475,15 +479,15 @@ setMethod("IupdateDataValues",
 		function(object, ValueID, localDateTime, value, TZ, SiteID, VariableID, Offset=NULL, OffsetTypeID=NULL, CensorCode, QualifierID=NULL, MethodID, SourceID, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID, valueAccuracy=NULL,...  ){
 			insert.query <- paste("UPDATE DataValues SET DataValue = ",value,
 					", ValueAccuracy = ", valueAccuracy,
-				       	", LocalDateTime = '", localDateTime,
-				       	"', UTCOffset = ", tz2offset(TZ),
-					", DateTimeUTC = '", strftime(localDateTime, tz=TZ),
-					"', SiteID = ", SiteID, 
+				       	", LocalDateTime = \"", localDateTime,
+				       	"\", UTCOffset = ", tz2offset(TZ),
+					", DateTimeUTC = \"", strftime(localDateTime, tz=TZ),
+					"\", SiteID = ", SiteID, 
 					", VariableID = ", VariableID,
 					", OffsetValue = ", Offset,
 					", OffsetTypeID = ", OffsetTypeID,
-				        ", CensorCode = '", CensorCode,
-					"', QualifierID = ", QualifierID,
+				        ", CensorCode = \"", CensorCode,
+					"\", QualifierID = ", QualifierID,
 				        ", MethodID = ", MethodID, 
 					", SourceID = ", SourceID,
 					", SampleID = ", SampleID, 
@@ -515,7 +519,7 @@ setMethod("IaddVariable", signature=(object = "odm1_1"),
 				theGeneralCategory <- svk(GeneralCategory, "GeneralCategory", rownum, object)
 
 
-				insert.query <- paste("INSERT INTO Variables (VariableCode, VariableName, Speciation, VariableUnitsID, SampleMedium,ValueType, IsRegular, TimeSupport, TimeUnitsID, DataType, GeneralCategory, NoDataValue) VALUES ('", paste(
+				insert.query <- paste("INSERT INTO Variables (VariableCode, VariableName, Speciation, VariableUnitsID, SampleMedium,ValueType, IsRegular, TimeSupport, TimeUnitsID, DataType, GeneralCategory, NoDataValue) VALUES (\"", paste(
 						theCode,
 						theName ,
 						theSpeciation ,
@@ -528,7 +532,7 @@ setMethod("IaddVariable", signature=(object = "odm1_1"),
 						theDataType ,
 						theGeneralCategory ,
 						theNoDataValue ,
-						sep="', '"), "')", sep="")
+						sep="\", \""), "\")", sep="")
 			 	run.query(object, insert.query )
 			}
 	  }
@@ -538,13 +542,13 @@ setMethod("IaddISOMetadata",
 		function(object, TopicCategory, Title, Abstract, ProfileVersion, MetadataLink) {
 		for(rownum in seq(along=Title)){
 			theTopicCategory <- svk(TopicCategory, "TopicCatgeoryCV", rownum,object)
-			insert.query <- paste("INSERT INTO ISOMetadata (TopicCategory, Title, Abstract, ProfileVersion, MetadataLink) VALUES ('", paste(
+			insert.query <- paste("INSERT INTO ISOMetadata (TopicCategory, Title, Abstract, ProfileVersion, MetadataLink) VALUES (\"", paste(
 					theTopicCategory,
 					Title[rownum],
 					Abstract[rownum],
 					ProfileVersion[rownum],
 					MetadataLink[rownum],
-					sep="', '"), "')", sep="")
+					sep="\", \""), "\")", sep="")
 			run.query(object, insert.query )
 
 		}
@@ -555,7 +559,7 @@ setMethod("IaddSource",
 		function(object, Organization, SourceDescription, SourceLink, ContactName, Phone, Email, Address, City, State, ZipCode, Citation, Metadata) {
 		for(rownum in seq(along=SourceDescription)){
 			theMetadata <- svk(Metadata, "ISOMetadata", rownum,object)
-			insert.query <- paste("INSERT INTO Sources (Organization, SourceDescription, SourceLink, ContactName, Phone, Email, Address, City, State, ZipCode, Citation, MetadataID) VALUES ('", paste(
+			insert.query <- paste("INSERT INTO Sources (Organization, SourceDescription, SourceLink, ContactName, Phone, Email, Address, City, State, ZipCode, Citation, MetadataID) VALUES (\"", paste(
 					Organization[rownum],
 					SourceDescription[rownum],
 					SourceLink[rownum],
@@ -568,7 +572,7 @@ setMethod("IaddSource",
 					ZipCode[rownum],
 					Citation[rownum],
 					theMetadata,
-					sep="', '"), "')", sep="")
+					sep="\", \""), "\")", sep="")
 			run.query(object, insert.query )
 
 		}
@@ -595,7 +599,7 @@ setMethod("IaddSite",
 				theVerticalDatum <- svk(VerticalDatum, "VerticalDatumCV",rownum,object)
 				theLocalProjection <- svk(LocalProjection, "SpatialReferences", rownum,object)
 
-				insert.query <- paste("INSERT INTO Sites (SiteCode, SiteName, Latitude, Longitude, LatLongDatumID, Elevation_m, VerticalDatum, LocalX, LocalY, LocalProjectionID, PosAccuracy_m, State, County, Comments) VALUES ('", paste(
+				insert.query <- paste("INSERT INTO Sites (SiteCode, SiteName, Latitude, Longitude, LatLongDatumID, Elevation_m, VerticalDatum, LocalX, LocalY, LocalProjectionID, PosAccuracy_m, State, County, Comments) VALUES (\"", paste(
 
 						Code[rownum],
 						Name[rownum],
@@ -611,7 +615,7 @@ setMethod("IaddSite",
 						theState,
 						theCounty,
 						theComment,
-						sep="', '"), "')", sep="")
+						sep="\", \""), "\")", sep="")
 			 	run.query(object, insert.query )
 			}
 
@@ -640,7 +644,7 @@ setMethod("IaddDataValues",
 				theTZ <- sv(TZ, rownum)
 				theDerivedFromID <- sv(DerivedFromID, rownum)
 
-				insert.query <- paste("INSERT INTO DataValues (DataValue, ValueAccuracy, LocalDateTime, UTCOffset, DateTimeUTC, SiteID, VariableID, OffsetValue, OffsetTypeID, CensorCode, QualifierID, MethodID, SourceID, SampleID, DerivedFromID, QualityControlLevelID) VALUES ('", paste(values[rownum],
+				insert.query <- paste("INSERT INTO DataValues (DataValue, ValueAccuracy, LocalDateTime, UTCOffset, DateTimeUTC, SiteID, VariableID, OffsetValue, OffsetTypeID, CensorCode, QualifierID, MethodID, SourceID, SampleID, DerivedFromID, QualityControlLevelID) VALUES (\"", paste(values[rownum],
 						thevalueAccuracy,
 						thelocalDateTime,
 						theTZ , 
@@ -654,7 +658,7 @@ setMethod("IaddDataValues",
 						theSourceID,
 						theSampleID,
 						theDerivedFromID,
-						theQualityControlLevelID ,sep="', '"), "')", sep="")
+						theQualityControlLevelID ,sep="\", \""), "\")", sep="")
 			 	run.query(object, insert.query )
 			}
 		}
@@ -723,7 +727,7 @@ setMethod("IaddCV",
 	  function(object, table, term, definition){
 		  #check for valid tables
 		  stopifnot(table %in% CVtables())
-			query <- paste("INSERT INTO ",table,"CV (Term, Definition) Values ('", term, "','",definition,"')"  , sep="")
+			query <- paste("INSERT INTO ",table,"CV (Term, Definition) Values (\"", term, "\",\"",definition,"\")"  , sep="")
 			res <- run.query(object, query )
 			return(res)
 	  }
@@ -732,7 +736,17 @@ setMethod("IaddUnits",
 	  signature(object= "odm1_1"),
 	  function(object, ID, Name, Type, Abbreviation){
 		  #check for valid tables
-			query <- paste("INSERT INTO Units (UnitsID, UnitsName, UnitsType, UnitsAbbreviation) Values ('", ID, "','",Name, "','", Type ,"','",Abbreviation,"')"  , sep="")
+			query <- paste("INSERT INTO Units (UnitsID, UnitsName, UnitsType, UnitsAbbreviation) Values (\"", ID, "\",\"",Name, "\",\"", Type ,"\",\"",Abbreviation,"\")"  , sep="")
+			res <- run.query(object, query )
+			return(res)
+	  }
+)
+
+setMethod("IaddSpatialReferences",
+	  signature(object= "odm1_1"),
+	  function(object, ID, SRSName, SRSID, IsGeographic, Notes){
+		  #check for valid tables
+			query <- paste("INSERT INTO SpatialReferences (SpatialReferenceID, SRSID, SRSName, IsGeographic, Notes) Values (\"", ID, "\",\"", SRSID, "\",\"",SRSName, "\",\"", IsGeographic ,"\",\"",Notes,"\")"  , sep="")
 			res <- run.query(object, query )
 			return(res)
 	  }

@@ -1,11 +1,11 @@
-Package: RODM
+Package: RObsDat
 Type: Package
-Title: R-Interface to the observations Data Model 
-Version: 10-09
-Date: 2011-09-05
+Title: R-Interface to the observations Data Model from QUASHI
+Version: 11.12
+Date: 2011-12-08
 Author: Dominik Reusser
 Maintainer: Dominik Reusser <reusser@pik-potsdam.de>
-Depends: R (>= 2.11.0), zoo, DBI, vwr 
+Depends: R (>= 2.11.0), zoo, DBI, vwr, methods, RColorBrewer, maptools, sp, SSOAP, XMLSchema (>=0.5)
 Suggests:RMySQL, RSQLite
 Description: This package provides classes and functions for handling observational (time series) data
 License: GPL

@@ -1,12 +1,12 @@
 addCV <- function(table, term, definition){
 	stopifnot(length(term)==length(definition))
 	for(i in seq(along=term)){
-		#check existing
-		if(NROW(IgetCV(getOption("odm.handler"), table=table, term=term[i], definition=definition[i]))>0){
-			todo("ToDo: Handling of existing entries")
-			browser()
+		definition[i] <- gsub("\"", "'", definition[i])
+		if(NROW(existing <- IgetCV(getOption("odm.handler"), table=table, term=term[i], definition=definition[i]))>0){
+			warning(paste("Skiping existing entry:", term[i]))
+			return()
 		}
-		todo("ToDo: Warnign and handling if CV is extended")
+		warning(paste("Extending CV", table, " which should not be necessary. Please propose new term to CUASHI at http://his.cuahsi.org/mastercvreg/", sep=""))
 
 		IaddCV(getOption("odm.handler"), table=table, term=term[i], definition=definition[i])
 	}

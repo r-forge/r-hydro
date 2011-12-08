@@ -1,8 +1,8 @@
 getMetadata <- function(table, ...){
 	#check for valid table name
-	table.list <- c(CVtables(), "SpatialReference", "Site", "Methods","Qualifiers","QualityControlLevels","Samples","Source","Variable","OffsetTypes","Units","ISOMetadata")
+	table.list <- c(CVtables(), "SpatialReferences", "Site", "Methods","Qualifiers","QualityControlLevels","Samples","Source","Variable","OffsetTypes","Units","ISOMetadata")
 	if(!table %in% table.list){
-		stop("Undefined table", table, "Valid values are:", table.list)
+		stop("Undefined table ", table, " Valid values are: ", paste(table.list, collapse=", "))
 	}
 
 	#query data
