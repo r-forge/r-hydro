@@ -13,7 +13,7 @@ WaSiM control file.
     \item{\code{origin}}{ToDo}
     \item{\code{parameter.name}}{ToDo}
     \item{\code{par_block}}{name of the parameter block (marked by \[\])}
-    \item{\code{type}}{name of the data. For types with special meaning see \code{\linkS4class{HydroModelRun}} }
+    \item{\code{type}}{name of the data. For types with special meaning see \code{\linkS4class{HydroRun}} }
     \item{\code{units}}{units of the data}
   }
 }

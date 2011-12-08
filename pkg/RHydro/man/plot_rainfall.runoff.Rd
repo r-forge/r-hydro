@@ -8,7 +8,8 @@
 plot_rainfall.runoff(rain, q.model, q.measured = NULL, myColors =
                  data.frame(measured = c("grey"), modelled =
                  c("black"), rain = c("black")), q.units = "mm/h",
-                 p.units = "mm/h", mar = c(3, 4, 2, 4) + 0.1, ...)
+                 p.units = "mm/h", 
+		 mar = c(3, 4, 2, 4) + 0.1, cex.rain = 1, ...)
 }
 \arguments{
   \item{rain}{ \code{\link[zoo]{zoo}}-object with rainfall data }
@@ -17,6 +18,7 @@ plot_rainfall.runoff(rain, q.model, q.measured = NULL, myColors =
   \item{myColors}{ data.frame defining colors for plotting }
   \item{q.units}{ character: units of the discharge: used for axis label }
   \item{p.units}{ character: units of the rainfall: used for axis label }
+  \item{cex.rain}{ numeric: Size of the axis lable for rainfall }
   \item{mar}{ see \code{\link{par}}  }
   \item{\dots}{ other arguments passed to \code{\link[zoo]{plot.zoo}} }
 }

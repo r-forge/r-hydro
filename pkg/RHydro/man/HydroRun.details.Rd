@@ -7,7 +7,7 @@
 \alias{get.runCount}
 \title{ Extract details from HydroRun object }
 \description{
-\code{get.data.types} extracts a list of data.types stored in a \code{\linkS4class{HydroModelRun}} object.
+\code{get.data.types} extracts a list of data.types stored in a \code{\linkS4class{HydroRun}} object.
 \code{get.stations} extracts a list of stations for which data is available.
 \code{get.runCount} returns the number of runs stored in the object.
 }
@@ -26,7 +26,7 @@ get.stations(object, type = factor(c("flux", "state")),
 get.runCount(object)
 }
 \arguments{
-  \item{object}{ a \code{\linkS4class{HydroModelRun}} object }
+  \item{object}{ a \code{\linkS4class{HydroRun}} object }
   \item{type}{ ToDo }
   \item{origin}{ ToDo }
   \item{unique}{ ToDo }

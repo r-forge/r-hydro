@@ -5,14 +5,15 @@
   This is an implementation of the 1995 Fortran version of the hydrological model TOPMODEL, originally developed by Keith Beven.
 }
 \usage{
-topmodel(parameters, inputs, topidx, delay, performance, verbose = FALSE)
+topmodel(parameters, data, delay, topidx, pm= c("NS"), return.simulations=TRUE, verbose = FALSE)
 }
 \arguments{
   \item{parameters}{A vector, matrix or HydroModelParameters object containing the input parameters (see below for the exact structure)}
-  \item{inputs}{A list of vectors or zoo time series, containing at least a member called ``prec'' (precipitation) and ``PET'' (potential evapotranspiration). ``Qobs'' may also be given, in which the Nash-Sutcliffe efficiency is calculated directly}
+  \item{data}{A list of vectors or zoo time series, containing at least a member called ``prec'' (precipitation) and ``PET'' (potential evapotranspiration). ``Qobs'' may also be given, in which the Nash-Sutcliffe efficiency is calculated directly}
   \item{delay}{Delay function for overland flow (see below)}
   \item{topidx}{An object returned from the \code{\link{topidx}} method}
-  \item{performance}{Return a performance measure rather than the simulated discharge. Currently only "NS" is implemented.}
+  \item{pm}{Return a performance measure rather than the simulated discharge. Currently only "NS" is implemented.}
+  \item{return.simulations}{If set to TRUE, returns predicted discharge time series}
   \item{verbose}{If set to TRUE, returns besides predicted discharge also overland flow, base flow and storage}
 }
 \details{
@@ -69,8 +70,10 @@ attach(huagrahuma)
 output <- topmodel(parameters[1:9], inputs, topidx, delay)
 
 #Use HydroModel structure:
-mymodel <- HydroModel("topmodel", parameters, data, delay = delay, topidx = topidx)
-predictions <- predict(model, probs=c(0.05, 0.95))
+mymodel <- HydroModel("topmodel", huagrahuma$parameters[1:9], 
+ 	huagrahuma$inputs, delay = huagrahuma$delay,
+        topidx = huagrahuma$topidx)
+predictions <- predict(mymodel, probs=c(0.05, 0.95))
 
 
 }

@@ -16,7 +16,7 @@ export(NSeff,
 ##       "$.HydroRun",
 	long.wave.radiation.balance,
         sat.vap.pres,
-      hbv, abc, hbv.prerun, lhs.abc, lhs.hbv
+      hbv, abc, hbv.prerun
 	)
 
 exportClasses(
@@ -26,7 +26,7 @@ exportClasses(
               HydroTopmodelParameters,
               HydroWasimParameters)
 
-exportMethods(print, plot, merge, coerce, validity.check, subset)
+exportMethods(print, plot, merge, coerce, validity.check, subset, predict)
 # import packages that define generics for the exported methods
 # (e.g. stats for simulate)
 import(methods, stats) 

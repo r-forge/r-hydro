@@ -1,8 +1,10 @@
 \name{HydroRun-class}
 \docType{class}
 \alias{HydroRun-class}
+\alias{HydroModel-class}
 \alias{$.HydroRun}
 \alias{print,HydroRun-method}
+\alias{predict,HydroModel-method}
 \alias{get.names,HydroRun-method}
 \alias{subset,HydroRun-method}
 \alias{validity.check,HydroRun-method}
@@ -11,7 +13,7 @@
 \alias{plot,HydroRun,ANY-method}
 
 
-\title{Class "HydroRun" }
+\title{Class "HydroRun" and "HydroModel" (to be merged) }
 \description{	 The HydroRun class is capable of holding data for several simulation runs}
 \section{Objects from the Class}{
 Objects are created by calling a hydrological model implemented in R
@@ -41,6 +43,7 @@ evaluation methods will be added in future versions.
     }
               
     \item{print}{\code{signature(x = "HydroRun")}: ... }
+    \item{predict}{\code{signature(x = "HydroModel")}: ... }
     \item{get.names}{\code{signature(object = "HydroRun")}: Obtain list of names that can be accessed with $ }
     \item{subset}{\code{signature(x = "HydroRun")}: select a subset of the data ToDo: Improve documentation  }
     \item{validitiy.check}{\code{signature(x = "HydroRun")}: run validity checks on data ToDo: implement and improve documentation  }

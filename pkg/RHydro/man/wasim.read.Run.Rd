@@ -17,7 +17,7 @@ wasim.read.Run(files)
   If files points to multiple WaSiM \$\$\$-files, each is added as seperate run.
 }
 \value{
- A \code{\linkS4class{HydroModelRun}} object is returned.
+ A \code{\linkS4class{HydroRun}} object is returned.
 }
 \references{ thePaper,
 

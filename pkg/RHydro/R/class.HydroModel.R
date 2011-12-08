@@ -41,8 +41,8 @@ setMethod("predict",
             if(!is.null(newdata)) object@data <- try.xts(newdata)
             ## figure out whether we need to run the model again:
             if(!is.null(newdata) | (length(object@simulations) == 0)) {
-              sim <- do.call(object@model,
-                             c(list(object@parameters, object@data), model@dots))
+              sim <- do.call(what=object@model,
+                             c(list(object@parameters, object@data), object@dots))
               object@simulations <- sim
             }
             
@@ -65,7 +65,7 @@ setMethod("predict",
 
 
 ## this formulation works for S3 generics:
-
+#Todo: Why?
 print.HydroModel <- function (x, ...) {
   ##cat("Model ID: ",x@parameters@modelID,"\n")
   cat("Model: ", x@model, "\n")

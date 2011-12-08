@@ -13,8 +13,8 @@ setClass("HydroTopmodelParameters",
                                modelID = "Topmodel"),
          validity = function(object) {
            ## check that number of parameters is correct
-           if(length(object@parameters) !=9)
-             return("Incorrect number of parameters")
+           if(count <- length(object@parameters) !=9)
+             return(paste("Incorrect number of parameters. Found", count, "out of 9"))
            ## check for negative initial subsurface flow
            if(any(object@parameters[1] < 0))
              return("Initial subsurface flow should not be negative")

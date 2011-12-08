@@ -1,3 +1,4 @@
+#ToDo: This can be merged into class.HydroModel.R  Take care of the different structure when doing this.
 
 ## new class structure HydroRun
 ## to replace HydroModelRun

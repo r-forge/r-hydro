@@ -23,6 +23,6 @@ data(huagrahuma)
 attach(huagrahuma)
 
 output <- topmodel(parameters[1:9], inputs, topidx, delay)
-NSeff(inputs$Q,output$Qsim)
+NSeff(inputs$Q,output$Q)
 }
 \keyword{models}

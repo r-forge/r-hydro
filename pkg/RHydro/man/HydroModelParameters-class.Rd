@@ -8,6 +8,7 @@
 \alias{coerce,HydroModelParameters,data.frame-method}
 \alias{coerce,HydroModelParameters,matrix-method}
 \alias{coerce,list,HydroWasimParameters-method}
+\alias{coerce,list,HydroModelParameters-method}
 \alias{plot,HydroModelParameters,ANY-method}
 \alias{print,HydroModelParameters-method}
 \alias{names,HydroModelParameters-method}
@@ -40,13 +41,14 @@ the specific model }
     \item{coerce}{\code{signature(from = "HydroModelParameters", to = "data.frame")}: ... }
     \item{coerce}{\code{signature(from = "HydroModelParameters", to = "matrix")}: ... }
     \item{coerce}{\code{signature(from = "list", to = "HydroWasimParameters")}: ... }
+    \item{coerce}{\code{signature(from = "list", to = "HydroModelParameters")}: ... }
 	 }
 }
 \references{ thePaper }
 \author{ Dominik Reusser, Wouter Buytaert }
 
 \seealso{
-	\code{\linkS4class{HydroModelRun}} 
+	\code{\linkS4class{HydroRun}} 
 	\code{\linkS4class{HydroTopmodelParameters}} 
 	\code{\linkS4class{HydroWasimParameters}} 
 }
