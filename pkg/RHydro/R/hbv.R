@@ -14,11 +14,20 @@ hbv = function (pars, init, prec, delta_t=1, unithg=NULL) {
  
         
     if (is.na(pars['corr']))  pars['corr'] =1
+    if (is.na(pars['beta']))  pars['beta'] =0.2
     if (is.na(pars['fc']))  pars['fc'] =200
     if (is.na(pars['etpmean']))  pars['etpmean'] =5
     if (is.na(pars['tmean']))  pars['tmean'] =10
     if (is.na(pars['cfmax']))  pars['cfmax'] =2.4
     if (is.na(pars['tt']))  pars['tt'] =0
+
+    if (is.na(pars['lp']))  pars['lp'] =0.1
+    if (is.na(pars['k_perc']))  pars['k_perc'] =0.1
+    if (is.na(pars['luz']))  pars['luz'] =0.1
+    if (is.na(pars['minsm']))  pars['minsm'] =0.1
+    if (is.na(pars['k0']))  pars['k0'] =0.1
+    if (is.na(pars['k1']))  pars['k1'] =0.1
+    if (is.na(pars['k2']))  pars['k2'] =0.1
     
  
     if (!is.null(unithg))  #custom specifivcation of unit hydrograph 

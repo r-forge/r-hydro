@@ -47,9 +47,8 @@ Maik Heistermann (?), Dominik Reusser
 \examples{
 data(huagrahuma)
 abc(pars=c(a=0.5,b=0.3,c=0.7), init=c(G=1), prec = huagrahuma$inputs$P, R.implement=TRUE)
-#ToDo, get fortran to run
 #Todo: make more sensible example
-#abc(pars=c(a=0.5,b=0.3,c=0.7), init=c(G=1), prec = huagrahuma$inputs$P)
+abc(pars=c(a=0.5,b=0.3,c=0.7), init=c(G=1), prec = huagrahuma$inputs$P)
 }
 \keyword{ ~modelling }
 \keyword{ utilities }

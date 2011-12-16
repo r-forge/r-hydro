@@ -108,7 +108,7 @@ prec.day <- aggregate(huagrahuma$inputs$P,
 
 #use standard parameters and initialization
 #ToDo: get it running...
-#hbv(pars=0, init=0, prec = prec.day , delta_t=1)
+hbv(pars=0, init=0, prec = prec.day , delta_t=1)
  
 }
 
