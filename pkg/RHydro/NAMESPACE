@@ -1,6 +1,9 @@
 useDynLib(RHydro)
 
-export(NSeff,
+export(fusesma.sim,
+       fusesma.ranges,
+       fuserouting.sim,
+       NSeff,
        get.data.types,
        get.stations,
        get.runCount,
