@@ -1,0 +1,176 @@
+## hydromad: Hydrological Modelling and Analysis of Data
+## FUSE Soil Moisture Accounting model
+# Author: Claudia Vitolo
+# Date: 14-11-2011
+                 
+fusesma.sim <- function(DATA,
+                        mid,deltim,fracstate0,
+                        rferr_add,rferr_mlt,frchzne,fracten,
+                        maxwatr_1,percfrac,fprimqb,qbrate_2a,
+                        qbrate_2b,qb_prms,maxwatr_2,baserte,
+                        rtfrac1,percrte,percexp,sacpmlt,
+                        sacpexp,iflwrte,axv_bexp,sareamax,
+                        loglamb,tishape,qb_powr)
+{    
+    stopifnot(c("P","E") %in% colnames(DATA))
+    P <- DATA[,"P"]
+    E <- DATA[,"E"]
+    ## skip over missing values
+    #bad <- is.na(P) | is.na(E)
+    #P[bad] <- 0
+    #E[bad] <- 0
+    
+    data(modlist)
+    #Read model structure
+    smodl<-list("rferr"=modlist[mid,2],
+                "arch1"=modlist[mid,3],
+                "arch2"=modlist[mid,4],
+                "qsurf"=modlist[mid,5],
+                "qperc"=modlist[mid,6],
+                "esoil"=modlist[mid,7],
+                "qintf"=modlist[mid,8],
+                "q_tdh"=modlist[mid,9])
+       
+    #model parameters as list
+    mparam0 <- list("rferr_add" = rferr_add,
+                    "rferr_mlt" = rferr_mlt,
+                    "frchzne"   = frchzne,
+                    "fracten"   = fracten,
+                    "maxwatr_1" = maxwatr_1,
+                    "percfrac"  = percfrac,
+                    "fprimqb"   = fprimqb,
+                    "qbrate_2a" = qbrate_2a,
+                    "qbrate_2b" = qbrate_2b,
+                    "qb_prms"   = qb_prms,
+                    "maxwatr_2" = maxwatr_2,
+                    "baserte"   = baserte,
+                    "rtfrac1"   = rtfrac1,
+                    "percrte"   = percrte,
+                    "percexp"   = percexp,
+                    "sacpmlt"   = sacpmlt,
+                    "sacpexp"   = sacpexp,
+                    "iflwrte"   = iflwrte,
+                    "axv_bexp"  = axv_bexp,
+                    "sareamax"  = sareamax,
+                    "loglamb"   = loglamb,
+                    "tishape"   = tishape,
+                    "qb_powr"   = qb_powr #,
+                    ##"timedelay" = timedelay
+                    )
+    
+    # Isolate model parameters to use for this run
+    mparam <- assign_par(smodl, mparam0)
+    
+    # compute derived parameters (bucket sizes, etc.)  **check mean_tipow
+    dparam <- par_derive(smodl,mparam)                 
+    
+    # initialize model states (upper layer and lower layer)
+    tens_1a <- -999
+    tens_1b <- -999
+    tens_1  <- -999
+    free_1  <- -999
+    watr_1  <- -999
+    tens_2  <- -999
+    free_2a <- -999
+    free_2b <- -999
+    watr_2  <- -999
+    free_2  <- -999
+
+    if (dparam$maxtens_1a != -999) tens_1a <- dparam$maxtens_1a * fracstate0
+    if (dparam$maxtens_1b != -999) tens_1b <- dparam$maxtens_1b * fracstate0
+    if (dparam$maxtens_1  != -999) tens_1  <- dparam$maxtens_1  * fracstate0
+    if (dparam$maxfree_1  != -999) free_1  <- dparam$maxfree_1  * fracstate0
+    if (mparam$maxwatr_1  != -999) watr_1  <- mparam$maxwatr_1  * fracstate0
+    if (dparam$maxtens_2  != -999) tens_2  <- dparam$maxtens_2  * fracstate0
+    if (dparam$maxfree_2a != -999) free_2a <- dparam$maxfree_2a * fracstate0
+    if (dparam$maxfree_2b != -999) free_2b <- dparam$maxfree_2b * fracstate0 
+    if (mparam$maxwatr_2  != -999) watr_2  <- mparam$maxwatr_2  * fracstate0
+    if (dparam$maxfree_2a != -999 && dparam$maxfree_2b != -999) free_2  <- free_2a + free_2b
+    
+    # Solve derivatives
+    times      <- seq(1, length(P), by = 1) # by = 1 means that solver timestep = data timestep
+
+    parameters <- c("deltim" = deltim) # standard deltim = 1 (daily time step), 1/24 (hourly time step), 1/24/4 (15 min time step)
+
+    state0    <- c("tens_1a" = tens_1a,
+                   "tens_1b" = tens_1b,
+                   "tens_1"  = tens_1,
+                   "free_1"  = free_1,
+                   "watr_1"  = watr_1,
+                   "tens_2"  = tens_2,
+                   "free_2a" = free_2a,
+                   "free_2b" = free_2b,
+                   "watr_2"  = watr_2,
+                   "free_2"  = free_2  )
+    
+    print("computing state variables ...")
+    # the solver returns a matrix nrows x ncols
+    # ncols = 11 (time, tens_1a, tens_1b,  tens_1,  free_1,  watr_1,  tens_2, free_2a, free_2b,  watr_2, free_2)
+    # nrows = length(P)
+    state1 <- ode("y" = state0, 
+                  "times" = times, 
+                  "func" = mstate_eqn, 
+                  "parms" = deltim, 
+                  "ppt" = P, 
+                  "pet" = E, 
+                  "smodl" = smodl, 
+                  "mparam" = mparam, 
+                  "dparam" = dparam)  #default: method="rk"
+
+    # single state
+    if(smodl$arch2 == 31 || smodl$arch2 == 33 || smodl$arch2 == 34 || smodl$arch2 == "topmdexp_2") { 
+        if (state0["tens_2"] != -999) {
+           state1[,7] <- state1[,10]
+           state1[,11] <- -999
+        } else {
+           state1[,7] <- -999
+           state1[,11] <- state1[,10]
+        }
+    }
+
+    print("computing fluxes ...")
+    U <- rep(0,length(P)) 
+    
+    fluxes <- matrix(0,nrow=length(P),ncol=17)
+    for (index in seq(along = P)) { 
+     w_flux   <- compute_fluxes(deltim,smodl,P[index],E[index],mparam,dparam,state1[index,2:11])
+     for (cindex in 1:17)  fluxes[index,cindex] <- w_flux[[cindex]]   #???
+     # compute effective rainfall (sum of surface runoff, overflow, interflow, and baseflow)
+     U[index] <- w_flux$qrunoff + w_flux$oflow_1 + w_flux$qintf_1 + w_flux$oflow_2 + w_flux$qbase_2
+    }
+    
+    #print("converting effective rainfall into zoo object ...")
+    # make it a time series object again
+    #attributes(U) <- attributes(P)
+    # re-insert missing values
+    #U[bad] <- NA
+    return(U)
+}
+
+
+fusesma.ranges <- function() {
+    list("rferr_add" = c(0, 0),
+         "rferr_mlt" = c(1, 1),
+         "frchzne"   = c(0.05, 0.95),
+         "fracten"   = c(0.05, 0.95),
+         "maxwatr_1" = c(25, 500),
+         "percfrac"  = c(0.05, 0.95),
+         "fprimqb"   = c(0.05, 0.95),
+         "qbrate_2a" = c(0.001, 0.25),
+         "qbrate_2b" = c(0.001, 0.25),
+         "qb_prms"   = c(0.001, 0.25),
+         "maxwatr_2" = c(50, 5000),
+         "baserte"   = c(0.001, 1000),
+         "rtfrac1"   = c(0.05, 0.95),
+         "percrte"   = c(0.01, 1000),
+         "percexp"   = c(1, 20),
+         "sacpmlt"   = c(1, 250),
+         "sacpexp"   = c(1, 5),
+         "iflwrte"   = c(0.01, 1000),
+         "axv_bexp"  = c(0.001, 3),
+         "sareamax"  = c(0.05, 0.95),
+         "loglamb"   = c(5, 10),
+         "tishape"   = c(2, 5),
+         "qb_powr"   = c(1, 10))
+
+}
