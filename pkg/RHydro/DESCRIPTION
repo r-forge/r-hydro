@@ -31,4 +31,21 @@ Collate: class.HydroModelParameters.R  class.HydroRun.R class.HydroModel.R
 	get.model.pars.R
 	fill.R
 	get.abc.model.pars.R
+  assign_par.R
+  compute_fluxes.R
+  fluxbaseflow.R
+  fluxevap.R
+  fluxperc.R
+  fluxqmiscell.R
+  fluxqsatexcess.R
+  fluxrain.R
+  fuserouting.R
+  fusesma.R
+  logismooth.R
+  mean_tipow.R
+  mstate_eqn.R
+  par_derive.R
+  qbsaturatn.R
+  qtimedelay.R
+
 
