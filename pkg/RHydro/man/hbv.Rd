@@ -8,7 +8,7 @@
 hbv - simulation using hydrological model HBV
 }
 \description{
-\code{hbv} simulates discharge from a given rainfall time series using a simple 0-D version of the hydrological model HBV (Bergström,) as implemented in Heistermann & Kneis (2011) with simple routing using custom, triangular hydrograph or linear storage cascade. \code{hbv_prerun} applies \code{hbv} while repeating a pre-run phase ("warm up") as long as any of the storages change by more than \code{storage_tolerance}
+\code{hbv} simulates discharge from a given rainfall time series using a simple 0-D version of the hydrological model HBV (BergstrÃ¶m,) as implemented in Heistermann & Kneis (2011) with simple routing using custom, triangular hydrograph or linear storage cascade. \code{hbv_prerun} applies \code{hbv} while repeating a pre-run phase ("warm up") as long as any of the storages change by more than \code{storage_tolerance}
 }
 \usage{
 hbv(pars, init, prec, delta_t=1, unithg=NULL)
@@ -21,8 +21,8 @@ hbv.prerun(init=NULL, prec, max_pre_runs=20, storage_tolerance=0.1, prerun_lengt
 
   \item{pars}{
 named vector holding the HBV parameters
-\code{cfmax=2.4}  degree day factor for snow melt  [mm/°C/d]
-\code{tt=0}    temperature threshold below which precipitation falls as snow [°C]
+\code{cfmax=2.4}  degree day factor for snow melt  [mm/Â°C/d]
+\code{tt=0}    temperature threshold below which precipitation falls as snow [Â°C]
 \code{fc=200}     field capacity [mm] 
 \code{minsm}   minimum soil moisture for storage sm [mm]
 \code{beta}    parameter to control the fraction of rain and snow melt partitioned for groundwater recharge [-]
@@ -35,7 +35,7 @@ named vector holding the HBV parameters
 \code{k2}     storage coefficient of soil lower zone [1/d]
 \code{maxbas} Length of (triangular) unit hydrograph [timesteps]. See details.
 \code{etpmean=5} mean evaporation [mm/d]
-\code{tmean=10} mean temperatures [°C]
+\code{tmean=10} mean temperatures [Â°C]
 
 \code{n} (real) number of storages in linear storage cascade. Overrides pars["maxbas"], overridden by \code{unithg}.
 \code{k} decay constant for linear storage cascade. Overrides pars["maxbas"], overridden by \code{unithg}.
@@ -87,8 +87,8 @@ The function returns a list \code{list(q, snow, sm, suz, slz)} with
     
 }
 \references{
-  Bergström, S. (1976) 
-  Development and application of a conceptual runoff model for Scandinavian catchments. \emph{SMHI Reports RHO}, No. 7, Norrköping.
+  BergstrÃ¶m, S. (1976) 
+  Development and application of a conceptual runoff model for Scandinavian catchments. \emph{SMHI Reports RHO}, No. 7, NorrkÃ¶ping.
   
   Heistermann, M. & Kneis, D. (2011)
   Benchmarking quantitative precipitation estimation by conceptual rainfall-runoff modeling, \emph{Water Resour. Res.,}
