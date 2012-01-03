@@ -47,5 +47,7 @@ Collate: class.HydroModelParameters.R  class.HydroRun.R class.HydroModel.R
   par_derive.R
   qbsaturatn.R
   qtimedelay.R
+  readmd.R
+  updatestates.R
 
 
