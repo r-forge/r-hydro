@@ -79,7 +79,7 @@ fluxqmiscell <- function(deltim,arch1,arch2,state,mparam,dparam,eff_ppt,qrunoff,
      oflow_2     <- w_func * qperc_12                       # compute over-flow of free water
    }
 
-   if(arch2 == 33 || arch2 == 34 || arch2 == "topmdexp_2") { # unlimited size
+   if(arch2 == 33 || arch2 == 34 || arch2 == 35) { # unlimited size
      tens2free_2 <- 0
      oflow_2     <- 0
      oflow_2a    <- 0
@@ -119,7 +119,7 @@ fluxqmiscell <- function(deltim,arch1,arch2,state,mparam,dparam,eff_ppt,qrunoff,
      oflow_2     <- max(0, qperc_12 - (mparam$maxwatr_2 - watr_2)/deltim) # compute over-flow of free water
    }
 
-   if(arch2 == 33 || arch2 == 34 || arch2=="topmdexp_2") { # unlimited size
+   if(arch2 == 33 || arch2 == 34 || arch2==35) { # unlimited size
      tens2free_2 <- 0
      oflow_2     <- 0
      oflow_2a    <- 0

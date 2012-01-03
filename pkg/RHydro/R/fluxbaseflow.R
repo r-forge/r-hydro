@@ -28,7 +28,7 @@ fluxbaseflow <- function(arch2,mparam,qbsat,free_2a, free_2b, watr_2) {
    
    if(arch2 == 33) qbase_2  <- mparam$qb_prms * watr_2                                    # baseflow resvr of unlimited size (0-huge), frac rate # qb_prms is a fraction (t-1)   
    if(arch2 == 34) qbase_2  <- qbsat * (watr_2/mparam$maxwatr_2)**mparam$qb_powr          # baseflow resvr of unlimited size (0-huge), power recession
-   if(arch2 == "topmdexp_2") qbase_2  <- qbsat * exp( -(1 - watr_2/mparam$maxwatr_2) )              # topmodel exponential reservoir (-huge to huge)
+   if(arch2 == 35) qbase_2  <- qbsat * exp( -(1 - watr_2/mparam$maxwatr_2) )              # topmodel exponential reservoir (-huge to huge)
    if(arch2 == 31) qbase_2  <- mparam$baserte * (watr_2/mparam$maxwatr_2)**mparam$qb_powr # baseflow reservoir of fixed size
 
    results <- c(qbase_2a,qbase_2b,qbase_2)

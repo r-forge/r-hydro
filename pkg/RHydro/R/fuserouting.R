@@ -15,7 +15,7 @@
 # Returns:
 #   X:                             routed runoff
 
-fuserouting.sim <- function(U,size_frac_future,timedelay,deltim,alpha,psave,mid)
+fuserouting.sim <- function(U, mid, deltim, timedelay, size_frac_future = 500, alpha = 2.5, psave = 0.0)
 {    
   
     print("routing ...")

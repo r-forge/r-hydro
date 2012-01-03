@@ -27,7 +27,7 @@ qbsaturatn <- function(arch_2,mparam,maxfree_2a,maxfree_2b,powlamb) {
      qbsat  <- mparam$baserte * ( topmdm / (powlamb ** mparam$qb_powr) ) # compute baseflow
    }
    
-   if(arch_2 == "topmdexp_2") {   # topmodel exponential transmissivity profile  (note: mm --> m)
+   if(arch_2 == 35) {   # topmodel exponential transmissivity profile  
      topmdm <- mparam$maxwatr_2 / 1000                          # for simplicity we use the capacity as the topmodel scaling parameter         
      qbsat  <- mparam$baserte * topmdm * exp(-mparam$loglamb)   # compute baseflow
    }

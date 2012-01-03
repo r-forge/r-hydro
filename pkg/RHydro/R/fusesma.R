@@ -3,14 +3,11 @@
 # Author: Claudia Vitolo
 # Date: 14-11-2011
                  
-fusesma.sim <- function(DATA,
-                        mid,deltim,fracstate0,
-                        rferr_add,rferr_mlt,frchzne,fracten,
-                        maxwatr_1,percfrac,fprimqb,qbrate_2a,
-                        qbrate_2b,qb_prms,maxwatr_2,baserte,
-                        rtfrac1,percrte,percexp,sacpmlt,
-                        sacpexp,iflwrte,axv_bexp,sareamax,
-                        loglamb,tishape,qb_powr)
+fusesma.sim <- function(DATA,mid,modlist,
+                        deltim=1,fracstate0=0.25,rferr_add=0,rferr_mlt=1,
+                        frchzne,fracten,maxwatr_1,percfrac,fprimqb,qbrate_2a,qbrate_2b,
+                        qb_prms,maxwatr_2,baserte,rtfrac1,percrte,percexp,sacpmlt,
+                        sacpexp,iflwrte,axv_bexp,sareamax,loglamb,tishape,qb_powr)
 {    
     stopifnot(c("P","E") %in% colnames(DATA))
     P <- DATA[,"P"]
@@ -20,7 +17,6 @@ fusesma.sim <- function(DATA,
     #P[bad] <- 0
     #E[bad] <- 0
     
-    data(modlist)
     #Read model structure
     smodl<-list("rferr"=modlist[mid,2],
                 "arch1"=modlist[mid,3],
@@ -116,25 +112,17 @@ fusesma.sim <- function(DATA,
                   "smodl" = smodl, 
                   "mparam" = mparam, 
                   "dparam" = dparam)  #default: method="rk"
-
-    # single state
-    if(smodl$arch2 == 31 || smodl$arch2 == 33 || smodl$arch2 == 34 || smodl$arch2 == "topmdexp_2") { 
-        if (state0["tens_2"] != -999) {
-           state1[,7] <- state1[,10]
-           state1[,11] <- -999
-        } else {
-           state1[,7] <- -999
-           state1[,11] <- state1[,10]
-        }
-    }
-
+      
+    print("updating state variables ...")
+    state1 <- updatestates(smodl,mparam,dparam,state1)
+    
     print("computing fluxes ...")
     U <- rep(0,length(P)) 
     
-    fluxes <- matrix(0,nrow=length(P),ncol=17)
+    fluxes <- matrix(0,nrow=length(P),ncol=17)                         # to output fluxes
     for (index in seq(along = P)) { 
      w_flux   <- compute_fluxes(deltim,smodl,P[index],E[index],mparam,dparam,state1[index,2:11])
-     for (cindex in 1:17)  fluxes[index,cindex] <- w_flux[[cindex]]   #???
+     for (cindex in 1:17)  fluxes[index,cindex] <- w_flux[[cindex]]    # to output fluxes
      # compute effective rainfall (sum of surface runoff, overflow, interflow, and baseflow)
      U[index] <- w_flux$qrunoff + w_flux$oflow_1 + w_flux$qintf_1 + w_flux$oflow_2 + w_flux$qbase_2
     }

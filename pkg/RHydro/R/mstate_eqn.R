@@ -66,7 +66,7 @@ mstate_eqn <- function(t, state, parameters, ppt, pet, smodl, mparam, dparam)   
       }
 
       # single state
-      if(smodl$arch2 == 31 || smodl$arch2 == 33 || smodl$arch2 == 34 || smodl$arch2 == "topmdexp_2") { 
+      if(smodl$arch2 == 31 || smodl$arch2 == 33 || smodl$arch2 == 34 || smodl$arch2 == 35) { 
         dwatr_2  <- m_flux$qperc_12 - m_flux$evap_2 - m_flux$qbase_2 - m_flux$oflow_2
       }
       

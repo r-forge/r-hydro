@@ -26,13 +26,13 @@ par_derive <- function(smodl,mparam) {
 
    # BUCKETSIZE
    if(mparam$maxwatr_1 != -999 && mparam$fracten != -999) {
-      maxtens_1  <- mparam$fracten * mparam$maxwatr_1            # derive maximum tension water in each layer
-      maxfree_1  <- (1-mparam$fracten) * mparam$maxwatr_1        # derive maximum free water in each layer
+      maxtens_1  <- mparam$fracten * mparam$maxwatr_1            # derive maximum tension water in upper layer
+      maxfree_1  <- (1-mparam$fracten) * mparam$maxwatr_1        # derive maximum free water in upper layer
    }
    
    if(mparam$maxwatr_2 != -999 && mparam$fracten != -999) {
-      maxtens_2  <-  mparam$fracten * mparam$maxwatr_2            # derive maximum tension water in each layer
-      maxfree_2  <-  (1-mparam$fracten) * mparam$maxwatr_2        # derive maximum free water in each layer
+      maxtens_2  <-  mparam$fracten * mparam$maxwatr_2           # derive maximum tension water in lower layer
+      maxfree_2  <-  (1-mparam$fracten) * mparam$maxwatr_2       # derive maximum free water in lower layer
    }
    
    # derive capacities of the recharge and lower zone (only used if upper tension is divided in two)

@@ -40,18 +40,24 @@ assign_par <- function(smodl,mparam0) {
    if(smodl$rferr == 12) rferr_mlt <- mparam0$rferr_mlt
 
    # (2) upper-layer architecture
+  if(smodl$arch1 == 21 || smodl$arch1 == 22) {
+      fracten   <- mparam0$fracten
+      maxwatr_1 <- mparam0$maxwatr_1
+   }
+   
    if(smodl$arch1 == 23) {
       frchzne   <- mparam0$frchzne
       fracten   <- mparam0$fracten
       maxwatr_1 <- mparam0$maxwatr_1
    }
 
-   if(smodl$arch1 == 22 || smodl$arch1 == 21) {
-      fracten   <- mparam0$fracten
-      maxwatr_1 <- mparam0$maxwatr_1
-   }
-
    # (3) lower-layer architecture / baseflow
+  if(smodl$arch2 == 31) { # power-law relation (no parameters needed for the topo index distribution)
+     maxwatr_2 <- mparam0$maxwatr_2
+     baserte   <- mparam0$baserte
+     qb_powr   <- mparam0$qb_powr
+   }
+   
    if(smodl$arch2 == 32) {       # tension reservoir plus two parallel tank
       percfrac  <- mparam0$percfrac
       fprimqb   <- mparam0$fprimqb
@@ -64,15 +70,8 @@ assign_par <- function(smodl,mparam0) {
      maxwatr_2 <- mparam0$maxwatr_2
      qb_prms   <- mparam0$qb_prms
    }
-
-   if(smodl$arch2 == "topmdexp_2") {        # topmodel options
-     maxwatr_2 <- mparam0$maxwatr_2
-     baserte   <- mparam0$baserte
-     loglamb   <- mparam0$loglamb
-     tishape   <- mparam0$tishape
-   }
-
-   if(smodl$arch2 == 34) {        # topmodel options
+   
+  if(smodl$arch2 == 34) {        # topmodel options
      maxwatr_2 <- mparam0$maxwatr_2
      baserte   <- mparam0$baserte
      loglamb   <- mparam0$loglamb
@@ -80,11 +79,14 @@ assign_par <- function(smodl,mparam0) {
      qb_powr   <- mparam0$qb_powr
    }
 
-   if(smodl$arch2 == 31) { # power-law relation (no parameters needed for the topo index distribution)
+   if(smodl$arch2 == 35) {        # topmodel options
      maxwatr_2 <- mparam0$maxwatr_2
      baserte   <- mparam0$baserte
-     qb_powr   <- mparam0$qb_powr
+     loglamb   <- mparam0$loglamb
+     tishape   <- mparam0$tishape
    }
+
+
 
    # (4) surface runoff
    if(smodl$qsurf == 41) axv_bexp <- mparam0$axv_bexp # arno/xzang/vic parameterization (upper zone control)
@@ -94,7 +96,7 @@ assign_par <- function(smodl,mparam0) {
        loglamb   <- mparam0$loglamb
        tishape   <- mparam0$tishape
      }
-     if(smodl$arch2 == 32 || smodl$arch2 == 33 || smodl$arch2 == "topmdexp_2") qb_powr   <- mparam0$qb_powr # need the topmodel power if we don't have it for baseflow # baseflow exponent (-), used to modify the topographic
+     if(smodl$arch2 == 32 || smodl$arch2 == 33 || smodl$arch2 == 35) qb_powr   <- mparam0$qb_powr # need the topmodel power if we don't have it for baseflow # baseflow exponent (-), used to modify the topographic
    }
    
    # (5) percolation
