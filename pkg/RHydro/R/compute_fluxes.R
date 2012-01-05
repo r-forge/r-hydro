@@ -15,15 +15,15 @@ compute_fluxes <- function(deltim,smodl,mppt,mpet,mparam,dparam,state) {
    # Returns:
    #   List of fluxes at time "t"
 
-   tens_1a <- state[[1]]
-   tens_1b <- state[[2]]
-   tens_1  <- state[[3]]
-   free_1  <- state[[4]]
-   watr_1  <- state[[5]]
-   tens_2  <- state[[6]]
-   free_2a <- state[[7]]
-   free_2b <- state[[8]]
-   watr_2  <- state[[9]]
+   tens_1a <- state[1]
+   tens_1b <- state[2]
+   tens_1  <- state[3]
+   free_1  <- state[4]
+   watr_1  <- state[5]
+   tens_2  <- state[6]
+   free_2a <- state[7]
+   free_2b <- state[8]
+   watr_2  <- state[9]
 
    # set all fluxes to zero at the start of time step
    eff_ppt     <- 0

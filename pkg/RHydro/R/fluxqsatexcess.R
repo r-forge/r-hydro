@@ -39,7 +39,6 @@ fluxqsatexcess <- function(mqsurf,eff_ppt,mparam,dparam,tens_1, watr_1, watr_2) 
          ti_chi  <- (mparam$loglamb - ti_off) / mparam$tishape   # chi -- loglamb is the first parameter (mean)
          ti_arg  <- max(0, ti_log - ti_off) / ti_chi             # argument to the incomplete gamma function
          satarea <- 1 - pgamma(ti_arg,ti_shp)                    # pgamma is the incomplete gamma function # cv: pgamma(scale,shape)
-         #satarea <- 1 - pgamma(ti_arg,ti_shp, lower=FALSE) * gamma(ti_shp)                    # pgamma is the incomplete gamma function # cv: pgamma(scale,shape)
       }
    }
 

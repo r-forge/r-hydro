@@ -19,10 +19,10 @@ for (r in 1:length(state1[,1])) {
   
 if (smodl$arch1 == 21) {
   # case('onestate_1') # upper layer defined by a single state variable
+  free_1  <- max(xmin, state1[r,6] - dparam$maxtens_1) # free storage
   tens_1a <- -999                               # 1st tension store (undefined)
   tens_1b <- -999                               # 2nd tension store (undefined)
-  tens_1  <- min(state1[r,6], dparam$maxtens_1)        # tension storage
-  free_1  <- max(xmin, state1[r,6] - dparam$maxtens_1) # free storage
+  tens_1  <- min(state1[r,6]-free_1, dparam$maxtens_1)        # tension storage
   watr_1  <- state1[r,6]
 }
 if (smodl$arch1 == 22) {
@@ -54,8 +54,8 @@ if (smodl$arch2 == 32) {  # (lower layer architecture)
 if(smodl$arch2 == 31 || smodl$arch2 == 33 || smodl$arch2 == 34 || smodl$arch2 == 35) { # single baseflow reservoir
   free_2a <- -999                                       # primary reservoir (undefined)
   free_2b <- -999                                       # secondary reservoir (undefined)
-  free_2  <- max(0, state1[r,10] - dparam$maxtens_2)     # free storage
-  tens_2  <- min(state1[r,10], dparam$maxtens_2)         # tension storage
+  free_2  <- max(xmin, state1[r,10] - dparam$maxtens_2)     # free storage
+  tens_2  <- min(state1[r,10]-free_2, dparam$maxtens_2)         # tension storage
   watr_2  <- tens_2  + free_2
 }
   

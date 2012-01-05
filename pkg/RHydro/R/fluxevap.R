@@ -3,8 +3,6 @@ fluxevap <- function(arch1,arch2,esoil,fpet,mparam,dparam,tens_1a, tens_1b, tens
    # Author: Claudia Vitolo
    # Date: 28-03-2011
    #
-   # PART OF FUSE MODEL (module 8 of XXX)
-   #
    # Args:
    #   arch1:                         smodl$arch1
    #   arch2:                         smodl$arch2

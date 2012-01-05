@@ -28,7 +28,6 @@ mean_tipow <- function(ti_shp,log_lamb,qb_pwr) {
       upperv <- (ibin/nbins) * ti_max                    # upper value in frequency bin
       gmarg2 <- max(0, upperv - ti_off) / ti_chi         # 1st argument to the gamma function
       upperp <- pgamma(gmarg2,ti_shp)                    # gammp is the incomplete gamma function
-      #upperp <- pgamma(gmarg2,ti_shp, lower=FALSE) * gamma(ti_shp)                    # gammp is the incomplete gamma function
       probin <- upperp - lowerp                          # probability of the current bin
       # get the scaled topographic index value
       logval <- 0.5 * (lowerv + upperv)                  # log-transformed index for the current bin

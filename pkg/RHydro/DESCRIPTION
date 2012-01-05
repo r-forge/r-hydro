@@ -41,6 +41,7 @@ Collate: class.HydroModelParameters.R  class.HydroRun.R class.HydroModel.R
   fluxrain.R
   fuserouting.R
   fusesma.R
+  initstates.R
   logismooth.R
   mean_tipow.R
   mstate_eqn.R
@@ -49,5 +50,6 @@ Collate: class.HydroModelParameters.R  class.HydroRun.R class.HydroModel.R
   qtimedelay.R
   readmd.R
   updatestates.R
+  upstates.R
 
 

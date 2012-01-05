@@ -17,8 +17,8 @@ fusesma.sim <- function(DATA,mid,modlist,
     #P[bad] <- 0
     #E[bad] <- 0
     
-    #Read model structure
-    smodl<-list("rferr"=modlist[mid,2],
+    # Read model structure [LIST]
+    smodl <- list("rferr"=modlist[mid,2],
                 "arch1"=modlist[mid,3],
                 "arch2"=modlist[mid,4],
                 "qsurf"=modlist[mid,5],
@@ -27,7 +27,7 @@ fusesma.sim <- function(DATA,mid,modlist,
                 "qintf"=modlist[mid,8],
                 "q_tdh"=modlist[mid,9])
        
-    #model parameters as list
+    # All the model parameters [LIST]
     mparam0 <- list("rferr_add" = rferr_add,
                     "rferr_mlt" = rferr_mlt,
                     "frchzne"   = frchzne,
@@ -54,50 +54,19 @@ fusesma.sim <- function(DATA,mid,modlist,
                     ##"timedelay" = timedelay
                     )
     
-    # Isolate model parameters to use for this run
+    # Isolate model parameters to use for this run [LIST]
     mparam <- assign_par(smodl, mparam0)
     
-    # compute derived parameters (bucket sizes, etc.)  **check mean_tipow
+    # compute derived parameters (bucket sizes, etc.) [LIST]
     dparam <- par_derive(smodl,mparam)                 
     
-    # initialize model states (upper layer and lower layer)
-    tens_1a <- -999
-    tens_1b <- -999
-    tens_1  <- -999
-    free_1  <- -999
-    watr_1  <- -999
-    tens_2  <- -999
-    free_2a <- -999
-    free_2b <- -999
-    watr_2  <- -999
-    free_2  <- -999
-
-    if (dparam$maxtens_1a != -999) tens_1a <- dparam$maxtens_1a * fracstate0
-    if (dparam$maxtens_1b != -999) tens_1b <- dparam$maxtens_1b * fracstate0
-    if (dparam$maxtens_1  != -999) tens_1  <- dparam$maxtens_1  * fracstate0
-    if (dparam$maxfree_1  != -999) free_1  <- dparam$maxfree_1  * fracstate0
-    if (mparam$maxwatr_1  != -999) watr_1  <- mparam$maxwatr_1  * fracstate0
-    if (dparam$maxtens_2  != -999) tens_2  <- dparam$maxtens_2  * fracstate0
-    if (dparam$maxfree_2a != -999) free_2a <- dparam$maxfree_2a * fracstate0
-    if (dparam$maxfree_2b != -999) free_2b <- dparam$maxfree_2b * fracstate0 
-    if (mparam$maxwatr_2  != -999) watr_2  <- mparam$maxwatr_2  * fracstate0
-    if (dparam$maxfree_2a != -999 && dparam$maxfree_2b != -999) free_2  <- free_2a + free_2b
+    # initialize model states (upper layer and lower layer) 
+    state0 <- initstates(smodl,mparam,dparam,fracstate0)    
     
     # Solve derivatives
     times      <- seq(1, length(P), by = 1) # by = 1 means that solver timestep = data timestep
 
     parameters <- c("deltim" = deltim) # standard deltim = 1 (daily time step), 1/24 (hourly time step), 1/24/4 (15 min time step)
-
-    state0    <- c("tens_1a" = tens_1a,
-                   "tens_1b" = tens_1b,
-                   "tens_1"  = tens_1,
-                   "free_1"  = free_1,
-                   "watr_1"  = watr_1,
-                   "tens_2"  = tens_2,
-                   "free_2a" = free_2a,
-                   "free_2b" = free_2b,
-                   "watr_2"  = watr_2,
-                   "free_2"  = free_2  )
     
     print("computing state variables ...")
     # the solver returns a matrix nrows x ncols
@@ -112,13 +81,12 @@ fusesma.sim <- function(DATA,mid,modlist,
                   "smodl" = smodl, 
                   "mparam" = mparam, 
                   "dparam" = dparam)  #default: method="rk"
-      
-    print("updating state variables ...")
+    
+    #Update fluxes
     state1 <- updatestates(smodl,mparam,dparam,state1)
     
     print("computing fluxes ...")
     U <- rep(0,length(P)) 
-    
     fluxes <- matrix(0,nrow=length(P),ncol=17)                         # to output fluxes
     for (index in seq(along = P)) { 
      w_flux   <- compute_fluxes(deltim,smodl,P[index],E[index],mparam,dparam,state1[index,2:11])

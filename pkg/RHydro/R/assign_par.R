@@ -86,8 +86,6 @@ assign_par <- function(smodl,mparam0) {
      tishape   <- mparam0$tishape
    }
 
-
-
    # (4) surface runoff
    if(smodl$qsurf == 41) axv_bexp <- mparam0$axv_bexp # arno/xzang/vic parameterization (upper zone control)
    if(smodl$qsurf == 42) sareamax <- mparam0$sareamax # prms variant (fraction of upper tension storage)

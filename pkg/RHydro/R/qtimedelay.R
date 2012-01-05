@@ -20,7 +20,6 @@ qtimedelay <- function(timedelay, deltim, size_frac_future) {
    for (jtim in seq(along = frac_future)) {
         tfuture <- jtim  * deltim                        # future time (units of days)
         cumprob <- pgamma(alamb*tfuture,alpha)           # cumulative probability at jtim
-        #cumprob <- pgamma(alamb*tfuture,alpha, lower=FALSE) * gamma(alpha)           # cumulative probability at jtim
         frac_future[jtim]  <- max(0, cumprob-psave)      # probability between jtim-1 and jtim
         psave   <- cumprob                               # cumulative probability at jtim-1
    }

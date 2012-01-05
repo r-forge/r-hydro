@@ -16,13 +16,12 @@ mstate_eqn <- function(t, state, parameters, ppt, pet, smodl, mparam, dparam)   
    # Returns:
    #   List of parameters.
   
-   #with(as.list(c(state, parameters)), {
-  
       deltim <- as.numeric(parameters[1])
   
       # compute fluxes:
       mppt   <- as.numeric(ppt[t])
       mpet   <- as.numeric(pet[t])
+      state  <- upstates(smodl,mparam,dparam,state)
       m_flux <- compute_fluxes(deltim,smodl,mppt,mpet,mparam,dparam,state)
 
       # computes derivatives (rate of change) of all states for all model combinations
@@ -54,6 +53,7 @@ mstate_eqn <- function(t, state, parameters, ppt, pet, smodl, mparam, dparam)   
       
       if(smodl$arch1 == 21) {                        # upper layer defined by a single state variable
         dwatr_1  <- m_flux$eff_ppt    - m_flux$qrunoff    - m_flux$evap_1  - m_flux$qperc_12 - m_flux$qintf_1 - m_flux$oflow_1
+        dtens_1  <- dwatr_1
       }
 
       # compute derivatives for states in the lower layer
@@ -68,6 +68,7 @@ mstate_eqn <- function(t, state, parameters, ppt, pet, smodl, mparam, dparam)   
       # single state
       if(smodl$arch2 == 31 || smodl$arch2 == 33 || smodl$arch2 == 34 || smodl$arch2 == 35) { 
         dwatr_2  <- m_flux$qperc_12 - m_flux$evap_2 - m_flux$qbase_2 - m_flux$oflow_2
+        dtens_2  <- dwatr_2
       }
       
       return(list(c("dtens_1a" = dtens_1a, 
@@ -80,7 +81,4 @@ mstate_eqn <- function(t, state, parameters, ppt, pet, smodl, mparam, dparam)   
                     "dfree_2b" = dfree_2b, 
                     "dwatr_2"  = dwatr_2,
                     "dfree_2"  = dfree_2   )))
-   #})
-
 }
-
