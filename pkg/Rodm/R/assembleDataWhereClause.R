@@ -27,9 +27,11 @@ assembleDataWhereClause <- function(ID=NULL, from=NULL, to=NULL, SiteID=NULL, Va
 				w.o$the.and <- " AND "
 			}
 
-			if(!is.null(Offset) & !is.null(OffsetTypeID)){
-				w.o$where.clause <- paste(w.o$where.clause, w.o$the.and, "OffsetValue like '%", Offset, "%' AND OffsetTypeID = ", OffsetTypeID, sep="")
-				w.o$the.and <- " AND "
+			if(!is.null(Offset)  &  !is.null(OffsetTypeID)){
+				if(!is.na(Offset) &  !is.na(OffsetTypeID)){
+					w.o$where.clause <- paste(w.o$where.clause, w.o$the.and, "OffsetValue like '%", Offset, "%' AND OffsetTypeID = ", OffsetTypeID, sep="")
+					w.o$the.and <- " AND "
+				}
 			}
 
 			where.clause <- w.o$where.clause

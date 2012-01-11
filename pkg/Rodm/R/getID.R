@@ -2,15 +2,15 @@ getID <- function(table, value#, allowNoValue=FALSE
 		  #allowNoValue does not make sense as it is implemented
 		  ){
 # Generate Table where to search for information - this could be done once only
-	lookup <- list(SpatialReferences = c("ID", "SRSName", "SRSID"), 
+	lookup <- list(SpatialReference = c("ID", "SRSName", "SRSID"), 
 		       Site=c('ID', 'Name','Code'),
-		       Methods=c('ID','Description'),
-		       Qualifiers=c('ID','Description','Code'),
-		       QualityControlLevels=c('ID','Definition','Explanation', 'Code'),
-		       Samples=c('ID','LabSampleCode'),
+		       Method=c('ID','Description'),
+		       Qualifier=c('ID','Description','Code'),
+		       QualityControlLevel=c('ID','Definition','Explanation', 'Code'),
+		       Sample=c('ID','LabSampleCode'),
 		       Source=c('ID','Organization','Description','Citation'),
 		       Variable=c('ID','Name','Code'),
-		       OffsetTypes=c('ID', 'Description'),
+		       OffsetType=c('ID', 'Description'),
 		       Units=c('ID', 'Name', 'Abbreviation'),
 		       ISOMetadata=c('ID', 'Title','Abstract')
 		       )
@@ -52,12 +52,15 @@ getID <- function(table, value#, allowNoValue=FALSE
 						cat("Term '",uvalue[i],"' returns more than 1 values in table ",table , "\n", sep="")
 						cat("\n\n Please select matching row or hit 0 to stop\n")
 						choice <- "impossible"
+						inval <- 0
 						while(choice == "impossible"){
 							next.step <- readline("What is your choice? ")
 							choice <- as.numeric(next.step)
 							if(is.na(choice)){ choice <- "impossible"}
 							if(choice < 0) { choice <- "impossible"}
 							if(choice > NROW(entry)) { choice <- "impossible"}
+							inval <- inval+1
+							if(inval==10) choice = 0
 						} 
 						if(choice==0){
 							stop(paste("No value found related to", uvalue[i], 'in table', table))

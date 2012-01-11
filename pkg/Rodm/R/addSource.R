@@ -8,8 +8,13 @@ addSource <- function(Organization, SourceDescription, SourceLink=NULL, ContactN
 	} else {
 		MetadataID <- rep(NA, length(SourceDescription))
 	}
-	#checking for existing entries doesnt make much sense because matching
-	#SourceDescritpion will not work as they probably differ
+	#checking for existing entries 
+	if(NROW(existing <- getMetadata("Source",Organization=Organization, SourceDescription=SourceDescription, SourceLink=SourceLink))>0){
+		warning(paste("Skiping existing ISOMetadata entry:", SourceDescription))
+		return()
+	}
+
+
 	IaddSource(getOption("odm.handler"), Organization=Organization, SourceDescription= SourceDescription, SourceLink= SourceLink, ContactName= ContactName, Phone= Phone, Email= Email, Address= Address, City= City, State= State, ZipCode= ZipCode, Citation= Citation, Metadata=MetadataID)
 
 }

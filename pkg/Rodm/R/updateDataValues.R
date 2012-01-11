@@ -1,57 +1,47 @@
 updateDataValues <- function(getDataResult, reason=NULL){
 	#Requery the data 
-	inDB <- getDataValues(ID=getDataResult$num$ValueID)
+	stopifnot(class(getDataResult)=="observations")
+	inDB <- getDataValues(ID=as.numeric(getDataResult@ids))
 
 	#Find differences based on ID!
-	nm <- intersect(names(inDB$num), names(getDataResult$num))
-	IDrow <- which(nm=="ValueID")
-	inDB.byID <- zoo(coredata(inDB$num[,nm]), order.by = coredata(inDB$num[,nm][,IDrow]))
-	getDataResult.byID <- zoo(coredata(getDataResult$num[,nm]),  order.by = coredata(getDataResult$num[,nm][,IDrow]))
-	different.num <- inDB.byID != getDataResult.byID
-
-	#find differences in time
-	inDB.byID <- zoo(index(inDB$num), order.by = coredata(inDB$num[,nm][,IDrow]))
-	getDataResult.byID <- zoo(index(getDataResult$num),  order.by = coredata(getDataResult$num[,nm][,IDrow]))
-	timediff <- inDB.byID - getDataResult.byID
-	if(any(timediff != 0)){
-		todo("Implement changing time in update data")
+	comp <- getDataResult == inDB
+	details <- attributes(comp)
+	if(any(!(names(details) %in% c("values", "dim")))){
+		todo("Implement updating if anything besides values is different")
 		browser()
+		stop("Unimplemented")
 	}
-
-
-
-	nnm <- intersect(names(inDB$char), names(getDataResult$char))
-	inDB.byID <- zoo(coredata(inDB$char[,nnm]), order.by = coredata(inDB$num[,nm][,IDrow]))
-	getDataResult.byID <- zoo(coredata(getDataResult$char[,nnm]),  order.by = coredata(getDataResult$num[,nm][,IDrow]))
-	different.char <- inDB.byID != getDataResult.byID
-	to.update <- coredata(getDataResult$num[,nm][rowSums(different.num)>0 | rowSums(different.char)>0,IDrow])
 
 
 	#update the single records
-	if(length(to.update)==0){
+	if(all(comp)){
 		warning("Nothing to update")
 		return()
 	}
+	to.update <- coredata(getDataResult@ids)[!comp]
 	IarchiveDataValues(getOption("odm.handler"),ValueID=to.update, reason)
 	for(rec.id in to.update){
-		the.row <- which(getDataResult$num[,nm][,IDrow]==rec.id)
-		the.tz <- guess.tz(getDataResult$num$UTCOffset[the.row])
-		IupdateDataValues(getOption("odm.handler"),ValueID=rec.id, 
-				localDateTime=chr2date(getDataResult$char$LocalDateTime[the.row], tz=the.tz),
-				value=getDataResult$num$DataValue[the.row],
-				valueAccuracy=getDataResult$num$ValueAccuracy[the.row],
+		the.row <- which(getDataResult@ids==rec.id)
+		#make sure that ID is processed correctly in Iupdate if it is NA
+		the.tz <- guess.tz(getDataResult[the.row]@attributes$UTCOffset)
+		obj <- getOption("odm.handler")
+		IupdateDataValues(obj,ValueID=rec.id, 
+				#localDateTime=chr2date(index(getDataResult[the.row]@values), tz=the.tz),
+				localDateTime=index(getDataResult[the.row]@values),
+				value=sv(coredata(getDataResult[the.row]@values)),
+				valueAccuracy=sv(getDataResult[the.row]@attributes$ValueAccuracy),
 				TZ=the.tz,
-				SiteID=getDataResult$num$SiteID[the.row],
-				VariableID=getDataResult$num$VariableID[the.row],
-				Offset=getDataResult$num$OffsetValue[the.row],
-				OffsetTypeID=getDataResult$num$OffsetTypeID[the.row],
-				CensorCode=getDataResult$char$CensorCode[the.row],
-				QualifierID=getDataResult$num$QualifierID[the.row],
-				MethodID=getDataResult$num$MethodID[the.row],
-				SourceID=getDataResult$num$SourceID[the.row],
-				SampleID=getDataResult$num$SampleID[the.row],
-				DerivedFromID=getDataResult$num$DerivedFromID[the.row],
-				QualityControlLevelID=getDataResult$num$QualityControlLevelID[the.row])
+				SiteID=getID("Site", getDataResult[the.row]@attributes$Site),
+				VariableID=getID("Variable",getDataResult[the.row]@attributes$Variable),
+				Offset=getDataResult[the.row]@attributes$OffsetValue,
+				OffsetTypeID=getID("OffsetType",getDataResult[the.row]@attributes$OffsetType),
+				CensorCode=sv(getDataResult[the.row]@attributes$CensorCode),
+				QualifierID=getID("Qualifier",getDataResult[the.row]@attributes$Qualifier),
+				MethodID=getID("Method",getDataResult[the.row]@attributes$Method),
+				SourceID=getID("Source",getDataResult[the.row]@attributes$Source),
+				SampleID=getID("Sample",getDataResult[the.row]@attributes$Sample),
+				DerivedFromID= sv(coredata(getDataResult[the.row]@derivedFrom)),
+				QualityControlLevelID=getID("QualityControlLevel",getDataResult[the.row]@attributes$QualityControlLevel))
 
 	}
 }

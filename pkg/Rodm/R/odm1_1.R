@@ -8,15 +8,17 @@ setGeneric("IdbState", function(object) {standardGeneric("IdbState")})
 setGeneric("IgetSite", function(object, ID=NULL, Code=NULL, Name=NULL, x=NULL, y=NULL, Elevation=NULL, LatLongDatum=NULL, exact=FALSE ) { standardGeneric("IgetSite")}) 
 setGeneric("IgetUnits", function(object, ID=NULL, Name=NULL, Type=NULL, Abbreviation=NULL, exact=FALSE ) { standardGeneric("IgetUnits")}) 
 setGeneric("IaddUnits", function(object, ID, Name, Type, Abbreviation ) { standardGeneric("IaddUnits")}) 
-setGeneric("IaddSpatialReferences", function(object, ID, SRSName, SRSID, IsGeographic, Notes ) { standardGeneric("IaddSpatialReferences")}) 
+setGeneric("IaddSpatialReference", function(object, ID, SRSName, SRSID, IsGeographic, Notes ) { standardGeneric("IaddSpatialReference")}) 
 setGeneric("IgetVariable", function(object, ID=NULL, Code=NULL, Name=NULL, Speciation=NULL, Unit=NULL, Medium=NULL,exact=FALSE, ...  ) { standardGeneric("IgetVariable")}) 
-setGeneric("IgetQualifiers", function(object, ID=NULL, Code=NULL, Description=NULL, ...  ) { standardGeneric("IgetQualifiers")}) 
-setGeneric("IgetMethods", function(object, ID=NULL, Description=NULL, ...  ) { standardGeneric("IgetMethods")}) 
-setGeneric("IgetOffsetTypes", function(object, ID=NULL, Description=NULL, Units=NULL, ...  ) { standardGeneric("IgetOffsetTypes")}) 
-setGeneric("IgetSamples", function(object, ID=NULL, LabSampleCode=NULL, ...  ) { standardGeneric("IgetSamples")}) 
+setGeneric("IgetQualifier", function(object, ID=NULL, Code=NULL, Description=NULL, ...  ) { standardGeneric("IgetQualifier")}) 
+setGeneric("IgetMethod", function(object, ID=NULL, Description=NULL, ...  ) { standardGeneric("IgetMethod")}) 
+setGeneric("IgetOffsetType", function(object, ID=NULL, Description=NULL, Units=NULL, ...  ) { standardGeneric("IgetOffsetType")}) 
+setGeneric("IaddOffsetType", function(object, Description=NULL, Units=NULL, ...  ) { standardGeneric("IaddOffsetType")}) 
+setGeneric("IgetSample", function(object, ID=NULL, LabSampleCode=NULL, ...  ) { standardGeneric("IgetSample")}) 
 setGeneric("IgetSource", function(object, ID=NULL, Organization=NULL, Description=NULL, Citation=NULL, ...  ) { standardGeneric("IgetSource")}) 
 setGeneric("IgetISOMetadata", function(object, ID=NULL, Title=NULL, Abstract=NULL, TopicCategory=NULL, ...  ) { standardGeneric("IgetISOMetadata")}) 
-setGeneric("IgetQualityControlLevels", function(object, ID=NULL, Code=NULL, Definition=NULL, Explanation=NULL, ...  ) { standardGeneric("IgetQualityControlLevels")}) 
+setGeneric("IgetQualityControlLevel", function(object, ID=NULL, Code=NULL, Definition=NULL, Explanation=NULL, ...  ) { standardGeneric("IgetQualityControlLevel")}) 
+setGeneric("IaddQualityControlLevel", function(object, ID, Code, Definition, Explanation, ...  ) { standardGeneric("IaddQualityControlLevel")}) 
 
 for(i in CVtables()){
 	code <- paste('setGeneric("Iget',i,'", function(object, Term=NULL,  Definition=NULL, exact=FALSE, ...  ) { standardGeneric("Iget',i,'")})', sep="")
@@ -33,8 +35,9 @@ for(i in CVtables()){
 
  
 setGeneric("IgetDataValues", function(object,ID=NULL, from=NULL, to=NULL, SiteID=NULL, VariableID=NULL, Offset=NULL, OffsetTypeID=NULL, CensorCode=NULL, QualifierID=NULL, MethodID=NULL, SourceID=NULL, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID=NULL, ...  ) { standardGeneric("IgetDataValues")}) 
-setGeneric("IgetSpatialReferences", function(object,ID=NULL, SRSID=NULL, SRSName=NULL, IsGeographic=NULL, Notes=NULL, exact=FALSE) { standardGeneric("IgetSpatialReferences")}) 
+setGeneric("IgetSpatialReference", function(object,ID=NULL, SRSID=NULL, SRSName=NULL, IsGeographic=NULL, Notes=NULL, exact=FALSE) { standardGeneric("IgetSpatialReference")}) 
 setGeneric("IgetOldDataValues", function(object,ID=NULL, from=NULL, to=NULL, SiteID=NULL, VariableID=NULL, Offset=NULL, OffsetTypeID=NULL, CensorCode=NULL, QualifierID=NULL, MethodID=NULL, SourceID=NULL, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID=NULL, VersionID, exact,...  ) { standardGeneric("IgetOldDataValues")}) 
+setGeneric("IgetDeletedDataValues", function(object,ID=NULL, from=NULL, to=NULL, SiteID=NULL, VariableID=NULL, Offset=NULL, OffsetTypeID=NULL, CensorCode=NULL, QualifierID=NULL, MethodID=NULL, SourceID=NULL, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID=NULL, VersionID, exact,...  ) { standardGeneric("IgetDeletedDataValues")}) 
 setGeneric("IaddDataValues", function(object, localDateTime, values, TZ, SiteID, VariableID, Offset=NULL, OffsetTypeID=NULL, CensorCode, QualifierID=NULL, MethodID, SourceID, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID, exact, ...  ) { standardGeneric("IaddDataValues")}) 
 setGeneric("IaddSite", function(object, Code, Name, Latitude, Longitude, LatLongDatum, Elevation=NULL, VerticalDatum=NULL, LocalX=NULL,LocalY=NULL, LocalProjection=NULL, PosAccuracy=NULL, State=NULL, County=NULL, Comments=NULL) {standardGeneric("IaddSite")})
 setGeneric("IaddVariable", function(object, Code, Name, Speciation, Unit, SampleMedium,ValueType, IsRegular, TimeSupport, TimeUnits, DataType, GeneralCategory, NoDataValue) {standardGeneric("IaddVariable")})
@@ -65,19 +68,22 @@ setMethod("IaddCV", signature(object = "NULL"), h.m)
 setMethod("IgetSite", signature(object = "NULL"), h.m)
 setMethod("IgetUnits", signature(object = "NULL"), h.m)
 setMethod("IaddUnits", signature(object = "NULL"), h.m)
-setMethod("IaddSpatialReferences", signature(object = "NULL"), h.m)
+setMethod("IaddSpatialReference", signature(object = "NULL"), h.m)
 setMethod("IgetVariable", signature(object = "NULL"), h.m)
-setMethod("IgetQualifiers", signature(object = "NULL"), h.m)
-setMethod("IgetMethods", signature(object = "NULL"), h.m)
-setMethod("IgetOffsetTypes", signature(object = "NULL"), h.m)
-setMethod("IgetSamples", signature(object = "NULL"), h.m)
+setMethod("IgetQualifier", signature(object = "NULL"), h.m)
+setMethod("IgetMethod", signature(object = "NULL"), h.m)
+setMethod("IgetOffsetType", signature(object = "NULL"), h.m)
+setMethod("IaddOffsetType", signature(object = "NULL"), h.m)
+setMethod("IgetSample", signature(object = "NULL"), h.m)
 setMethod("IgetSource", signature(object = "NULL"), h.m)
 setMethod("IgetISOMetadata", signature(object = "NULL"), h.m)
-setMethod("IgetQualityControlLevels", signature(object = "NULL"), h.m)
+setMethod("IgetQualityControlLevel", signature(object = "NULL"), h.m)
+setMethod("IaddQualityControlLevel", signature(object = "NULL"), h.m)
 setMethod("IgetCensorCode", signature(object = "NULL"), h.m)
 setMethod("IgetDataValues", signature(object = "NULL"), h.m)
-setMethod("IgetSpatialReferences", signature(object = "NULL"), h.m)
+setMethod("IgetSpatialReference", signature(object = "NULL"), h.m)
 setMethod("IgetOldDataValues", signature(object = "NULL"), h.m)
+setMethod("IgetDeletedDataValues", signature(object = "NULL"), h.m)
 setMethod("IaddDataValues", signature(object = "NULL"), h.m)
 setMethod("IaddSite", signature(object = "NULL"), h.m)
 setMethod("IaddVariable", signature(object = "NULL"), h.m)
@@ -181,16 +187,16 @@ setMethod("IgetSite",
 			w.o <- expand.where(w.o, Name, "SiteName", exact=exact)
 
 			if(!is.null(x)){
-				stop("ToDo: Implement getSite für x")
+				stop("ToDo: Implement getSite for x")
 			}
 			if(!is.null(y)){
-				stop("ToDo: Implement getSite für y")
+				stop("ToDo: Implement getSite for y")
 			}
 			if(!is.null(LatLongDatum)){
-				stop("ToDo: Implement getSite für LatLongDatum")
+				stop("ToDo: Implement getSite for LatLongDatum")
 			}
 			if(!is.null(Elevation)){
-				stop("ToDo: Implement getSite für Elevation")
+				stop("ToDo: Implement getSite for Elevation")
 			}
 
 			where.clause <- w.o$where.clause
@@ -213,13 +219,16 @@ setMethod("IgetVariable",
 			w.o <- expand.where(w.o, Code, "VariableCode", exact=exact)
 			w.o <- expand.where(w.o, Name, "VariableName", exact=exact)
 			if(!is.null(Speciation)){
-				stop("ToDo: Implement getVariable für Speciation")
+			    theSpeciation <- getID("Speciation", Speciation)
+			    w.o <- expand.where(w.o, theSpeciation, "Speciation", exact=TRUE)
 			}
 			if(!is.null(Unit)){
-				stop("ToDo: Implement getVariable für Unit")
+			    UnitID <- getID("Units", Unit)
+			    w.o <- expand.where(w.o, UnitID, "VariableUnitsID", exact=TRUE)
 			}
 			if(!is.null(Medium)){
-				stop("ToDo: Implement getVariable für Medium")
+			    theMedium <- getID("Medium", Medium)
+			    w.o <- expand.where(w.o, theMedium, "Medium", exact=TRUE)
 			}
 			where.clause <- w.o$where.clause
 			if(where.clause!="") where.clause <- paste(" WHERE ", where.clause)
@@ -231,7 +240,7 @@ setMethod("IgetVariable",
 			return(res)
 		}
 	)
-setMethod("IgetQualifiers", 
+setMethod("IgetQualifier", 
 		signature(object = "odm1_1"),
 		function(object,  ID=NULL, Code=NULL, Description=NULL, ...){
 		  	w.o <- list(where.clause = "", the.and  = "")
@@ -248,7 +257,7 @@ setMethod("IgetQualifiers",
 		}
 	)
 
-setMethod("IgetSpatialReferences",
+setMethod("IgetSpatialReference",
 	       signature(object = "odm1_1"),
        	       function(object,ID=NULL, SRSID=NULL, SRSName=NULL, IsGeographic=NULL, Notes=NULL,exact=FALSE) { 
 
@@ -269,7 +278,7 @@ setMethod("IgetSpatialReferences",
 			if(NCOL(res)>0) {names(res)[1] <- c("ID")}
 			return(res)
 	       }) 
-setMethod("IgetQualityControlLevels", 
+setMethod("IgetQualityControlLevel", 
 		signature(object = "odm1_1"),
 		function(object,  ID=NULL, Code=NULL, Definition=NULL, Explanation=NULL, ...){
 		  	w.o <- list(where.clause = "", the.and  = "")
@@ -286,7 +295,7 @@ setMethod("IgetQualityControlLevels",
 			return(res)
 		}
 	)
-setMethod("IgetSamples", 
+setMethod("IgetSample", 
 		signature(object = "odm1_1"),
 		function(object,  ID=NULL, LabSampleCode=NULL, ...){
 		  	w.o <- list(where.clause = "", the.and  = "")
@@ -302,14 +311,29 @@ setMethod("IgetSamples",
 			return(res)
 		}
 	)
-setMethod("IgetOffsetTypes", 
+setMethod("IaddOffsetType", signature=(object = "odm1_1"),
+	  function(object, Description, Units) {
+			for(rownum in seq(along=Description)){
+				#no Foreign Key
+				theDescription <- sv(Description, rownum)
+				theUnit <- svk(Units, "Unit", rownum, object)
+
+				insert.query <- paste("INSERT INTO OffsetTypes (OffsetDescription, OffsetUnitsID) VALUES (\"", paste(
+						theDescription ,
+						theUnit,
+						sep="\", \""), "\")", sep="")
+			 	run.query(object, insert.query )
+			}
+	  }
+)
+setMethod("IgetOffsetType", 
 		signature(object = "odm1_1"),
 		function(object,  ID=NULL, Description=NULL, Units=NULL, ...){
 		  	w.o <- list(where.clause = "", the.and  = "")
 
 			w.o <- expand.where(w.o, ID, "OffsetTypeID", exact=TRUE)
 			w.o <- expand.where(w.o, Description, "OffsetDescription", exact=FALSE)
-			w.o <- expand.where(w.o, Units, "OffsetUnits", exact=FALSE)
+			w.o <- expand.where(w.o, Units, "OffsetUnitsID", exact=FALSE)
 
 			where.clause <- w.o$where.clause
 			if(where.clause!="") where.clause <- paste(" WHERE ", where.clause)
@@ -320,7 +344,7 @@ setMethod("IgetOffsetTypes",
 			return(res)
 		}
 	)
-setMethod("IgetMethods", 
+setMethod("IgetMethod", 
 		signature(object = "odm1_1"),
 		function(object,  ID=NULL, Description=NULL, ...){
 		  	w.o <- list(where.clause = "", the.and  = "")
@@ -353,17 +377,46 @@ setMethod("IgetSource",
 			return(res)
 		}
 	)
+setMethod("IgetDeletedDataValues", 
+		signature(object = "odm1_1Ver"),
+		function(object,ID=NULL, from=NULL, to=NULL, SiteID=NULL, VariableID=NULL, Offset=NULL, OffsetTypeID=NULL, CensorCode=NULL, QualifierID=NULL, MethodID=NULL, SourceID=NULL, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID=NULL, VersionID, exact=FALSE, ...  ){
+
+			where.clause <- assembleDataWhereClause(ID=ID, from=from, to=to, SiteID=SiteID, VariableID=VariableID, Offset=Offset, OffsetTypeID=OffsetTypeID, CensorCode=CensorCode, QualifierID=QualifierID, MethodID=MethodID, SourceID=SourceID, SampleID=SampleID, DerivedFromID=DerivedFromID, QualityControlLevelID=QualityControlLevelID, exact=exact)
+			if(where.clause==""){
+				where.clause <- "WHERE"
+			} else {
+				where.clause <- paste(where.clause, "AND")
+			}
+
+			the.query <- paste("SELECT * FROM DataValuesRepository NATURAL JOIN (SELECT ValueID, max(VersionID) AS VersionID FROM DataValuesRepository R ", where.clause, " NOT EXISTS (SELECT * FROM DataValues N WHERE N.ValueID = R.ValueID ) GROUP BY ValueID) AS RecSelect ")
+			to.ret <- run.query(object, the.query )
+			return(to.ret)
+		}
+	)
+
 setMethod("IgetOldDataValues", 
 		signature(object = "odm1_1Ver"),
 		function(object,ID=NULL, from=NULL, to=NULL, SiteID=NULL, VariableID=NULL, Offset=NULL, OffsetTypeID=NULL, CensorCode=NULL, QualifierID=NULL, MethodID=NULL, SourceID=NULL, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID=NULL, VersionID, exact=FALSE, ...  ){
 
 			where.clause <- assembleDataWhereClause(ID=ID, from=from, to=to, SiteID=SiteID, VariableID=VariableID, Offset=Offset, OffsetTypeID=OffsetTypeID, CensorCode=CensorCode, QualifierID=QualifierID, MethodID=MethodID, SourceID=SourceID, SampleID=SampleID, DerivedFromID=DerivedFromID, QualityControlLevelID=QualityControlLevelID, exact=exact)
+			if(where.clause==""){
+				where.clause <- "WHERE"
+			} else {
+				where.clause <- paste(where.clause, "AND")
+			}
 
-			the.query <- paste("SELECT * FROM DataValuesRepository NATURAL JOIN (SELECT ValueID, min(VersionID) AS VersionID FROM DataValuesRepository ", where.clause, " AND VersionID >= ",VersionID," GROUP BY ValueID) AS RecSelect ")
+			the.query <- paste("SELECT * FROM DataValuesRepository NATURAL JOIN (SELECT ValueID, min(VersionID) AS VersionID FROM DataValuesRepository ", where.clause, " VersionID >= ",VersionID," GROUP BY ValueID) AS RecSelect ")
 			to.ret <- run.query(object, the.query )
-			return(restructureDataResult(to.ret))
+			return(to.ret)
 		}
 	)
+setMethod("IgetDeletedDataValues", 
+		signature(object = "odm1_1"),
+		function(object,ID=NULL, from=NULL, to=NULL, SiteID=NULL, VariableID=NULL, Offset=NULL, OffsetTypeID=NULL, CensorCode=NULL, QualifierID=NULL, MethodID=NULL, SourceID=NULL, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID=NULL, VersionID, ...  ){
+
+			#Do nothing because no version
+		}
+)
 
 setMethod("IgetOldDataValues", 
 		signature(object = "odm1_1"),
@@ -381,7 +434,7 @@ setMethod("IgetDataValues",
 			query <- paste("SELECT * FROM DataValues ", where.clause)
 			to.ret <- run.query(object, query )
 			#ToDo: Define standard return values and order
-			return(restructureDataResult(to.ret))
+			return(to.ret)
 		}
 	)
 setMethod("IdeleteDataValues", 
@@ -442,16 +495,16 @@ setMethod("IaddDataVersion",
 		signature(object = "odm1_1Ver"),
 		function(object, reason){
 			# Eintrag in VersionsTabelle ValidUntilDate zum alten Datensatz
-			the.query <- paste("UPDATE Versions SET ValidUntil = ", sqlnow(object) ," WHERE VersionID =", IgetCurrentDataVersion(object))
+			the.query <- paste("UPDATE Versions SET ValidUntil = ", sqlstatements(object, "now") ," WHERE VersionID =", IgetCurrentDataVersion(object))
 			run.query(object, the.query )
 			# Neuer Eintrag in VersionsTabelle mit neuer Begruendung
 			the.query <- paste("INSERT INTO Versions (VersionComment) Values (\"",reason,"\")", sep="")
 			run.query(object, the.query )
 
 			# Achtung: beim Abholen von der Versionshistory 
-			#	muss die Begruendung für die Aenderung jeweils 
+			#	muss die Begruendung for die Aenderung jeweils 
 			#	bei der naechsten Versionsnummer nachgeschaut werden.
-			the.query <- "SELECT LAST_INSERT_ID()"
+			the.query <- paste("SELECT ", sqlstatements(object, "last_id"))
 			to.ret <- run.query(object, the.query )
 			return(as.numeric(to.ret))
 		}
@@ -466,6 +519,7 @@ setMethod("IarchiveDataValues",
 			if(is.na(currentVersion)){
 				the.query <- paste("INSERT INTO Versions (VersionComment) Values ('Initial Version')", sep="")
 				run.query(object, the.query )
+				currentVersion <-  IgetCurrentDataVersion(object)
 			}
 			the.query = paste("INSERT INTO DataValuesRepository SELECT ValueID, VersionID, DataValue, ValueAccuracy, LocalDateTime, UTCOffset, DateTimeUTC, SiteID, VariableID, OffsetValue, OffsetTypeID, CensorCode, QualifierID, MethodID, SourceID, SampleID, DerivedFromID, QualityControlLevelID FROM DataValues JOIN (SELECT ",currentVersion," as VersionID) as Version WHERE ValueID = ", paste(ValueID, collapse=" OR ValueID = "), sep="")
 			run.query(object, the.query )
@@ -477,23 +531,23 @@ setMethod("IarchiveDataValues",
 setMethod("IupdateDataValues", 
 		signature(object = "odm1_1"),
 		function(object, ValueID, localDateTime, value, TZ, SiteID, VariableID, Offset=NULL, OffsetTypeID=NULL, CensorCode, QualifierID=NULL, MethodID, SourceID, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID, valueAccuracy=NULL,...  ){
-			insert.query <- paste("UPDATE DataValues SET DataValue = ",value,
-					", ValueAccuracy = ", valueAccuracy,
-				       	", LocalDateTime = \"", localDateTime,
-				       	"\", UTCOffset = ", tz2offset(TZ),
-					", DateTimeUTC = \"", strftime(localDateTime, tz=TZ),
-					"\", SiteID = ", SiteID, 
-					", VariableID = ", VariableID,
-					", OffsetValue = ", Offset,
-					", OffsetTypeID = ", OffsetTypeID,
-				        ", CensorCode = \"", CensorCode,
-					"\", QualifierID = ", QualifierID,
-				        ", MethodID = ", MethodID, 
-					", SourceID = ", SourceID,
-					", SampleID = ", SampleID, 
-					", DerivedFromID = ", DerivedFromID,
-					", QualityControlLevelID = ", QualityControlLevelID,
-					" WHERE ValueID = ", ValueID, sep="")
+			insert.query <- paste("UPDATE DataValues SET DataValue = \"",value,
+					"\", ValueAccuracy = \"", valueAccuracy,
+				       	"\", LocalDateTime = \"", localDateTime,
+				       	"\", UTCOffset = \"", tz2offset(TZ),
+					"\", DateTimeUTC = \"", strftime(localDateTime, tz=TZ),
+					"\", SiteID = \"", SiteID, 
+					"\", VariableID = \"", VariableID,
+					"\", OffsetValue = \"", Offset,
+					"\", OffsetTypeID = \"", OffsetTypeID,
+				        "\", CensorCode = \"", CensorCode,
+					"\", QualifierID = \"", QualifierID,
+				        "\", MethodID = \"", MethodID, 
+					"\", SourceID = \"", SourceID,
+					"\", SampleID = \"", SampleID, 
+					"\", DerivedFromID = \"", DerivedFromID,
+					"\", QualityControlLevelID = \"", QualityControlLevelID,
+					"\" WHERE ValueID = ", ValueID, sep="")
 				run.query(object, insert.query)
 
 		}
@@ -536,6 +590,21 @@ setMethod("IaddVariable", signature=(object = "odm1_1"),
 			 	run.query(object, insert.query )
 			}
 	  }
+)
+setMethod("IaddQualityControlLevel",
+		signature(object = "odm1_1"),
+		function(object,  ID, Code, Definition, Explanation) {
+		for(rownum in seq(along=ID)){
+			insert.query <- paste("INSERT INTO QualityControlLevels (QualityControlLevelID, QualityControlLevelCode, Definition, Explanation) VALUES (\"", paste(
+					ID[rownum],
+					Code[rownum],
+					Definition[rownum],
+					Explanation[rownum],
+					sep="\", \""), "\")", sep="")
+			run.query(object, insert.query )
+
+		}
+	}
 )
 setMethod("IaddISOMetadata",
 		signature(object = "odm1_1"),
@@ -597,7 +666,7 @@ setMethod("IaddSite",
 				#with Foreign Key 
 				# :'<,'>s/\i*$/the& <- svk(&, "&", rownum, object)/   
 				theVerticalDatum <- svk(VerticalDatum, "VerticalDatumCV",rownum,object)
-				theLocalProjection <- svk(LocalProjection, "SpatialReferences", rownum,object)
+				theLocalProjection <- svk(LocalProjection, "SpatialReference", rownum,object)
 
 				insert.query <- paste("INSERT INTO Sites (SiteCode, SiteName, Latitude, Longitude, LatLongDatumID, Elevation_m, VerticalDatum, LocalX, LocalY, LocalProjectionID, PosAccuracy_m, State, County, Comments) VALUES (\"", paste(
 
@@ -646,9 +715,9 @@ setMethod("IaddDataValues",
 
 				insert.query <- paste("INSERT INTO DataValues (DataValue, ValueAccuracy, LocalDateTime, UTCOffset, DateTimeUTC, SiteID, VariableID, OffsetValue, OffsetTypeID, CensorCode, QualifierID, MethodID, SourceID, SampleID, DerivedFromID, QualityControlLevelID) VALUES (\"", paste(values[rownum],
 						thevalueAccuracy,
-						thelocalDateTime,
+						strftime(thelocalDateTime, "%Y-%m-%d %H:%M:%s", tz=theTZ ),
 						theTZ , 
-						strftime(thelocalDateTime, tz="GMT"), 
+						strftime(thelocalDateTime, tz="GMT", ), 
 						theSiteID, theVariableID,
 						theOffset,
 						theOffsetTypeID,
@@ -669,23 +738,23 @@ setMethod("IgetNo",
 		#lookup table for database information
 		tab.def <- matrix(
 				 #db table, db attribute
-				c("SpatialReferences", "SRSName", "SRSID, IsGeographic, Notes, SpatialReferenceID","0, 0, '', 'No'", "SpatialReferenceID",
-	  			  "OffsetTypes", "OffsetDescription", "OffsetUnitsID", "1", "OffsetTypeID",
-				  "Qualifiers", "QualifierCode", "QualifierDescription", "'No Qualifier - to enable optional fields with foreign keys'", "QualifierID" ,
-				  "Samples", "LabSampleCode", "SampleType, LabMethodID", "'no', 1", "SampleID",
-				  "Methods", "MethodDescription", "MethodLink", "''", "MethodID",
-				  "QualityControlLevels", "QualityControlLevelCode", "Definition, Explanation, QualityControlLevelID", "'No Code', 'Default entry if no code is available', 999", "QualityControlLevelID",
-				  "ISOMetadata", "Title", "TopicCategory", "'Unknown'", "MetadataID"
+				c("SpatialReferences", "SpatialReferences", "SRSName", "SRSID, IsGeographic, Notes, SpatialReferenceID","0, 0, '', 'No'", "SpatialReferenceID",
+	  			  "OffsetType", "OffsetTypes", "OffsetDescription", "OffsetUnitsID", "1", "OffsetTypeID",
+				  "Qualifier", "Qualifiers", "QualifierCode", "QualifierDescription", "'No Qualifier - to enable optional fields with foreign keys'", "QualifierID" ,
+				  "Sample", "Samples", "LabSampleCode", "SampleType, LabMethodID", "'no', 1", "SampleID",
+				  "Method", "Methods", "MethodDescription", "MethodLink", "''", "MethodID",
+				  "QualityControlLevel", "QualityControlLevel", "QualityControlLevelCode", "Definition, Explanation, QualityControlLevelID", "'No Code', 'Default entry if no code is available', 999", "QualityControlLevelID",
+				  "ISOMetadata", "ISOMetadata", "Title", "TopicCategory", "'Unknown'", "MetadataID"
 				),
-		  	byrow=TRUE, ncol=5)
+		  	byrow=TRUE, ncol=6)
 		CVtab <- paste(CVtables(), "CV", sep="")
 		lc <- length(CVtab)
-		CVentries <- cbind(CVtab, rep("Definition", lc), rep("Term",lc), rep("'no'",lc), rep("Term", lc))
+		CVentries <- cbind(CVtab, CVtab, rep("Definition", lc), rep("Term",lc), rep("'no'",lc), rep("Term", lc))
 		tab.def <- rbind(tab.def, CVentries)
 		tab.def <- as.data.frame(tab.def, stringsAsFactors=FALSE)
-		names(tab.def) <- c("tab", "col", "other.fields", "default.values", "primary.key")
+		names(tab.def) <- c("entry", "tab", "col", "other.fields", "default.values", "primary.key")
 		tab.def.bak <- tab.def
-		tab.def <- tab.def[tab.def$tab %in% c(table, paste(table,"CV",sep="")),]
+		tab.def <- tab.def[tab.def$entry %in% c(table, paste(table,"CV",sep="")),]
 		if(NROW(tab.def)!=1){
 			cat("Existing tables:\n")
 			print(tab.def.bak$tab)
@@ -735,14 +804,13 @@ setMethod("IaddCV",
 setMethod("IaddUnits",
 	  signature(object= "odm1_1"),
 	  function(object, ID, Name, Type, Abbreviation){
-		  #check for valid tables
 			query <- paste("INSERT INTO Units (UnitsID, UnitsName, UnitsType, UnitsAbbreviation) Values (\"", ID, "\",\"",Name, "\",\"", Type ,"\",\"",Abbreviation,"\")"  , sep="")
 			res <- run.query(object, query )
 			return(res)
 	  }
 )
 
-setMethod("IaddSpatialReferences",
+setMethod("IaddSpatialReference",
 	  signature(object= "odm1_1"),
 	  function(object, ID, SRSName, SRSID, IsGeographic, Notes){
 		  #check for valid tables

@@ -3,12 +3,12 @@ addSite <- function(Code, Name, x, y, Elevation=NULL, LatLongDatum, LocalProject
 
 	#check from referencetables: SpatialReferences -> LatLongDatum, LocalProjection
 	stopifnot(length(LatLongDatum) == length(Code))
-	SpatialReferenceID <- getID("SpatialReferences", LatLongDatum)
+	SpatialReferenceID <- getID("SpatialReference", LatLongDatum)
 
 
 	if(!is.null(LocalProjection)){
 		stopifnot(length(LocalProjection) == length(Code))
-		SpatialReferenceID2 <- getID("SpatialReferences", LocalProjection)
+		SpatialReferenceID2 <- getID("SpatialReference", LocalProjection)
 	} else {
 		#ToDo
 		SpatialReferenceID2 <- rep(1, length(Code))
@@ -21,8 +21,11 @@ addSite <- function(Code, Name, x, y, Elevation=NULL, LatLongDatum, LocalProject
 	} else {
 		VertDatID <- rep(NA, length(Code))
 	}
-	#check for existing entries
-	todo("ToDo check for existing locations")
+
+	if(NROW(existing <- getMetadata("Site",Name=Name))>0){
+		warning(paste("Skiping existing Site:", Name))
+		return()
+	}
 	#transform coordinates
 	#depending on value of isLocal
 	todo("ToDo automatic coordinate conversion")

@@ -5,8 +5,12 @@ expandVar <- function(var, nrow, ncol, checkID=FALSE, table=NULL){
 	} else {
 		theID <- var
 	}
-	nrow.var <- NROW(theID)
-	ncol.var <- NCOL(theID)
+	if(is.matrix(theID)){
+		nrow.var <- NROW(theID)
+		ncol.var <- NCOL(theID)
+	} else {
+		nrow.var <- ncol.var <- length(theID)
+	}
 	#Same dimensions are required as were passed
 	if(nrow.var == nrow & ncol.var == ncol){
 		#make certain theID is an matrix
@@ -19,16 +23,18 @@ expandVar <- function(var, nrow, ncol, checkID=FALSE, table=NULL){
 
 	if(ncol.var == 1 & nrow.var==1){
 		return(matrix(theID, ncol=ncol, nrow=nrow))
-	} else if(ncol==ncol.var){
-		
-		cat("ncol==ncol.var. Please impement\n")
-		browser()
-	} else if(nrow==nrow.var){
-		cat("nrow==nrow.var. Please impement\n")
-		browser()
+	} else if(!is.matrix(theID)){
+		if(ncol==ncol.var){
+			return(matrix(theID, ncol=ncol, nrow=nrow, byrow=TRUE))
+		} else if(nrow==nrow.var){
+			return(matrix(theID, ncol=ncol, nrow=nrow))
+		} else {
+			cat("Unexpected expansion of variable. Please impement\n")
+			browser()
+		}
 	} else {
-		cat("Unexpected expansion of variable. Please impement\n")
-		browser()
+			cat("Unexpected expansion of variable. Please impement\n")
+			browser()
 	}
 	stop("Should not be here")
 

@@ -1,13 +1,13 @@
 addVariable <- function(Code, Name, 
-			Speciation=rep("No", NROW(Code)), 
+			Speciation=rep("Unknown", NROW(Code)), 
 			Unit, 
-			SampleMedium =rep("No", NROW(Code)),
-			ValueType=rep("No", NROW(Code)),
+			SampleMedium =rep("Unknown", NROW(Code)),
+			ValueType=rep("Unknown", NROW(Code)),
 			IsRegular=rep("True", NROW(Code)),
-			TimeSupport=rep(1, NROW(Code)),
-			TimeUnits=rep("year", NROW(Code)),
-			DataType=rep("No", NROW(Code)),
-			GeneralCategory=rep("No", NROW(Code)),
+			TimeSupport=rep(0, NROW(Code)),
+			TimeUnits=rep("Julian year", NROW(Code)),
+			DataType=rep("Unknown", NROW(Code)),
+			GeneralCategory=rep("Unknown", NROW(Code)),
 			NoDataValue=rep("Null", NROW(Code))
 		       	){
 	#Handle CV-Fields: VariableName, Speciation, SampleMedium, ValueType, DataType, GeneralCategory
@@ -34,7 +34,12 @@ addVariable <- function(Code, Name,
 	stopifnot(length(TimeSupport) == length(Code))
 
 	#check for existing entries
-	todo("check for existing variables")
+	if(NROW(existing <- getMetadata("Variable",Name=Name, Speciation = Speciation, SampleMedium=SampleMedium, ValueType=ValueType, DataType=DataType, GeneralCategory=GeneralCategory))>0){
+		warning(paste("Skiping existing ISOMetadata entry:", Name))
+		return()
+	}
+
+
 	IaddVariable(getOption("odm.handler"), Code=Code, Name=VariableNameID, Speciation=SpeciationID, Unit=VariableUnitsID, SampleMedium=SampleMediumID,ValueType=ValueTypeID, IsRegular=IsRegular, TimeSupport=TimeSupport, TimeUnits=TimeUnitsID, DataType=DataTypeID, GeneralCategory=GeneralCategoryID, NoDataValue=NoDataValue)
 
 

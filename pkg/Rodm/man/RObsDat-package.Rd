@@ -1,0 +1,35 @@
+\name{RObsDat-package}
+\alias{RObsDat-package}
+\alias{RObsDat}
+\docType{package}
+\title{
+R-Interface to the observations Data Model from QUASHI
+}
+\description{
+This package provides classes and functions for handling observational (time series) data. 
+
+The package provides a number of feature for your convenience:
+- Automatic retrieval of standard vocabularies from QUASHI.
+- Fuzzy matching of terms for more convenient insertion.
+- Automatic handling of synonyms for more convenient data processing. 
+
+Note: tell me what additional questions should be answered here.
+}
+\details{
+Use \code{\link{addDataValues}} to store data in the database.
+
+Use \code{\link{getMetadata}} and \code{\link{getDataValues}} to retrieve information from the database.
+}
+\author{
+Dominik Reusser
+
+Maintainer: Dominik Reusser <reusser@pik-potsdam.de>
+}
+\references{
+Reusser et al. 2012: Todo add details
+}
+\keyword{ package }
+\examples{
+	example(addDataValues)
+	example(updateValues)
+}

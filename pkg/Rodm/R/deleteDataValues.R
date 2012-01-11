@@ -1,15 +1,15 @@
-deleteDataValues <- function(getDataResult=NULL, ID=NULL,reason=NULL){
-	the.id <- c()
-	if(!is.null(getDataResult)){
-		the.id <- getDataResult$num$ValueID
+deleteDataValues <- function(ID=NULL,reason=NULL){
+	the.class <- class(ID)
+	the.id=c()
+	if(the.class=="observations"){
+		the.id <- ID@ids
 	}
-	if(!is.null(ID)){
+	if(the.class=="numeric"){
 		the.id <- ID
 	}
 	if(length(the.id)>0){
 		IarchiveDataValues(getOption("odm.handler"),ValueID=the.id, reason)
 		IdeleteDataValues(getOption("odm.handler"),ValueID=the.id)
-
 	}
 
 }

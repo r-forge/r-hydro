@@ -1,8 +1,8 @@
 chr2date <- function(string, tz){
-	if(nchar(string)==10){
+	if(all(nchar(string)==10)){
 		if(tz!="GMT") warning("Unsupported tz handling other than GMT in chr2date") 
 		result <- as.POSIXct(strptime(string, "%Y-%m-%d", tz="GMT"))
-	} else if (nchar(string)==19) {
+	} else if (all(nchar(string)==19)) {
 		if(tz!="GMT") warning("Unsupported tz handling other than GMT in chr2date") 
 		result <- as.POSIXct(strptime(string, "%Y-%m-%d %H:%M:%s", tz="GMT"))
 	} else {

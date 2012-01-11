@@ -1,0 +1,32 @@
+export( addCV,                     deleteDataValues,   odm.close, 
+addDataValues,             expandVar,          reload, 
+addISOMetadata,            expand.where,       restructureDataResult, 
+addOffsetType,             getDataMatrix,       
+addSite,                   getDataValues,       
+addSource,                 getDataVersions,     
+addSpatialReferences,      getID,               
+addSynonym,                getMetadata,         
+addUnits,                              
+addVariable,                                
+addQualityControlLevel,
+assembleDataWhereClause,   updateCV, 
+updateDataValues, 
+CVtables )
+
+exportClasses("odm1_1", "odm1_1Ver", "observations")
+
+# Import all packages listed as Imports or Depends
+import(
+  xts,
+  zoo,
+  DBI,
+  vwr,
+  methods,
+  RColorBrewer,
+  maptools,
+  sp,
+  SSOAP,
+  XMLSchema,
+  testthat
+)
+

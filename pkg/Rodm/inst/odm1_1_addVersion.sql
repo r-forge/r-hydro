@@ -18,7 +18,7 @@ CREATE TABLE  DataValuesRepository (
 	DerivedFromID int(11)  default NULL COMMENT 'Integer identifier for the derived from group of data values that the current data value is derived from.  This refers to a group of derived from records in the DerivedFrom table. If NULL, the data value is inferred to not be derived from another data value.',
 	QualityControlLevelID int(11)  NOT NULL COMMENT 'Integer identifier giving the level of quality control that the value has been subjected to. This references the QualityControlLevels table.  -9999 = Unknown',
 
- 	PRIMARY KEY  (`ValueID`),
+ 	PRIMARY KEY  (`ValueID`, VersionID),
    CONSTRAINT FKValue1ID FOREIGN KEY (ValueID) REFERENCES DataValues (ValueID) ON DELETE CASCADE ON UPDATE CASCADE,
    CONSTRAINT FKVersionID FOREIGN KEY (VersionID) REFERENCES Versions (VersionID) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT FKSiteID FOREIGN KEY (SiteID) REFERENCES Sites (SiteID) ON DELETE CASCADE ON UPDATE CASCADE,
