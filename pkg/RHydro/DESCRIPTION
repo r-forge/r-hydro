@@ -51,5 +51,6 @@ Collate: class.HydroModelParameters.R  class.HydroRun.R class.HydroModel.R
   readmd.R
   updatestates.R
   upstates.R
+  outfluxes.R
 
 
