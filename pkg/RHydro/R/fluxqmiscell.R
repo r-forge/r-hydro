@@ -20,22 +20,26 @@ fluxqmiscell <- function(deltim,arch1,arch2,state,mparam,dparam,eff_ppt,qrunoff,
    #   tens2free_2 <- flow from tension storage to free storage in the lower layer (mm day-1)
    #   oflow_1     <- overflow from the upper soil layer (mm day-1)
    #   oflow_2     <- overflow from the lower soil layer (mm day-1)
+   #   oflow_2a     <- overflow from the lower soil layer (mm day-1)
+   #   oflow_2b     <- overflow from the lower soil layer (mm day-1)
 
    rchr2excs   <- 0
    tens2free_1 <- 0
    tens2free_2 <- 0
    oflow_1     <- 0
    oflow_2     <- 0
+   oflow_2a    <- 0
+   oflow_2b    <- 0
 
-   tens_1a <- state[1]
-   tens_1b <- state[2]
-   tens_1  <- state[3]
-   free_1  <- state[4]
-   watr_1  <- state[5]
-   tens_2  <- state[6]
-   free_2a <- state[7]
-   free_2b <- state[8]
-   watr_2  <- state[9]
+   tens_1a <- state[[1]]
+   tens_1b <- state[[2]]
+   tens_1  <- state[[3]]
+   free_1  <- state[[4]]
+   watr_1  <- state[[5]]
+   tens_2  <- state[[6]]
+   free_2a <- state[[7]]
+   free_2b <- state[[8]]
+   watr_2  <- state[[9]]
 
    if(arch1 == 23) { # tension storage sub-divided into recharge and excess
      w_func      <- logismooth(tens_1a,dparam$maxtens_1a)
@@ -126,9 +130,8 @@ fluxqmiscell <- function(deltim,arch1,arch2,state,mparam,dparam,eff_ppt,qrunoff,
      oflow_2b    <- 0
    }
 
-   results <- c(rchr2excs,tens2free_1,tens2free_2,oflow_1,oflow_2)
+   results <- c(rchr2excs,tens2free_1,tens2free_2,oflow_1,oflow_2,oflow_2a,oflow_2b)
 
    return(results)
 
 }
-

@@ -15,15 +15,15 @@ compute_fluxes <- function(deltim,smodl,mppt,mpet,mparam,dparam,state) {
    # Returns:
    #   List of fluxes at time "t"
 
-   tens_1a <- state[1]
-   tens_1b <- state[2]
-   tens_1  <- state[3]
-   free_1  <- state[4]
-   watr_1  <- state[5]
-   tens_2  <- state[6]
-   free_2a <- state[7]
-   free_2b <- state[8]
-   watr_2  <- state[9]
+   tens_1a <- state[[1]]
+   tens_1b <- state[[2]]
+   tens_1  <- state[[3]]
+   free_1  <- state[[4]]
+   watr_1  <- state[[5]]
+   tens_2  <- state[[6]]
+   free_2a <- state[[7]]
+   free_2b <- state[[8]]
+   watr_2  <- state[[9]]
 
    # set all fluxes to zero at the start of time step
    eff_ppt     <- 0
@@ -43,21 +43,23 @@ compute_fluxes <- function(deltim,smodl,mppt,mpet,mparam,dparam,state) {
    qbase_2b    <- 0   
    oflow_1     <- 0
    oflow_2     <- 0
+   oflow_2a     <- 0
+   oflow_2b     <- 0
 
    # compute effective rainfall
    eff_ppt   <- fluxrain(smodl$rferr,mppt,mparam$rferr_add,mparam$rferr_mlt)        # rainfall
 
    # compute excess of saturation
    temp      <- fluxqsatexcess(smodl$qsurf,eff_ppt,mparam,dparam,tens_1, watr_1, watr_2)
-   satarea   <- temp[1]   # saturated area
-   qrunoff   <- temp[2]   # surface runoff
+   satarea   <- temp[[1]]   # saturated area
+   qrunoff   <- temp[[2]]   # surface runoff
 
    # compute evaporation
    temp      <- fluxevap(smodl$arch1,smodl$arch2,smodl$esoil,mpet,mparam,dparam,tens_1a, tens_1b, tens_1, tens_2)
-   evap_1a   <- temp[1]
-   evap_1b   <- temp[2]
-   evap_1    <- temp[3]
-   evap_2    <- temp[4]
+   evap_1a   <- temp[[1]]
+   evap_1b   <- temp[[2]]
+   evap_1    <- temp[[3]]
+   evap_2    <- temp[[4]]
 
    # compute interflow from free water in the upper layer
    if(smodl$qintf==72) qintf_1 <- mparam$iflwrte * (free_1/dparam$maxfree_1)
@@ -68,17 +70,19 @@ compute_fluxes <- function(deltim,smodl,mppt,mpet,mparam,dparam,state) {
 
    # compute baseflow
    temp <- fluxbaseflow(smodl$arch2,mparam,dparam$qbsat,free_2a, free_2b, watr_2)
-   qbase_2a <- temp[1]
-   qbase_2b <- temp[2]
-   qbase_2  <- temp[3]
+   qbase_2a <- temp[[1]]
+   qbase_2b <- temp[[2]]
+   qbase_2  <- temp[[3]]
 
    # compute overflow (miscellaneous fluxes)
    temp <- fluxqmiscell(deltim,smodl$arch1,smodl$arch2,state,mparam,dparam,eff_ppt,qrunoff,qperc_12)
-   rchr2excs   <- temp[1]
-   tens2free_1 <- temp[2]
-   tens2free_2 <- temp[3]
-   oflow_1     <- temp[4]
-   oflow_2     <- temp[5]
+   rchr2excs   <- temp[[1]]
+   tens2free_1 <- temp[[2]]
+   tens2free_2 <- temp[[3]]
+   oflow_1     <- temp[[4]]
+   oflow_2     <- temp[[5]]
+   oflow_2a    <- temp[[6]]
+   oflow_2b    <- temp[[7]]
 
    flux1 <- list("eff_ppt"     = eff_ppt,
                  "satarea"     = satarea,
@@ -96,9 +100,10 @@ compute_fluxes <- function(deltim,smodl,mppt,mpet,mparam,dparam,state) {
                  "qbase_2a"    = qbase_2a,
                  "qbase_2b"    = qbase_2b,
                  "oflow_1"     = oflow_1,
-                 "oflow_2"     = oflow_2)
+                 "oflow_2"     = oflow_2,
+                 "oflow_2a"     = oflow_2a,
+                 "oflow_2b"     = oflow_2b)
 
    return(flux1)
 
 }
-

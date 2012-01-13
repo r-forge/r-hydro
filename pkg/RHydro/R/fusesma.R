@@ -69,9 +69,6 @@ fusesma.sim <- function(DATA,mid,modlist,
     parameters <- c("deltim" = deltim) # standard deltim = 1 (daily time step), 1/24 (hourly time step), 1/24/4 (15 min time step)
     
     print("computing state variables ...")
-    # the solver returns a matrix nrows x ncols
-    # ncols = 11 (time, tens_1a, tens_1b,  tens_1,  free_1,  watr_1,  tens_2, free_2a, free_2b,  watr_2, free_2)
-    # nrows = length(P)
     state1 <- ode("y" = state0, 
                   "times" = times, 
                   "func" = mstate_eqn, 
@@ -86,21 +83,14 @@ fusesma.sim <- function(DATA,mid,modlist,
     state1 <- updatestates(smodl,mparam,dparam,state1)
     
     print("computing fluxes ...")
-    U <- rep(0,length(P)) 
-    fluxes <- matrix(0,nrow=length(P),ncol=17)                         # to output fluxes
-    for (index in seq(along = P)) { 
-     w_flux   <- compute_fluxes(deltim,smodl,P[index],E[index],mparam,dparam,state1[index,2:11])
-     for (cindex in 1:17)  fluxes[index,cindex] <- w_flux[[cindex]]    # to output fluxes
-     # compute effective rainfall (sum of surface runoff, overflow, interflow, and baseflow)
-     U[index] <- w_flux$qrunoff + w_flux$oflow_1 + w_flux$qintf_1 + w_flux$oflow_2 + w_flux$qbase_2
-    }
+    allfluxes <- outfluxes(deltim,smodl,P,E,mparam,dparam,state1)
     
     #print("converting effective rainfall into zoo object ...")
     # make it a time series object again
     #attributes(U) <- attributes(P)
     # re-insert missing values
     #U[bad] <- NA
-    return(U)
+    return(allfluxes$U)
 }
 
 
