@@ -1,10 +1,15 @@
 chr2date <- function(string, tz){
-	if(all(nchar(string)==10)){
+	if(all(nchar(string) %in% c(10,19))){
+		result <- as.POSIXct(rep(NA, length(string)))
 		if(tz!="GMT") warning("Unsupported tz handling other than GMT in chr2date") 
-		result <- as.POSIXct(strptime(string, "%Y-%m-%d", tz="GMT"))
-	} else if (all(nchar(string)==19)) {
-		if(tz!="GMT") warning("Unsupported tz handling other than GMT in chr2date") 
-		result <- as.POSIXct(strptime(string, "%Y-%m-%d %H:%M:%s", tz="GMT"))
+		do.these <- nchar(string) == 10
+		result[do.these] <- as.POSIXct(strptime(string[do.these], "%Y-%m-%d", tz="GMT"))
+		do.these <- nchar(string) == 19
+		result[do.these] <- as.POSIXct(strptime(string[do.these], "%Y-%m-%d %H:%M:%s", tz="GMT"))
+		if(any(is.na(result))){
+			cat("Unexpected NA in string conversion results\n")
+			browser()
+		}
 	} else {
 		cat("Unimplemented date format in chr2date")
 		browser()
