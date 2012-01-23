@@ -1,7 +1,6 @@
 mean_tipow <- function(ti_shp,log_lamb,qb_pwr) { 
    # Computes the mean of the power-transformed topographic index
    # Author: Claudia Vitolo
-   # Date: 28-03-2011
    #
    # Args:
    #   ti_shp:
@@ -31,7 +30,7 @@ mean_tipow <- function(ti_shp,log_lamb,qb_pwr) {
       probin <- upperp - lowerp                          # probability of the current bin
       # get the scaled topographic index value
       logval <- 0.5 * (lowerv + upperv)                  # log-transformed index for the current bin
-      powval <- (exp(logval))**(1/qb_pwr)                # power-transformed index for the current bin
+      powval <- (exp(logval))^(1/qb_pwr)                 # power-transformed index for the current bin
       avepow <- avepow + powval*probin                   # average power-transformed index
       # save the lower value and probability
       lowerv <- upperv                                   # lower value for the next bin

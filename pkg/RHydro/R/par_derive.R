@@ -1,8 +1,6 @@
 par_derive <- function(smodl,mparam) {
    # Computes derived model parameters (bucket sizes, etc.)
    # Author: Claudia Vitolo
-   # Date: 28-03-2011
-   # Modified: 14-11-2011 # compute fraction of runoff in future time steps moved to fuserouting
    #
    # Args:
    #   smodl:                         list of model components
@@ -53,7 +51,7 @@ par_derive <- function(smodl,mparam) {
    # mean of the power-transformed topographic index
    if(mparam$tishape != -999 && mparam$loglamb != -999 && mparam$qb_powr != -999) {
      temp    <- mean_tipow(mparam$tishape, mparam$loglamb, mparam$qb_powr)
-     maxpow  <- temp[1]
+     maxpow  <- temp[1]/10   # not clear why???
      powlamb <- temp[2]
    }
 
@@ -76,3 +74,4 @@ par_derive <- function(smodl,mparam) {
    return(dparam)
 
 }
+

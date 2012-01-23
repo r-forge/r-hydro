@@ -1,6 +1,18 @@
 outfluxes <- function(deltim,smodl,P,E,mparam,dparam,state1) {
    # Output Fluxes
    # Author: Claudia Vitolo
+   #
+   # Args:
+   #   deltim:                        time step
+   #   smodl:                         list of model components
+   #   P:                             rain+snow melt time series 
+   #   E:                             potential evapotranspiration time series
+   #   mparam:                        model parameters
+   #   dparam:                        derived model parameters
+   #   state1:                        state variables
+   #
+   # Returns:
+   #   All the fluxes + effective rainfall (or instantaneous discharge)
 
    # set all fluxes to zero at the start of time step
    eff_ppt     <- rep(0,length(P))
@@ -76,3 +88,4 @@ outfluxes <- function(deltim,smodl,P,E,mparam,dparam,state1) {
    return(allfluxes)
 
 }
+

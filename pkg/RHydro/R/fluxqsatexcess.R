@@ -1,7 +1,6 @@
 fluxqsatexcess <- function(mqsurf,eff_ppt,mparam,dparam,tens_1, watr_1, watr_2) {
    # Computes the saturated area and surface runoff
    # Author: Claudia Vitolo
-   # Date: 28-03-2011
    #
    # Args:
    #   mqsurf:      smodl$qsurf
@@ -17,7 +16,6 @@ fluxqsatexcess <- function(mqsurf,eff_ppt,mparam,dparam,tens_1, watr_1, watr_2) 
 
    satarea   <- 0
    qrunoff   <- 0 
-      
    no_zero   <- 0.00000001  # avoid divide by zero
    
    # saturated area method

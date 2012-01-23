@@ -1,7 +1,6 @@
 logismooth <- function(statex,maxstatex) {
    # Uses a logistic function to smooth the threshold at the top of a bucket
    # Author: Claudia Vitolo
-   # Date: 28-03-2011
    #
    # Args:
    #   statex:

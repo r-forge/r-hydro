@@ -1,9 +1,6 @@
 fluxrain <- function(rferr,fppt,rferr_add,rferr_mlt) {
    # Compute the "effective" rainfall, following a prescribed error model
    # Author: Claudia Vitolo
-   # Date: 28-03-2011
-   #
-   # PART OF FUSE MODEL (module 6 of XXX)
    #
    # Args:
    #   rferr:        smodl$rferr

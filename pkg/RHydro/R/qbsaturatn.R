@@ -1,9 +1,6 @@
 qbsaturatn <- function(arch_2,mparam,maxfree_2a,maxfree_2b,powlamb) {
    # Computes baseflow at saturation (used in the sac percolation model)
    # Author: Claudia Vitolo
-   # Date: 28-03-2011
-   #
-   # PART OF FUSE MODEL (3b of XXX)
    #
    # Args:
    #   arch_2:

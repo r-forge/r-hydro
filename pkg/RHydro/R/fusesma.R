@@ -1,14 +1,21 @@
-## hydromad: Hydrological Modelling and Analysis of Data
-## FUSE Soil Moisture Accounting model
-# Author: Claudia Vitolo
-# Date: 14-11-2011
-                 
 fusesma.sim <- function(DATA,mid,modlist,
                         deltim=1,fracstate0=0.25,rferr_add=0,rferr_mlt=1,
                         frchzne,fracten,maxwatr_1,percfrac,fprimqb,qbrate_2a,qbrate_2b,
                         qb_prms,maxwatr_2,baserte,rtfrac1,percrte,percexp,sacpmlt,
-                        sacpexp,iflwrte,axv_bexp,sareamax,loglamb,tishape,qb_powr)
-{    
+                        sacpexp,iflwrte,axv_bexp,sareamax,loglamb,tishape,qb_powr) {
+    ## FUSE Soil Moisture Accounting model
+    # Author: Claudia Vitolo
+    #
+    # Args:
+    #   DATA:                          matrix containing 3 columns called: P (precipitation), E (potential evapotranspiration) and Q (observed streamflow discharge, optional)
+    #   mid:                           model id 
+    #   modlist:                       list of model structures ordered by model id
+    #   deltim:                        time step
+    #   fracstate...qb_powr:           input parameters
+    #
+    # Returns:
+    #   U:                             Instantaneous runoff                     
+                            
     stopifnot(c("P","E") %in% colnames(DATA))
     P <- DATA[,"P"]
     E <- DATA[,"E"]
@@ -27,7 +34,7 @@ fusesma.sim <- function(DATA,mid,modlist,
                 "qintf"=modlist[mid,8],
                 "q_tdh"=modlist[mid,9])
        
-    # All the model parameters [LIST]
+    # All model parameters [LIST]
     mparam0 <- list("rferr_add" = rferr_add,
                     "rferr_mlt" = rferr_mlt,
                     "frchzne"   = frchzne,
@@ -50,8 +57,7 @@ fusesma.sim <- function(DATA,mid,modlist,
                     "sareamax"  = sareamax,
                     "loglamb"   = loglamb,
                     "tishape"   = tishape,
-                    "qb_powr"   = qb_powr #,
-                    ##"timedelay" = timedelay
+                    "qb_powr"   = qb_powr 
                     )
     
     # Isolate model parameters to use for this run [LIST]
@@ -77,7 +83,8 @@ fusesma.sim <- function(DATA,mid,modlist,
                   "pet" = E, 
                   "smodl" = smodl, 
                   "mparam" = mparam, 
-                  "dparam" = dparam)  #default: method="rk"
+                  "dparam" = dparam) #,
+                  #method="rk")  #default: method="lsoda"
     
     #Update fluxes
     state1 <- updatestates(smodl,mparam,dparam,state1)
@@ -92,7 +99,6 @@ fusesma.sim <- function(DATA,mid,modlist,
     #U[bad] <- NA
     return(allfluxes$U)
 }
-
 
 fusesma.ranges <- function() {
     list("rferr_add" = c(0, 0),
@@ -120,3 +126,4 @@ fusesma.ranges <- function() {
          "qb_powr"   = c(1, 10))
 
 }
+

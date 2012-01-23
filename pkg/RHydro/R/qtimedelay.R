@@ -4,8 +4,8 @@ qtimedelay <- function(timedelay, deltim, size_frac_future) {
    #
    # Args:
    #   timedelay:                     mparam$timedelay
+   #   deltim:                        time step in days
    #   size_frac_future:              maximum number of future time steps
-   #   deltim:                        time step in days.
    #
    # Returns:
    #   Fraction of runoff in future time steps.

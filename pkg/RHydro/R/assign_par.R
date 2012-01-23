@@ -1,11 +1,10 @@
 assign_par <- function(smodl,mparam0) {
-   # Extract useful parameters from Contraints table
+   # Extract useful parameters from input parameter list
    # Author: Claudia Vitolo
-   # Date: 23-11-2011
    #
    # Args:
    #   smodl:                         list of model components
-   #   constr:                        set of parameters (table)
+   #   mparam0:                       initial parameter list 
    #
    # Returns:
    #   List of parameters.
@@ -33,63 +32,63 @@ assign_par <- function(smodl,mparam0) {
    loglamb   <- -999 # mean value of the log-transformed topographic index (m)
    tishape   <- -999 # shape parameter for the topo index gamma distribution (-)
    qb_powr   <- -999 # baseflow exponent (-)
-   #timedelay <- -999 # use a gamma distribution with shape parameter <- 2.5
 
    # (1) rainfall errors
-   if(smodl$rferr == 11) rferr_add <- mparam0$rferr_add
-   if(smodl$rferr == 12) rferr_mlt <- mparam0$rferr_mlt
+   if(smodl$rferr == 11) rferr_add <- mparam0$rferr_add   # additive_e
+   if(smodl$rferr == 12) rferr_mlt <- mparam0$rferr_mlt   # multiplc_e
 
    # (2) upper-layer architecture
-  if(smodl$arch1 == 21 || smodl$arch1 == 22) {
-      fracten   <- mparam0$fracten
-      maxwatr_1 <- mparam0$maxwatr_1
+  if(smodl$arch1 == 21 || smodl$arch1 == 22) {   # onestate_1, tension1_1 (need to define tension and free storage -- even if one state)
+      fracten   <- mparam0$fracten   # frac total storage as tension storage (-)
+      maxwatr_1 <- mparam0$maxwatr_1 # maximum total storage in layer1 (mm)
    }
    
-   if(smodl$arch1 == 23) {
-      frchzne   <- mparam0$frchzne
-      fracten   <- mparam0$fracten
-      maxwatr_1 <- mparam0$maxwatr_1
+   if(smodl$arch1 == 23) {                       # tension2_1 (tension storage sub-divided into recharge and excess)
+      frchzne   <- mparam0$frchzne   # PRMS: frac tension storage in recharge zone (-)
+      fracten   <- mparam0$fracten   # frac total storage as tension storage (-)
+      maxwatr_1 <- mparam0$maxwatr_1 # maximum total storage in layer1 (mm)
+      #fraclowz  <- mparam0$fraclowz # fraction of soil excess to lower zone (-) # NOT USED
    }
 
    # (3) lower-layer architecture / baseflow
-  if(smodl$arch2 == 31) { # power-law relation (no parameters needed for the topo index distribution)
+  if(smodl$arch2 == 31) {             # fixedsiz_2 (power-law relation (no parameters needed for the topo index distribution))
      maxwatr_2 <- mparam0$maxwatr_2
      baserte   <- mparam0$baserte
      qb_powr   <- mparam0$qb_powr
    }
    
-   if(smodl$arch2 == 32) {       # tension reservoir plus two parallel tank
-      percfrac  <- mparam0$percfrac
-      fprimqb   <- mparam0$fprimqb
-      maxwatr_2 <- mparam0$maxwatr_2
-      qbrate_2a <- mparam0$qbrate_2a
-      qbrate_2b <- mparam0$qbrate_2b
+   if(smodl$arch2 == 32) {            # tens2pll_2 (tension reservoir plus two parallel tanks)
+      percfrac  <- mparam0$percfrac   # fraction of percolation to tension storage (-)
+      fprimqb   <- mparam0$fprimqb    # SAC: fraction of baseflow in primary resvr (-)
+      maxwatr_2 <- mparam0$maxwatr_2  # maximum total storage in layer2 (mm)
+      qbrate_2a <- mparam0$qbrate_2a  # baseflow depletion rate for primary resvr (day-1)
+      qbrate_2b <- mparam0$qbrate_2b  # baseflow depletion rate for secondary resvr (day-1)
    }
 
-   if(smodl$arch2 == 33) {        # baseflow resvr of unlimited size (0-huge), frac rate
-     maxwatr_2 <- mparam0$maxwatr_2
-     qb_prms   <- mparam0$qb_prms
+   if(smodl$arch2 == 33) {            # unlimfrc_2 (baseflow resvr of unlimited size (0-huge), frac rate)
+     maxwatr_2 <- mparam0$maxwatr_2   # maximum total storage in layer2 (mm)
+     qb_prms   <- mparam0$qb_prms     # baseflow depletion rate (day-1)
    }
    
-  if(smodl$arch2 == 34) {        # topmodel options
-     maxwatr_2 <- mparam0$maxwatr_2
-     baserte   <- mparam0$baserte
-     loglamb   <- mparam0$loglamb
-     tishape   <- mparam0$tishape
-     qb_powr   <- mparam0$qb_powr
+  if(smodl$arch2 == 34) {             # unlimpow_2 (topmodel option = power-law transmissivity profile)
+     maxwatr_2 <- mparam0$maxwatr_2   # maximum total storage in layer2 (mm)
+     baserte   <- mparam0$baserte     # baseflow rate (mm day-1)
+     loglamb   <- mparam0$loglamb     # mean value of the log-transformed topographic index (m)
+     tishape   <- mparam0$tishape     # shape parameter for the topo index Gamma distribution (-)
+     qb_powr   <- mparam0$qb_powr     # baseflow exponent (-)
    }
 
-   if(smodl$arch2 == 35) {        # topmodel options
-     maxwatr_2 <- mparam0$maxwatr_2
-     baserte   <- mparam0$baserte
-     loglamb   <- mparam0$loglamb
-     tishape   <- mparam0$tishape
+   if(smodl$arch2 == 35) {            # topmdexp_2 = old topmodel option, this which was something lingering from initial development.. not used because the exponential case can be very similar to the power case for given parameter values
+     maxwatr_2 <- mparam0$maxwatr_2   # maximum total storage in layer2 (mm)
+     baserte   <- mparam0$baserte     # baseflow rate (mm day-1)
+     loglamb   <- mparam0$loglamb     # mean value of the log-transformed topographic index (m)
+     tishape   <- mparam0$tishape     # shape parameter for the topo index Gamma distribution (-)
    }
 
    # (4) surface runoff
-   if(smodl$qsurf == 41) axv_bexp <- mparam0$axv_bexp # arno/xzang/vic parameterization (upper zone control)
-   if(smodl$qsurf == 42) sareamax <- mparam0$sareamax # prms variant (fraction of upper tension storage)
-   if(smodl$qsurf == 43) {                                                                     # topmodel parameterization
+   if(smodl$qsurf == 41) axv_bexp <- mparam0$axv_bexp # arno_x_vic = arno/xzang/vic parameterization (upper zone control)
+   if(smodl$qsurf == 42) sareamax <- mparam0$sareamax # prms_varnt = prms variant (fraction of upper tension storage)
+   if(smodl$qsurf == 43) {                            # tmdl_param = topmodel parameterization
      if(smodl$arch2 == 32 || smodl$arch2 == 33 || smodl$arch2 == 31) {     # need the topographic index if we don't have it for baseflow
        loglamb   <- mparam0$loglamb
        tishape   <- mparam0$tishape
@@ -98,24 +97,21 @@ assign_par <- function(smodl,mparam0) {
    }
    
    # (5) percolation
-   if(smodl$qperc == 51||smodl$qperc == 53) { # standard equation k(theta)**c
-     percrte   <- mparam0$percrte
-     percexp   <- mparam0$percexp
+   if(smodl$qperc == 51||smodl$qperc == 53) { # perc_f2sat, perc_w2sat = standard equation k(theta)**c
+     percrte   <- mparam0$percrte             # percolation rate (mm day-1)
+     percexp   <- mparam0$percexp             # percolation exponent (-)
    }
 
-   if(smodl$qperc == 52) { # perc defined by moisture content in lower layer (sac)
-     sacpmlt   <- mparam0$sacpmlt
-     sacpexp   <- mparam0$sacpexp
+   if(smodl$qperc == 52) { # perc_lower = perc defined by moisture content in lower layer (sac)
+     sacpmlt   <- mparam0$sacpmlt             # multiplier in the SAC model for dry lower layer (-)
+     sacpexp   <- mparam0$sacpexp             # exponent in the SAC model for dry lower layer (-)
    }
 
    # (6) evaporation
-   if(smodl$esoil == 61) rtfrac1 <- mparam0$rtfrac1
+   if(smodl$esoil == 61) rtfrac1 <- mparam0$rtfrac1   # fraction of roots in the upper layer (-)
 
    # (7) interflow
-   if(smodl$qintf == 72) iflwrte <- mparam0$iflwrte
-
-   # (8) time delay in runoff
-   #if(smodl$q_tdh == 82) timedelay <- mparam0$timedelay
+   if(smodl$qintf == 72) iflwrte <- mparam0$iflwrte   # interflow rate (mm day-1)
 
    params <- list("rferr_add" = rferr_add,
                   "rferr_mlt" = rferr_mlt,
@@ -139,8 +135,7 @@ assign_par <- function(smodl,mparam0) {
                   "sareamax"  = sareamax ,
                   "loglamb"   = loglamb  ,
                   "tishape"   = tishape  ,
-                  "qb_powr"   = qb_powr  #,
-                  #"timedelay" = timedelay
+                  "qb_powr"   = qb_powr  
                   )
 
    return(params)

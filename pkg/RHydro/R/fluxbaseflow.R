@@ -1,17 +1,14 @@
 fluxbaseflow <- function(arch2,mparam,qbsat,free_2a, free_2b, watr_2) {
    # Compute baseflow from the lower soil layer
    # Author: Claudia Vitolo
-   # Date: 28-03-2011
-   #
-   # PART OF FUSE MODEL (module 11 of XXX)
    #
    # Args:
    #   arch2:         smodl$arch2
-   #   mparam:
+   #   mparam:        useful model parameters
    #   qbsat:         dparam$qbsat
-   #   free_2a:
-   #   free_2b:
-   #   watr_2:
+   #   free_2a:       Free Storage Primary Baseflow Reservoir
+   #   free_2b:       Free Storage Secondary Baseflow Reservoir
+   #   watr_2:        Total Storage Lower Layer
    #
    # Returns:
    #   Baseflow
@@ -26,7 +23,7 @@ fluxbaseflow <- function(arch2,mparam,qbsat,free_2a, free_2b, watr_2) {
       qbase_2  <- qbase_2a + qbase_2b           # total baseflow
    }
    
-   if(arch2 == 33) qbase_2  <- mparam$qb_prms * watr_2                                    # baseflow resvr of unlimited size (0-huge), frac rate # qb_prms is a fraction (t-1)   
+   if(arch2 == 33) qbase_2  <- mparam$qb_prms * watr_2                                   # baseflow resvr of unlimited size (0-huge), frac rate # qb_prms is a fraction (t-1)   
    if(arch2 == 34) qbase_2  <- qbsat * (watr_2/mparam$maxwatr_2)**mparam$qb_powr          # baseflow resvr of unlimited size (0-huge), power recession
    if(arch2 == 35) qbase_2  <- qbsat * exp( -(1 - watr_2/mparam$maxwatr_2) )              # topmodel exponential reservoir (-huge to huge)
    if(arch2 == 31) qbase_2  <- mparam$baserte * (watr_2/mparam$maxwatr_2)**mparam$qb_powr # baseflow reservoir of fixed size
