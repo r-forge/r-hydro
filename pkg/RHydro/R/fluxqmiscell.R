@@ -32,7 +32,7 @@ fluxqmiscell <- function(deltim,arch1,arch2,state,mparam,dparam,eff_ppt,qrunoff,
    oflow_2b    <- 0
    oflow_2     <- 0
    
-   x <- 2
+   x <- 1
    
    switch(x,    
           

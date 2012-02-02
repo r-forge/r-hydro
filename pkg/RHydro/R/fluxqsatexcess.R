@@ -31,7 +31,7 @@ fluxqsatexcess <- function(mqsurf,eff_ppt,mparam,dparam,tens_1, watr_1, watr_2) 
       if(ti_sat > dparam$maxpow) {
          satarea <- 0 
       } else {
-         ti_log  <- log( ti_sat**mparam$qb_powr )                # convert the topographic index to log space, compute the saturated area (note: critical value of the topographic index is in log space)
+         ti_log  <- log(ti_sat^mparam$qb_powr)                # convert the topographic index to log space, compute the saturated area (note: critical value of the topographic index is in log space)
          ti_off  <- 3                                            # offset in the gamma distribution (the "3rd" parameter)
          ti_shp  <- mparam$tishape                               # shape of the gamma distribution (the "2nd" parameter)
          ti_chi  <- (mparam$loglamb - ti_off) / mparam$tishape   # chi -- loglamb is the first parameter (mean)

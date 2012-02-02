@@ -10,7 +10,7 @@ fusesma.sim <- function(DATA,mid,modlist,
     #   DATA:                          matrix containing 3 columns called: P (precipitation), E (potential evapotranspiration) and Q (observed streamflow discharge, optional)
     #   mid:                           model id 
     #   modlist:                       list of model structures ordered by model id
-    #   deltim:                        time step
+    #   deltim:                        time step: deltim = 1 (daily time step), 1/24 (hourly time step), 1/24/4 (15 min time step)
     #   fracstate...qb_powr:           input parameters
     #
     # Returns:
@@ -72,7 +72,7 @@ fusesma.sim <- function(DATA,mid,modlist,
     # Solve derivatives
     times      <- seq(1, length(P), by = 1) # by = 1 means that solver timestep = data timestep
 
-    parameters <- c("deltim" = deltim) # standard deltim = 1 (daily time step), 1/24 (hourly time step), 1/24/4 (15 min time step)
+    parameters <- c("deltim" = deltim) 
     
     print("computing state variables ...")
     state1 <- ode("y" = state0, 
@@ -83,11 +83,12 @@ fusesma.sim <- function(DATA,mid,modlist,
                   "pet" = E, 
                   "smodl" = smodl, 
                   "mparam" = mparam, 
-                  "dparam" = dparam) #,
+                  "dparam" = dparam,
+                  atol = 1e-2, rtol = 1e-2)
                   #method="rk")  #default: method="lsoda"
     
     #Update fluxes
-    state1 <- updatestates(smodl,mparam,dparam,state1)
+    #state1 <- updatestates(smodl,mparam,dparam,state1)
     
     print("computing fluxes ...")
     allfluxes <- outfluxes(deltim,smodl,P,E,mparam,dparam,state1)

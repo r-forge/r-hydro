@@ -11,10 +11,10 @@ upstates <- function(smodl,mparam,dparam,state) {
    # Returns:
    #   State variables updated
    
-     xmin <- 1e-06
+   xmin <- 0 # 1e-06
      
    if (smodl$arch1 == 21) {
-     # case('onestate_1') # upper layer defined by a single state variable
+     # case('onestate_1'): upper layer defined by a single state variable
      free_1  <- max(xmin, state[["watr_1"]] - dparam$maxtens_1) # free storage
      tens_1a <- -999                                            # 1st tension store (undefined)
      tens_1b <- -999                                            # 2nd tension store (undefined)
@@ -23,7 +23,7 @@ upstates <- function(smodl,mparam,dparam,state) {
    }
      
    if (smodl$arch1 == 22) {
-     # case('tension1_1') # upper layer broken up into tension and free storage
+     # case('tension1_1'): upper layer broken up into tension and free storage
      tens_1a <- -999                              # 1st tension store (undefined)
      tens_1b <- -999                              # 2nd tension store (undefined)
      tens_1  <- state[["tens_1"]]                 # tension storage
@@ -54,8 +54,8 @@ upstates <- function(smodl,mparam,dparam,state) {
      free_2a <- -999                                                                      # primary reservoir (undefined)
      free_2b <- -999                                                                      # secondary reservoir (undefined)
      free_2  <- max(xmin, state[["watr_2"]] - dparam$maxtens_2)                           # free storage
-     tens_2  <- min(state[["tens_2"]]-free_2, dparam$maxtens_2)                           # tension storage
-     watr_2  <- tens_2  + free_2                                                          # total storage
+     tens_2  <- min(state[["watr_2"]]-free_2, dparam$maxtens_2)                           # tension storage
+     watr_2  <- state[["watr_2"]]                                                         # total storage
    }
      
      state_new <- c("tens_1a" = tens_1a,

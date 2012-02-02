@@ -16,7 +16,7 @@ mean_tipow <- function(ti_shp,log_lamb,qb_pwr) {
    
    # preliminaries: get parameters of the gamma distribution [ti_shp = shape of the gamma distribution  (the "2nd" parameter)]
    ti_off <- 3                                           # offset in the gamma distribution (the "3rd" parameter) 
-   ti_chi <- (log_lamb - ti_off) / ti_shp  # chi -- loglamb is the first parameter (mean)
+   ti_chi <- (log_lamb - ti_off) / ti_shp                # chi -- loglamb is the first parameter (mean)
    
    # loop through the frequency distribution
    lowerv <- 0
