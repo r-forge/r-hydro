@@ -1,4 +1,4 @@
-fuserouting.sim <- function(U, mid, modlist, deltim, timedelay, size_frac_future = 500, alpha = 2.5, psave = 0.0) {    
+fuserouting.sim <- function(U, mid, modlist, deltim=1, timedelay, size_frac_future = 500, alpha = 2.5, psave = 0.0) {    
    ## FUSE Routing model
    # Author: Claudia Vitolo
    #

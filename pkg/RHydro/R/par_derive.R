@@ -51,7 +51,7 @@ par_derive <- function(smodl,mparam) {
    # mean of the power-transformed topographic index
    if(mparam$tishape != -999 && mparam$loglamb != -999 && mparam$qb_powr != -999) {
      temp    <- mean_tipow(mparam$tishape, mparam$loglamb, mparam$qb_powr)
-     maxpow  <- temp[1]/10   # not clear why???
+     maxpow  <- temp[1]    #in fortran code maxpow/10, why??? 
      powlamb <- temp[2]
    }
 

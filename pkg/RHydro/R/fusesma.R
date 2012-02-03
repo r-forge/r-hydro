@@ -85,10 +85,6 @@ fusesma.sim <- function(DATA,mid,modlist,
                   "mparam" = mparam, 
                   "dparam" = dparam,
                   atol = 1e-2, rtol = 1e-2)
-                  #method="rk")  #default: method="lsoda"
-    
-    #Update fluxes
-    #state1 <- updatestates(smodl,mparam,dparam,state1)
     
     print("computing fluxes ...")
     allfluxes <- outfluxes(deltim,smodl,P,E,mparam,dparam,state1)

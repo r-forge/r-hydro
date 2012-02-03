@@ -11,7 +11,7 @@ initstates <- function(smodl,mparam,dparam,fracstate0) {
    # Returns:
    #   Initial condition for state variables
 
-   xmin <- 0 # 1e-06
+   xmin <- 0 #1e-06
   
    # initialize model states (upper layer and lower layer)
    tens_1a <- -999   # Excess Tension storage Upper Layer
