@@ -38,7 +38,7 @@
                cols=col.names
         }
         
-        t.data <- as.matrix(table)[,5:col.count]
+        t.data <- as.matrix(table)[,5:col.count, drop=FALSE]
         dimnames(t.data) <- list(paste("r",1:NROW(t.data),sep=""), col.names[5:col.count])
         drop.all.na <- which(colSums(is.na(t.data))==NROW(t.data))
         if(length(drop.all.na)>0){
