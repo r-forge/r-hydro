@@ -5,7 +5,7 @@ Version: 2011-11
 Date: 2011-11-08
 Author: Dominik Reusser, Wouter Buytaert, Claudia Vitolo
 Maintainer: Dominik Reusser <dreusser@pik-potsdam.de>, Wouter Buytaert <w.buytaert@imperial.ac.uk>, Claudia Vitolo <c.vitolo@imperial.ac.uk>
-Depends: R (>= 2.4.0), methods, xts, sp, graphics, stats, lhs, deSolve
+Depends: R (>= 2.4.0), methods, xts, sp, graphics, stats, lhs, deSolve, XML
 #Suggests: ncdf
 Description: This package provides classes and functions for hydrological analysis
 License: GPL
@@ -51,5 +51,8 @@ Collate: class.HydroModelParameters.R  class.HydroRun.R class.HydroModel.R
   readmd.R
   upstates.R
   outfluxes.R
+  array2xml.R
+  let2num.R
+  perfindices.R
 
 
