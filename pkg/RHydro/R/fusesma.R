@@ -1,20 +1,25 @@
-fusesma.sim <- function(DATA,mid,modlist,
-                        deltim=1,fracstate0=0.25,rferr_add=0,rferr_mlt=1,
+## FUSE Soil Moisture Accounting model
+# Author: Claudia Vitolo
+#
+# Args:
+#   DATA:                          matrix containing 3 columns called: P (precipitation), E (potential evapotranspiration) and Q (observed streamflow discharge, optional)
+#   mid:                           model id 
+#   modlist:                       list of model structures ordered by model id
+#   states:                        boolean. If states=TRUE, the output contains the list of state variables
+#   fluxes:                        boolean. If fluxes=TRUE, the output contains the list of fluxes (last element of the list is U)
+#   deltim:                        time step: deltim = 1 (daily time step), 1/24 (hourly time step), 1/24/4 (15 min time step)
+#   fracstate...qb_powr:           input parameters
+#
+# Returns:
+#   U:                             Instantaneous runoff      
+#   s:                             (optional) list of state variables 
+#   f:                             (optional) list of fluxes (containing also U)
+
+fusesma.sim <- function(DATA,mid,modlist,states=FALSE,fluxes=FALSE,
+                        deltim=1,fracstate0=0.25,rferr_add=0,rferr_mlt=1,fraclowz=0.5,
                         frchzne,fracten,maxwatr_1,percfrac,fprimqb,qbrate_2a,qbrate_2b,
                         qb_prms,maxwatr_2,baserte,rtfrac1,percrte,percexp,sacpmlt,
-                        sacpexp,iflwrte,axv_bexp,sareamax,loglamb,tishape,qb_powr) {
-    ## FUSE Soil Moisture Accounting model
-    # Author: Claudia Vitolo
-    #
-    # Args:
-    #   DATA:                          matrix containing 3 columns called: P (precipitation), E (potential evapotranspiration) and Q (observed streamflow discharge, optional)
-    #   mid:                           model id 
-    #   modlist:                       list of model structures ordered by model id
-    #   deltim:                        time step: deltim = 1 (daily time step), 1/24 (hourly time step), 1/24/4 (15 min time step)
-    #   fracstate...qb_powr:           input parameters
-    #
-    # Returns:
-    #   U:                             Instantaneous runoff                     
+                        sacpexp,iflwrte,axv_bexp,sareamax,loglamb,tishape,qb_powr) {              
                             
     stopifnot(c("P","E") %in% colnames(DATA))
     P <- DATA[,"P"]
@@ -89,38 +94,46 @@ fusesma.sim <- function(DATA,mid,modlist,
     print("computing fluxes ...")
     allfluxes <- outfluxes(deltim,smodl,P,E,mparam,dparam,state1)
     
-    #print("converting effective rainfall into zoo object ...")
+    # print("converting effective rainfall into zoo object ...")
     # make it a time series object again
-    #attributes(U) <- attributes(P)
+    # attributes(U) <- attributes(P)
     # re-insert missing values
-    #U[bad] <- NA
-    return(allfluxes$U)
+    # U[bad] <- NA
+
+    if (states == FALSE && fluxes == FALSE) results <- allfluxes$U
+    if (states == TRUE  && fluxes == FALSE) results <- list("s"=state1,"U"=allfluxes$U)
+    if (states == FALSE && fluxes == TRUE)  results <- allfluxes
+    if (states == TRUE  && fluxes == TRUE)  results <- list("s"=state1,"f"=allfluxes)
+
+    return(results)
 }
 
-fusesma.ranges <- function() {
-    list("rferr_add" = c(0, 0),
-         "rferr_mlt" = c(1, 1),
-         "frchzne"   = c(0.05, 0.95),
-         "fracten"   = c(0.05, 0.95),
-         "maxwatr_1" = c(25, 500),
-         "percfrac"  = c(0.05, 0.95),
-         "fprimqb"   = c(0.05, 0.95),
-         "qbrate_2a" = c(0.001, 0.25),
-         "qbrate_2b" = c(0.001, 0.25),
-         "qb_prms"   = c(0.001, 0.25),
-         "maxwatr_2" = c(50, 5000),
-         "baserte"   = c(0.001, 1000),
-         "rtfrac1"   = c(0.05, 0.95),
-         "percrte"   = c(0.01, 1000),
-         "percexp"   = c(1, 20),
-         "sacpmlt"   = c(1, 250),
-         "sacpexp"   = c(1, 5),
-         "iflwrte"   = c(0.01, 1000),
-         "axv_bexp"  = c(0.001, 3),
-         "sareamax"  = c(0.05, 0.95),
-         "loglamb"   = c(5, 10),
-         "tishape"   = c(2, 5),
-         "qb_powr"   = c(1, 10))
-
+fusesma.ranges <- function(deltim) {
+    list("rferr_add" = c(0, 0),                      # additive rainfall error (mm)
+         "rferr_mlt" = c(1, 1),                      # multiplicative rainfall error (-)
+         "maxwatr_1" = c(25, 500),                   # depth of the upper soil layer (mm)
+         "maxwatr_2" = c(50, 5000),                  # depth of the lower soil layer (mm)
+         "fracten"   = c(0.05, 0.95),                # fraction total storage in tension storage (-)
+         "frchzne"   = c(0.05, 0.95),                # fraction tension storage in recharge zone (-)
+         "fprimqb"   = c(0.05, 0.95),                # fraction storage in 1st baseflow reservoir (-)
+         "rtfrac1"   = c(0.05, 0.95),                # fraction of roots in the upper layer (-)
+         "percrte"   = c(0.01/deltim, 1000/deltim),  # percolation rate (mm day-1)                            # Affected by deltim
+         "percexp"   = c(1, 20),                     # percolation exponent (-)
+         "sacpmlt"   = c(1, 250),                    # SAC model percltn mult for dry soil layer (-)
+         "sacpexp"   = c(1, 5),                      # SAC model percltn exp for dry soil layer (-)
+         "percfrac"  = c(0.05, 0.95),                # fraction of percltn to tension storage (-)
+         #"fraclowz"  = c(0.05, 0.95),               # fraction of soil excess to lower zone (-) # NOT USED!
+         "iflwrte"   = c(0.01/deltim, 1000/deltim),  # interflow rate (mm day-1)                              # Affected by deltim
+         "baserte"   = c(0.001/deltim, 1000/deltim), # baseflow rate (mm day-1)                               # Affected by deltim
+         "qb_powr"   = c(1, 10),                     # baseflow exponent (-)
+         "qb_prms"   = c(0.001/deltim, 0.25/deltim), # baseflow depletion rate (day-1)                        # Affected by deltim
+         "qbrate_2a" = c(0.001/deltim, 0.25/deltim), # baseflow depletion rate 1st reservoir (day-1)          # Affected by deltim
+         "qbrate_2b" = c(0.001/deltim, 0.25/deltim), # baseflow depletion rate 2nd reservoir (day-1)          # Affected by deltim
+         "sareamax"  = c(0.05, 0.95),                # maximum saturated area (-)
+         "axv_bexp"  = c(0.001, 3),                  # ARNO/VIC "b" exponent (-)
+         "loglamb"   = c(5, 10),                     # mean value of the topographic index (m)
+         "tishape"   = c(2, 5))                      # shape param for the topo index Gamma dist (-) 
+         #"timedelay" = c(0.01, 5),                  # time delay in runoff (days) ---> moved to "fuserouting.R"
+                
 }
 

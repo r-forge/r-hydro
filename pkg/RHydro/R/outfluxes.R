@@ -35,12 +35,11 @@ outfluxes <- function(deltim,smodl,P,E,mparam,dparam,state1) {
    oflow_2a    <- rep(0,length(P))
    oflow_2b    <- rep(0,length(P))
  
-   U           <- rep(0,length(P)) 
+   U           <- rep(0,length(P))     # effective rainfall
    
-   #fluxes <- matrix(0,nrow=length(P),ncol=17)                         # to output fluxes
    for (index in seq(along = P)) { 
+       #if (index == 720) browser()
        w_flux   <- compute_fluxes(deltim,smodl,P[index],E[index],mparam,dparam,state1[index,2:11])
-       #for (cindex in 1:17)  fluxes[index,cindex] <- w_flux[[cindex]]    # to output fluxes
        eff_ppt[index]     <- w_flux$eff_ppt
        satarea[index]     <- w_flux$satarea
        qrunoff[index]     <- w_flux$qrunoff 
