@@ -14,6 +14,7 @@
 ##   See current structure in prototype as a suggestion
 setGeneric("validity.check", function(object) { standardGeneric("validity.check") })
 
+setGeneric("plot")
 setOldClass("zoo")
 
 validityHydroRun <- function(object){
@@ -304,8 +305,8 @@ setMethod("plot",
               hydro.plot.type=c("rainfall-runoff", "by.data.type", "by.station", "balance"),
               type = factor(c("flux","state")),
               origin = factor(c("simulated","measured")),
-              data.types=get.data.types(object, type=type, origin=origin),
-              stations=get.stations(object, type=type, origin=origin),
+              data.types=get.data.types(x, type=type, origin=origin),
+              stations=get.stations(x, type=type, origin=origin),
               balance.types=unique(unlist(getBalanceTypes.rhydro.data.types())),
               legend.position="right",
               runs=1:get.runCount(x),

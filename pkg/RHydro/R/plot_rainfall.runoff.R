@@ -1,5 +1,5 @@
 plot_rainfall.runoff <- function(rain, q.model, q.measured=NULL,
-myColors=data.frame(measured=c("grey"), modelled=c("black"), rain=c("black")),
+myColors=data.frame(measured=c("grey"), modelled=c("black"), rain=c("grey")),
 q.units="mm/h", p.units="mm/h", mar=c(3,4,2,4)+0.1, cex.rain=1, ...){
     data.count <- 3
     theXRange <- NA
@@ -53,7 +53,7 @@ q.units="mm/h", p.units="mm/h", mar=c(3,4,2,4)+0.1, cex.rain=1, ...){
             }
         }
         if(!is.na(max.rain)){  #set range for rain
-                plot.window(range(index(q.model)), c(2*max.rain,0))
+                plot.window(theXRange, c(2*max.rain,0))
                 show.rain.axis=TRUE
         }
     }
