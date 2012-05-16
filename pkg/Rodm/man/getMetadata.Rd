@@ -14,7 +14,7 @@ id2name is an internal function. It takes a dataframe (e.g. returned from IgetDa
 }
 \usage{
 getMetadata(table, EXACT = FALSE, ...)
-getID(table, value)
+getID(table, value, remove.special.character=TRUE)
 id2name(dataframe)
 }
 \arguments{
@@ -23,6 +23,9 @@ Table name of the metadata table.
 }
   \item{EXACT}{
 boolean indicating whether only exact matches should be returned or partial matches of the term should be accepted.
+}
+  \item{remove.special.character}{
+boolean indicating whether special characters should be removed when comparing. Usually, this should be turned on.
 }
   \item{value}{
 String describing the entry in the table.
@@ -49,7 +52,7 @@ Use \code{\link{CVtables}} to obtain a list of controlled vocabularies. See also
 \examples{
 #connect to standard database
 #this also retrieves the controlled vocabularies from the CUASHI server
-try(getID("Site", value="test"))
+getDefaultDB()
 
 #retrieve metadata
 getMetadata(table="VariableName")

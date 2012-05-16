@@ -11,6 +11,7 @@ setGeneric("IaddUnits", function(object, ID, Name, Type, Abbreviation ) { standa
 setGeneric("IaddSpatialReference", function(object, ID, SRSName, SRSID, IsGeographic, Notes ) { standardGeneric("IaddSpatialReference")}) 
 setGeneric("IgetVariable", function(object, ID=NULL, Code=NULL, Name=NULL, Speciation=NULL, Unit=NULL, Medium=NULL,exact=FALSE, ...  ) { standardGeneric("IgetVariable")}) 
 setGeneric("IgetQualifier", function(object, ID=NULL, Code=NULL, Description=NULL, ...  ) { standardGeneric("IgetQualifier")}) 
+setGeneric("IgetLabMethod", function(object, ID=NULL, LabName=NULL, Organization=NULL, MethodName=NULL, Description=NULL, Link=NULL, ...  ) { standardGeneric("IgetLabMethod")}) 
 setGeneric("IgetMethod", function(object, ID=NULL, Description=NULL, ...  ) { standardGeneric("IgetMethod")}) 
 setGeneric("IgetOffsetType", function(object, ID=NULL, Description=NULL, Units=NULL, ...  ) { standardGeneric("IgetOffsetType")}) 
 setGeneric("IaddOffsetType", function(object, Description=NULL, Units=NULL, ...  ) { standardGeneric("IaddOffsetType")}) 
@@ -19,6 +20,7 @@ setGeneric("IgetSource", function(object, ID=NULL, Organization=NULL, Descriptio
 setGeneric("IgetISOMetadata", function(object, ID=NULL, Title=NULL, Abstract=NULL, TopicCategory=NULL, ...  ) { standardGeneric("IgetISOMetadata")}) 
 setGeneric("IgetQualityControlLevel", function(object, ID=NULL, Code=NULL, Definition=NULL, Explanation=NULL, ...  ) { standardGeneric("IgetQualityControlLevel")}) 
 setGeneric("IaddQualityControlLevel", function(object, ID, Code, Definition, Explanation, ...  ) { standardGeneric("IaddQualityControlLevel")}) 
+setGeneric("IaddLabMethod", function(object, ID, LabName, Organization, MethodName, Description, Link, ...  ) { standardGeneric("IaddLabMethod")}) 
 
 for(i in CVtables()){
 	code <- paste('setGeneric("Iget',i,'", function(object, Term=NULL,  Definition=NULL, exact=FALSE, ...  ) { standardGeneric("Iget',i,'")})', sep="")
@@ -71,6 +73,7 @@ setMethod("IaddUnits", signature(object = "NULL"), h.m)
 setMethod("IaddSpatialReference", signature(object = "NULL"), h.m)
 setMethod("IgetVariable", signature(object = "NULL"), h.m)
 setMethod("IgetQualifier", signature(object = "NULL"), h.m)
+setMethod("IgetLabMethod", signature(object = "NULL"), h.m)
 setMethod("IgetMethod", signature(object = "NULL"), h.m)
 setMethod("IgetOffsetType", signature(object = "NULL"), h.m)
 setMethod("IaddOffsetType", signature(object = "NULL"), h.m)
@@ -98,26 +101,27 @@ setMethod("IaddSource", signature(object = "NULL"), h.m)
 setMethod("IaddISOMetadata", signature(object = "NULL"), h.m)
 
 check.version <- function(object, version){
-		if(dbExistsTable(object@con, "ODMVersion")){
+		if(mdbExistsTable(object@con, "ODMVersion")){
 			query = "SELECT * FROM ODMVersion"
 		        if(getOption("verbose.queries", default=FALSE)) print(query)
 			res <- dbGetQuery(object@con, query)
 			if(NROW(res)==0){
 				stop("No Database Version stored in table ODMVersion. Please specify the version (e.g. 'dbGetQuery(options('odm.handler')[[1]]@con, 'INSERT INTO ODMVersion (VersionNumber) values (\"1.1Ver\")') ).\n")
 			}
-			if(res$VersionNumber!=version){
-				stop("Invalid Database version. Expected ",version,", obtained ",res$VersionNumber)
+			if(res[,1]!=version){
+				stop("Invalid Database version. Expected ",version,", obtained ",res[,1])
 			}
 		} else {
 			warning("Creating database structure")
 			run.sql.script(object@con, system.file("odm1_1_raw.sql", package="RObsDat"))
 			if(version=="1.1Ver"){
 			     run.sql.script(object@con, system.file("odm1_1_addVersion.sql", package="RObsDat"))
+			     todo("Fix problem with constraints for DataValuesRepository")
 			}
 			warning("Updating controlled vocabularies")
 			updateCV()
 		}
-		if(!dbExistsTable(object@con, "Synonyms")){
+		if(!mdbExistsTable(object@con, "Synonyms")){
 			warning("Creating synonym table")
 			query = "CREATE TABLE Synonyms (phrase TEXT, RecID NUMERIC, tab TEXT)"
 		        if(getOption("verbose.queries", default=FALSE)) print(query)
@@ -171,7 +175,7 @@ setMethod("IgetUnits",
 			query <- paste("SELECT * FROM Units", where.clause)
 			res <- run.query(object, query )
 			#ToDo: Define standard return values and order
-			if(NCOL(res)>0) {names(res)[1:4] <- c("ID", "Name", "Type", "Abbreviation")}
+			if(!is.null(res) & NCOL(res)>0) {names(res)[1:4] <- c("ID", "Name", "Type", "Abbreviation")}
 			return(res)
 		}
 	)
@@ -240,6 +244,27 @@ setMethod("IgetVariable",
 			return(res)
 		}
 	)
+
+setMethod("IgetLabMethod", 
+		signature(object = "odm1_1"),
+		function(object, ID=NULL, LabName=NULL, Organization=NULL, MethodName=NULL, Description=NULL, Link=NULL, ...){
+		  	w.o <- list(where.clause = "", the.and  = "")
+			w.o <- expand.where(w.o, ID, "LabMethodID", exact=TRUE)
+			w.o <- expand.where(w.o, LabName, "LabName", exact=FALSE)
+			w.o <- expand.where(w.o, Organization, "LabOrganization", exact=FALSE)
+			w.o <- expand.where(w.o, MethodName, "LabMethodName", exact=FALSE)
+			w.o <- expand.where(w.o, Link, "LabMethodLink", exact=FALSE)
+			w.o <- expand.where(w.o, Description, "LabMethodDescription", exact=FALSE)
+			where.clause <- w.o$where.clause
+			if(where.clause!="") where.clause <- paste(" WHERE ", where.clause)
+			query <- paste("SELECT * FROM Qualifiers ", where.clause)
+			res <- run.query(object, query )
+			#ToDo: Define standard return values and order
+			if(NCOL(res)>0) {names(res)[1] <- c("ID")}
+			return(res)
+		}
+	)
+
 setMethod("IgetQualifier", 
 		signature(object = "odm1_1"),
 		function(object,  ID=NULL, Code=NULL, Description=NULL, ...){
@@ -263,8 +288,8 @@ setMethod("IgetSpatialReference",
 
 			#the where.object is used to assemble the where clause
 		  	w.o <- list(where.clause = "", the.and  = "")
-			w.o <- expand.where(w.o, ID, "SpatialReferenceID", exact=TRUE)
-			w.o <- expand.where(w.o, SRSID, "SRSID", exact=TRUE)
+			w.o <- expand.where(w.o, ID, "SpatialReferenceID", exact=TRUE, isnumeric=TRUE)
+			w.o <- expand.where(w.o, SRSID, "SRSID", exact=TRUE, isnumeric=TRUE)
 			w.o <- expand.where(w.o, SRSName, "SRSName", exact=exact)
 			w.o <- expand.where(w.o, IsGeographic, "IsGeographic", exact=TRUE)
 			w.o <- expand.where(w.o, Notes, "Notes", exact=exact)
@@ -504,7 +529,8 @@ setMethod("IaddDataVersion",
 			# Achtung: beim Abholen von der Versionshistory 
 			#	muss die Begruendung for die Aenderung jeweils 
 			#	bei der naechsten Versionsnummer nachgeschaut werden.
-			the.query <- paste("SELECT ", sqlstatements(object, "last_id"))
+			#the.query <- paste("SELECT ", sqlstatements(object, "last_id"))
+			the.query <- paste("SELECT MAX(VersionID) FROM Versions")
 			to.ret <- run.query(object, the.query )
 			return(as.numeric(to.ret))
 		}
@@ -521,7 +547,7 @@ setMethod("IarchiveDataValues",
 				run.query(object, the.query )
 				currentVersion <-  IgetCurrentDataVersion(object)
 			}
-			the.query = paste("INSERT INTO DataValuesRepository SELECT ValueID, VersionID, DataValue, ValueAccuracy, LocalDateTime, UTCOffset, DateTimeUTC, SiteID, VariableID, OffsetValue, OffsetTypeID, CensorCode, QualifierID, MethodID, SourceID, SampleID, DerivedFromID, QualityControlLevelID FROM DataValues JOIN (SELECT ",currentVersion," as VersionID) as Version WHERE ValueID = ", paste(ValueID, collapse=" OR ValueID = "), sep="")
+			the.query = paste("INSERT INTO DataValuesRepository SELECT ValueID, VersionID, DataValue, ValueAccuracy, LocalDateTime, UTCOffset, DateTimeUTC, SiteID, VariableID, OffsetValue, OffsetTypeID, CensorCode, QualifierID, MethodID, SourceID, SampleID, DerivedFromID, QualityControlLevelID FROM DataValues, (SELECT ",currentVersion," as VersionID) as Version WHERE ValueID = ", paste(ValueID, collapse=" OR ValueID = "), sep="")
 			run.query(object, the.query )
 			# Version updaten
 			IaddDataVersion(object, reason)
@@ -532,22 +558,22 @@ setMethod("IupdateDataValues",
 		signature(object = "odm1_1"),
 		function(object, ValueID, localDateTime, value, TZ, SiteID, VariableID, Offset=NULL, OffsetTypeID=NULL, CensorCode, QualifierID=NULL, MethodID, SourceID, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID, valueAccuracy=NULL,...  ){
 			insert.query <- paste("UPDATE DataValues SET DataValue = \"",value,
-					"\", ValueAccuracy = \"", valueAccuracy,
-				       	"\", LocalDateTime = \"", localDateTime,
+					"\", ValueAccuracy = ", valueAccuracy,
+				       	", LocalDateTime = \"", localDateTime,
 				       	"\", UTCOffset = \"", tz2offset(TZ),
 					"\", DateTimeUTC = \"", strftime(localDateTime, tz=TZ),
-					"\", SiteID = \"", SiteID, 
-					"\", VariableID = \"", VariableID,
-					"\", OffsetValue = \"", Offset,
-					"\", OffsetTypeID = \"", OffsetTypeID,
-				        "\", CensorCode = \"", CensorCode,
-					"\", QualifierID = \"", QualifierID,
-				        "\", MethodID = \"", MethodID, 
-					"\", SourceID = \"", SourceID,
-					"\", SampleID = \"", SampleID, 
-					"\", DerivedFromID = \"", DerivedFromID,
-					"\", QualityControlLevelID = \"", QualityControlLevelID,
-					"\" WHERE ValueID = ", ValueID, sep="")
+					"\", SiteID = ", SiteID, 
+					", VariableID = ", VariableID,
+					", OffsetValue = ", Offset,
+					", OffsetTypeID = ", OffsetTypeID,
+				        ", CensorCode = \"", CensorCode,
+					"\", QualifierID = ", QualifierID,
+				        ", MethodID = ", MethodID, 
+					", SourceID = ", SourceID,
+					", SampleID = ", SampleID, 
+					", DerivedFromID = ", DerivedFromID,
+					", QualityControlLevelID = ", QualityControlLevelID,
+					" WHERE ValueID = ", ValueID, sep="")
 				run.query(object, insert.query)
 
 		}
@@ -585,8 +611,7 @@ setMethod("IaddVariable", signature=(object = "odm1_1"),
 						theTimeUnits ,
 						theDataType ,
 						theGeneralCategory ,
-						theNoDataValue ,
-						sep="\", \""), "\")", sep="")
+						sep="\", \""), "\",", theNoDataValue  ," )", sep="")
 			 	run.query(object, insert.query )
 			}
 	  }
@@ -650,7 +675,7 @@ setMethod("IaddSource",
 
 setMethod("IaddSite", 
 		signature(object = "odm1_1"),
-		function(object, Code, Name, Latitude, Longitude, LatLongDatum, Elevation=NULL, VerticalDatum=NULL, LocalX=NULL,LocalY=NULL, LocalProjection=NULL, PosAccuracy=NULL, State=NULL, County=NULL, Comments=NULL){
+		function(object, Code, Name, Latitude, Longitude, LatLongDatum, Elevation=NULL, VerticalDatum=NULL, LocalX=0,LocalY=0, LocalProjection=NULL, PosAccuracy=0, State=NULL, County=NULL, Comments=NULL){
 			for(rownum in seq(along=Name)){
 
 				#no Foreign Key
@@ -713,21 +738,21 @@ setMethod("IaddDataValues",
 				theTZ <- sv(TZ, rownum)
 				theDerivedFromID <- sv(DerivedFromID, rownum)
 
-				insert.query <- paste("INSERT INTO DataValues (DataValue, ValueAccuracy, LocalDateTime, UTCOffset, DateTimeUTC, SiteID, VariableID, OffsetValue, OffsetTypeID, CensorCode, QualifierID, MethodID, SourceID, SampleID, DerivedFromID, QualityControlLevelID) VALUES (\"", paste(values[rownum],
+				insert.query <- paste("INSERT INTO DataValues (DataValue, ValueAccuracy, LocalDateTime, UTCOffset, DateTimeUTC, SiteID, VariableID, OffsetValue, OffsetTypeID, CensorCode, QualifierID, MethodID, SourceID, SampleID, DerivedFromID, QualityControlLevelID) VALUES (", paste(values[rownum],
 						thevalueAccuracy,
-						strftime(thelocalDateTime, "%Y-%m-%d %H:%M:%s", tz=theTZ ),
+						paste("'", strftime(thelocalDateTime, "%Y-%m-%d %H:%M:%S", tz=theTZ ), "'", sep=""),
 						theTZ , 
-						strftime(thelocalDateTime, tz="GMT", ), 
+						paste("'", strftime(thelocalDateTime, tz="GMT", ), "'", sep=""), 
 						theSiteID, theVariableID,
 						theOffset,
 						theOffsetTypeID,
-						theCensorCode,
+						paste("'", theCensorCode, "'", sep=""),
 						theQualifierID,
 						theMethodID,
 						theSourceID,
 						theSampleID,
 						theDerivedFromID,
-						theQualityControlLevelID ,sep="\", \""), "\")", sep="")
+						theQualityControlLevelID ,sep=", "), ")", sep="")
 			 	run.query(object, insert.query )
 			}
 		}
@@ -741,7 +766,10 @@ setMethod("IgetNo",
 				c("SpatialReferences", "SpatialReferences", "SRSName", "SRSID, IsGeographic, Notes, SpatialReferenceID","0, 0, '', 'No'", "SpatialReferenceID",
 	  			  "OffsetType", "OffsetTypes", "OffsetDescription", "OffsetUnitsID", "1", "OffsetTypeID",
 				  "Qualifier", "Qualifiers", "QualifierCode", "QualifierDescription", "'No Qualifier - to enable optional fields with foreign keys'", "QualifierID" ,
-				  "Sample", "Samples", "LabSampleCode", "SampleType, LabMethodID", "'no', 1", "SampleID",
+				  "LabMethod", "LabMethods", "LabMethodName", "LabMethodDescription, LabName, LabOrganization, LabMethodLink", "'No LabMethod - to enable optional fields with foreign keys', 'NoLab', 'NoOrganization', 'NoLink'", "LabMethodID" ,
+
+				  #does not work because samples depends also on LabMethods
+				  "Sample", "Samples", "LabSampleCode", "", "", "SampleID",
 				  "Method", "Methods", "MethodDescription", "MethodLink", "''", "MethodID",
 				  "QualityControlLevel", "QualityControlLevel", "QualityControlLevelCode", "Definition, Explanation, QualityControlLevelID", "'No Code', 'Default entry if no code is available', 999", "QualityControlLevelID",
 				  "ISOMetadata", "ISOMetadata", "Title", "TopicCategory", "'Unknown'", "MetadataID"
@@ -761,15 +789,45 @@ setMethod("IgetNo",
 		       	stop(paste("IgetNo: No definitions for table", table))
 		}
 
+		#Foreign keys
+		#generate?
+		fk.list <- list("Sample" = c("LabMethod", "SampleType"))
+
 		query <- paste("SELECT * FROM ", tab.def$tab ," WHERE ", tab.def$col,"='No",tab.def$tab,"'", sep="")
 		res <- run.query(object, query)
 		if(NROW(res)==0){
+			fks <- fk.list[[table]]
+			if(!is.null(fks)){
+				for(thefk in fks){
+					novalue <- IgetNo(object, thefk)
+					if(thefk %in% CVtables()){
+						fieldname <- thefk
+					} else {
+						fieldname <- paste(thefk, "ID", sep="")
+					}
+					if(tab.def$other.fields!=""){
+					       	thesep = ", "
+					} else {
+						thesep = ""
+					}
+					tab.def$other.fields <- paste(tab.def$other.fields, thesep, fieldname, sep="")
+					tab.def$default.values <- paste(tab.def$default.values, thesep, "'", novalue, "'", sep="")
+
+
+				}
+			}
 			ins.query <- paste("INSERT INTO ", tab.def$tab ," (",tab.def$col, ", ", tab.def$other.fields,") Values ('No",tab.def$tab,"',", tab.def$default.values,")", sep="" )
 			res <- run.query(object, ins.query)
 			res <- run.query(object, query)
 
 		}
-		return(res[[tab.def$primary.key]])
+
+		#necessary because postres does not support capital letters
+		coln <- which(tolower(tab.def$primary.key) %in% tolower(names(res)))
+
+		toret <-res[[coln]] 
+		stopifnot(!is.null(toret))
+		return(toret)
 	  }
 )
 
@@ -833,6 +891,10 @@ setMethod("IgetSynonymID",
 		       query <- paste('SELECT RecID FROM Synonyms WHERE phrase = "',
 				       phrase, '" AND tab="', table, '"', sep='')
 			res <- run.query(object, query)
-			return(res$RecID)
+			if(NCOL(res)==0){
+				return(NULL)
+			} else {
+				return(res[,1])
+			}
 
 	       })

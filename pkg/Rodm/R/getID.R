@@ -1,5 +1,6 @@
-getID <- function(table, value#, allowNoValue=FALSE
+getID <- function(table, value,#, allowNoValue=FALSE
 		  #allowNoValue does not make sense as it is implemented
+		  remove.special.character=TRUE
 		  ){
 # Generate Table where to search for information - this could be done once only
 	lookup <- list(SpatialReference = c("ID", "SRSName", "SRSID"), 
@@ -28,7 +29,11 @@ getID <- function(table, value#, allowNoValue=FALSE
 
 	#avoid special characters
 	#and remove trainling spaces
-	value <- sub(' +$', '', iconv(value, "","ascii",sub=" "))
+	if(remove.special.character){
+		#we need to be able to turn this off after lookup with
+		#levenstein algorithm, if special characters are present
+		value <- sub(' +$', '', iconv(value, "","ascii",sub=" "))
+	}
 
 	#get ids for unique values
 	uvalue <- unique(value)
@@ -44,6 +49,8 @@ getID <- function(table, value#, allowNoValue=FALSE
 			#avoid running loop again if we found a value
 			if(NROW(entry)==0){
 				for(field in lookup[[table]]){
+					#Skip ID field if we have characters (causes trouble with postgeres
+					if(field == "ID" & is.character(uvalue[i])) next
 					command <- paste('entry <- unique(rbind(entry, Iget',table,'(options("odm.handler")[[1]], ',field,'="',uvalue[i],'", exact=',exact,')))', sep='')
 					eval(parse(text=command))
 					#stop if we found too many results
@@ -51,6 +58,7 @@ getID <- function(table, value#, allowNoValue=FALSE
 						print(entry)
 						cat("Term '",uvalue[i],"' returns more than 1 values in table ",table , "\n", sep="")
 						cat("\n\n Please select matching row or hit 0 to stop\n")
+						if(!interactive()) stop("Error: no unique value in non-interactive session")
 						choice <- "impossible"
 						inval <- 0
 						while(choice == "impossible"){
@@ -71,9 +79,13 @@ getID <- function(table, value#, allowNoValue=FALSE
 					#store value if we are doing ok
 					if(NROW(entry)==1){ 
 						if(table %in% CVtables()){
-							uvalueID[i]  <- entry$Term
+							#necessary because postgres does not support capital letters
+							coln <- which(names(entry) %in% c("term","Term"))
+							uvalueID[i]  <- entry[,coln]
 						} else {
-							uvalueID[i]  <- entry$ID
+							#necessary because postgres does not support capital letters
+							coln <- which(names(entry) %in% c("ID","id"))
+							uvalueID[i]  <- entry[,coln]
 						}
 						break
 					}
@@ -84,12 +96,6 @@ getID <- function(table, value#, allowNoValue=FALSE
 			all.table <- NULL # to avoid warnings during check
 			command <- paste('all.table <- Iget',table,'(options("odm.handler")[[1]])', sep='')
 			eval(parse(text=command))
-
-			if(!all(lookup[[table]] %in% names(all.table))){
-				fields <- paste(lookup[[table]][!lookup[[table]] %in% names(all.table)], collapse="; ")
-				existing <- paste(names(all.table), collapse="; ")
-			       	stop(paste("getID error: lookup not defined correctly, missing fields for table ", table, ":", fields, ". Existing fields are:", existing ))
-			}
 			if(NROW(all.table)==0){
 				if(uvalue[i]=='No' | uvalue[i]=="Unknown"){
 					uvalueID[i] <- IgetNo(options("odm.handler")[[1]], table)
@@ -97,6 +103,12 @@ getID <- function(table, value#, allowNoValue=FALSE
 				} else {
 					stop("Table ", table, " has no entries. Please enter a record for '", value, "'")
 				}
+			}
+
+			if(!all(lookup[[table]] %in% names(all.table))){
+				fields <- paste(lookup[[table]][!lookup[[table]] %in% names(all.table)], collapse="; ")
+				existing <- paste(names(all.table), collapse="; ")
+			       	stop(paste("getID error: lookup not defined correctly, missing fields for table ", table, ":", fields, ". Existing fields are:", existing ))
 			}
 
 
@@ -137,6 +149,7 @@ getID <- function(table, value#, allowNoValue=FALSE
 			print(possible.answer)
 			cat("\n\n Please select matching record or hit 0 to stop or -1 to enter a search phrase\n")
 			choice <- "impossible"
+			if(!interactive()) stop("Error: no unique value in non-interactive session")
 			while(choice == "impossible"){
 				next.step <- readline("What is your choice? ")
 				choice <- as.numeric(next.step)
@@ -154,7 +167,7 @@ getID <- function(table, value#, allowNoValue=FALSE
 				search.term <- readline("Please enter serach term: ")
 				uvalueID[i]  <- addSynonym(table=table, uvalue[i], search.term)
 			} else {
-				uvalueID[i]  <- getID(table, possible.answer[choice])
+				uvalueID[i]  <- getID(table, possible.answer[choice], remove.special.character=FALSE)
 				addSynonym(table, uvalue[i], uvalueID[i])
 				warning(paste("Stored", uvalue[i], "as synonym of",  possible.answer[choice]))
 			}

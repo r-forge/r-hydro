@@ -45,7 +45,7 @@ Use \code{\link{getMetadata}} to retrieve values.
 }
 \examples{
 #connect to standard database
-try(getID("Site", value="test"))
+getDefaultDB()
 #add data
 addSpatialReferences(ID=4269,SRSID=4269, Name="NAD83", IsGeographic=TRUE, Notes="todo: include notes in this example") 
 }

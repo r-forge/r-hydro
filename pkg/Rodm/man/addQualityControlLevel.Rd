@@ -78,6 +78,8 @@ Design Specifications
  \code{\link{addDataValues}}
 }
 \examples{
+getDefaultDB()
+
 addQualityControlLevel(ID=1,Code="1", Definition="Quality Controlled Data", Explanation="Quality controlled data have passed quality assurance procedures such as routine estimation of timing and sensor calibration or visual inspection and removal of obvious errors. An example is USGS published streamflow records following parsing through USGS quality control procedures.")
 }
 \keyword{ utility }

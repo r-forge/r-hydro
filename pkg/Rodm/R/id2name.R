@@ -1,8 +1,8 @@
 id2name <- function(dataframe){
 	dataframe.new <- dataframe
-	names.alt <- sub("ID","",names(dataframe))
-	for(i in grep("ID",names(dataframe))){
-		if(names.alt[i]=="Version") next #no conversion for version ID
+	names.alt <- sub("id","",names(dataframe))
+	for(i in grep("id",names(dataframe))){
+		if(names.alt[i]=="version") next #no conversion for version ID
 		repl <- getMetadata(names.alt[i], ID=dataframe[,i], EXACT=TRUE)
 
 		if(!is.null(repl$Name)){

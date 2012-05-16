@@ -271,7 +271,7 @@ CREATE TABLE  DataValues (
 	DerivedFromID int(11)  default NULL COMMENT 'Integer identifier for the derived from group of data values that the current data value is derived from.  This refers to a group of derived from records in the DerivedFrom table. If NULL, the data value is inferred to not be derived from another data value.',
 	QualityControlLevelID int(11)  NOT NULL COMMENT 'Integer identifier giving the level of quality control that the value has been subjected to. This references the QualityControlLevels table.  -9999 = Unknown',
 
- 	PRIMARY KEY  (`ValueID`),
+ 	PRIMARY KEY  (ValueID),
     CONSTRAINT FKSiteID FOREIGN KEY (SiteID) REFERENCES Sites (SiteID) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT FKVariableID FOREIGN KEY (VariableID) REFERENCES Variables (VariableID) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT FKOffsetTypeID FOREIGN KEY (OffsetTypeID) REFERENCES OffsetTypes (OffsetTypeID) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -288,7 +288,7 @@ CREATE TABLE  Groups (
 	GroupID int(11)  NOT NULL COMMENT 'Integer ID for each group of data values that has been formed.',
 	ValueID int(11)  NOT NULL COMMENT 'Integer identifier for each data value that belongs to a group. This corresponds to ValueID in the DataValues table',
  	PRIMARY KEY  (GroupID, ValueID),
-    CONSTRAINT FKGroupID FOREIGN KEY (GroupID) REFERENCES GroupDescriptions (GroupID) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT FKGroupID FOREIGN KEY (GroupID) REFERENCES GroupDescriptions (GroupID) ON DELETE CASCADE ON UPDATE CASCADE,
     CONSTRAINT FKValueID2 FOREIGN KEY (ValueID) REFERENCES DataValues (ValueID) ON DELETE CASCADE ON UPDATE CASCADE
      
 
@@ -346,4 +346,4 @@ CREATE TABLE  SeriesCatalog (
 
  ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT 'The SeriesCatalog table lists each separate data series in the database for the purposes of identifying or displaying what data are available at each site and to speed simple queries without querying the main DataValues table. Unique site/variable combinations are defined by unique combinations of SiteID, VariableID, MethodID, SourceID, and QualityControlLevelID.  This entire table should be programmatically derived and should be updated every time data is added to the database. Constraints on each field in the SeriesCatalog table are dependent upon the constraints on the fields in the table from which those fields originated.' ;
 
- INSERT INTO ODMVersion (VersionNumber) Values("1.1");
+ INSERT INTO ODMVersion (VersionNumber) Values('1.1');

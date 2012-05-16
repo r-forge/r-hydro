@@ -1,3 +1,11 @@
+CREATE TABLE Versions (
+	VersionID int(11)  NOT NULL auto_increment COMMENT 'The Version ID',
+	ValidUntil datetime NULL COMMENT 'Date when this Version has been replaced',
+	VersionComment  varchar(255) NOT NULL COMMENT 'Text describing the reason for the update', 
+	PRIMARY KEY (VersionID)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='The Versions table records Comments and Valdity Periods for DataValue Entries';
+DELETE FROM ODMVersion;
+INSERT INTO ODMVersion (VersionNumber) Values('1.1Ver');
 CREATE TABLE  DataValuesRepository (
 	ValueID int(11)  NOT NULL COMMENT 'Same integer identifier as DataValues for each data value.',
 	VersionID int(11) NOT NULL COMMENT 'Identifier of the Version of the data',
@@ -17,28 +25,17 @@ CREATE TABLE  DataValuesRepository (
 	SampleID int(11)  default NULL COMMENT 'Integer identifier that references into the Samples table. This is required only if the data value resulted from a physical sample processed in a lab.',
 	DerivedFromID int(11)  default NULL COMMENT 'Integer identifier for the derived from group of data values that the current data value is derived from.  This refers to a group of derived from records in the DerivedFrom table. If NULL, the data value is inferred to not be derived from another data value.',
 	QualityControlLevelID int(11)  NOT NULL COMMENT 'Integer identifier giving the level of quality control that the value has been subjected to. This references the QualityControlLevels table.  -9999 = Unknown',
-
- 	PRIMARY KEY  (`ValueID`, VersionID),
-   CONSTRAINT FKValue1ID FOREIGN KEY (ValueID) REFERENCES DataValues (ValueID) ON DELETE CASCADE ON UPDATE CASCADE,
-   CONSTRAINT FKVersionID FOREIGN KEY (VersionID) REFERENCES Versions (VersionID) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT FKSiteID FOREIGN KEY (SiteID) REFERENCES Sites (SiteID) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT FKVariableID FOREIGN KEY (VariableID) REFERENCES Variables (VariableID) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT FKOffsetTypeID FOREIGN KEY (OffsetTypeID) REFERENCES OffsetTypes (OffsetTypeID) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT FKCensorCodeID FOREIGN KEY (CensorCode) REFERENCES CensorCodeCV (Term) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT FKQualifierID FOREIGN KEY (QualifierID) REFERENCES Qualifiers (QualifierID) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT FKMethodID FOREIGN KEY (MethodID) REFERENCES Methods (MethodID) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT FKSourceID FOREIGN KEY (SourceID) REFERENCES Sources (SourceID) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT FKSampleID FOREIGN KEY (SampleID) REFERENCES Samples (SampleID) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT FKQualityControlLevelID FOREIGN KEY (QualityControlLevelID) REFERENCES QualityControlLevels (QualityControlLevelID) ON DELETE CASCADE ON UPDATE CASCADE
-
- ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='The DataValues table contains the actual data values.';
-
-CREATE TABLE Versions (
-	VersionID int(11)  NOT NULL auto_increment COMMENT 'The Version ID',
-	ValidUntil datetime NULL COMMENT 'Date when this Version has been replaced',
-	VersionComment  varchar(255) NOT NULL COMMENT 'Text describing the reason for the update', 
-	PRIMARY KEY (VersionID)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='The Versions table records Comments and Valdity Periods for DataValue Entries';
-
- DELETE FROM ODMVersion;
- INSERT INTO ODMVersion (VersionNumber) Values("1.1Ver");
+       PRIMARY KEY  (ValueID, VersionID)
+--	PRIMARY KEY  (ValueID, VersionID),
+--   CONSTRAINT FKValue1ID FOREIGN KEY (ValueID) REFERENCES DataValues (ValueID) ON DELETE CASCADE ON UPDATE CASCADE,
+--   CONSTRAINT FKVersionID FOREIGN KEY (VersionID) REFERENCES Versions (VersionID) ON DELETE CASCADE ON UPDATE CASCADE,
+--    CONSTRAINT FKSiteID FOREIGN KEY (SiteID) REFERENCES Sites (SiteID) ON DELETE CASCADE ON UPDATE CASCADE,
+--    CONSTRAINT FKVariableID FOREIGN KEY (VariableID) REFERENCES Variables (VariableID) ON DELETE CASCADE ON UPDATE CASCADE,
+--    CONSTRAINT FKOffsetTypeID FOREIGN KEY (OffsetTypeID) REFERENCES OffsetTypes (OffsetTypeID) ON DELETE CASCADE ON UPDATE CASCADE,
+--    CONSTRAINT FKCensorCodeID FOREIGN KEY (CensorCode) REFERENCES CensorCodeCV (Term) ON DELETE CASCADE ON UPDATE CASCADE,
+--    CONSTRAINT FKQualifierID FOREIGN KEY (QualifierID) REFERENCES Qualifiers (QualifierID) ON DELETE CASCADE ON UPDATE CASCADE,
+--    CONSTRAINT FKMethodID FOREIGN KEY (MethodID) REFERENCES Methods (MethodID) ON DELETE CASCADE ON UPDATE CASCADE,
+--    CONSTRAINT FKSourceID FOREIGN KEY (SourceID) REFERENCES Sources (SourceID) ON DELETE CASCADE ON UPDATE CASCADE,
+--    CONSTRAINT FKSampleID FOREIGN KEY (SampleID) REFERENCES Samples (SampleID) ON DELETE CASCADE ON UPDATE CASCADE,
+--    CONSTRAINT FKQualityControlLevelID FOREIGN KEY (QualityControlLevelID) REFERENCES QualityControlLevels (QualityControlLevelID) ON DELETE CASCADE ON UPDATE CASCADE 
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='The DataValues table contains the actual data values.';

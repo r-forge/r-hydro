@@ -1,4 +1,4 @@
-addSite <- function(Code, Name, x, y, Elevation=NULL, LatLongDatum, LocalProjection=NULL, isLocal=NULL, VerticalDatum=NULL,PositionAccuracy=NULL, State=NULL, County=NULL, Comment=NULL){
+addSite <- function(Code, Name, x, y, Elevation=NULL, LatLongDatum, LocalProjection=NULL, isLocal=NULL, VerticalDatum=NULL,PositionAccuracy=0, State=NULL, County=NULL, Comment=NULL){
 	#mandatory fields: Code, Name, Lat, Long, LatLongDatum
 
 	#check from referencetables: SpatialReferences -> LatLongDatum, LocalProjection
@@ -30,7 +30,7 @@ addSite <- function(Code, Name, x, y, Elevation=NULL, LatLongDatum, LocalProject
 	#depending on value of isLocal
 	todo("ToDo automatic coordinate conversion")
 
-	IaddSite(getOption("odm.handler"),Code = Code, Name =Name, Latitude=x, Longitude=y, Elevation=Elevation, LatLongDatum=SpatialReferenceID, LocalProjection=SpatialReferenceID2, VerticalDatum=VertDatID,PosAccuracy=PositionAccuracy, State=State, County=County, Comment=Comment)
+	IaddSite(getOption("odm.handler"),Code = Code, Name =Name, Latitude=x, Longitude=y, Elevation=Elevation, LatLongDatum=SpatialReferenceID, LocalProjection=SpatialReferenceID2, VerticalDatum=VertDatID,PosAccuracy=PositionAccuracy, State=State, County=County, Comments=Comment)
 
 
 }

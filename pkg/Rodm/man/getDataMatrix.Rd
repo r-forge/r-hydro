@@ -98,5 +98,6 @@ Dominik Reusser
 For information how to insert data into the database \code{\link{addDataValues}}
 }
 \examples{
+getDefaultDB()
 }
 \keyword{ utilities }

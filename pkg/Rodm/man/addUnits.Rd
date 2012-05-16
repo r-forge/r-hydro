@@ -36,7 +36,7 @@ Dominik Reusser
  \code{\link{updateCV}} to retrieve the vocabularies from the CUASHI web service and update the database. \code{\link{getMetadata}}  allows to query for meta data.
 }
 \examples{
-try(getID("Site", value="test"))
+getDefaultDB()
 #add data
 addUnits(ID="dsm", Name="decisiemens per meter", Type="Electrical Conductivity", Abbreviation="dS/m")
 getMetadata("Units", Name="per meter")

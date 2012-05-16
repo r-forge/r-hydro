@@ -6,8 +6,21 @@ run.sql.script <- function(con, script.file){
 	script <- paste(script, collapse=" ")
 	scriptparts <- strsplit(script, ";")[[1]]
 
+
 	for(i in seq(along=scriptparts)){
+
 	  statement <- gsub("COMMENT.'[^']*'", "",scriptparts[i] )
+
+	  tablename <- gsub("CREATE TABLE *([[:alpha:]]+).* ","\\1",statement)
+	  tablename <- gsub("[[:space:]]*", "", tablename)
+
+	  if(class(con)=="PostgreSQLConnection"){
+		statement <- gsub("ENGINE.*", "",statement )
+		statement <- gsub("int\\(11\\)  NOT NULL auto_increment", "SERIAL",statement)
+		statement <- gsub("int\\(11\\)", "integer",statement)
+		statement <- gsub("double", "double precision",statement)
+		statement <- gsub("datetime", "timestamp",statement)
+	  }
 	  if(class(con)=="SQLiteConnection"){
 		statement <- gsub("ENGINE.*", "",statement )
 		statementa <- gsub("int\\(11\\)  NOT NULL auto_increment", "INTEGER PRIMARY KEY",statement)
@@ -15,11 +28,9 @@ run.sql.script <- function(con, script.file){
 			statement <- gsub(", *PRIMARY KEY *\\([^)]*\\)","",statementa)
 		}
 	  }
-	  tablename <- gsub("CREATE TABLE *([[:alpha:]]+).* ","\\1",statement)
-	  tablename <- gsub("[[:space:]]*", "", tablename)
-	  if(!dbExistsTable(con, tablename)){
+	  if(!mdbExistsTable(con, tablename)){
 		  if(getOption("verbose.queries", default=FALSE)) print(statement)
-		  rs1 <- dbSendQuery(con, statement) 
+		  rs1 <- dbSendQuery(con, statement)
 	  }
 	}
 

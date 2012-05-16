@@ -14,6 +14,10 @@ The package provides a number of feature for your convenience:
 - Automatic handling of synonyms for more convenient data processing. 
 
 Note: tell me what additional questions should be answered here.
+
+The package has a large number of dependencies. To install, use the following command:
+
+\code{install.packages(c("sp", "testthat","XMLSchema", "SSOAP", "xts", "vwr", "RSQLite"), repos = c("http://www.omegahat.org/R", "http://mirrors.softliste.de/cran"))}
 }
 \details{
 Use \code{\link{addDataValues}} to store data in the database.

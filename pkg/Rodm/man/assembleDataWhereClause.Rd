@@ -10,7 +10,7 @@ These functions is used to avoid code repetition
 \usage{
 assembleDataWhereClause(ID = NULL, from = NULL, to = NULL, SiteID = NULL, VariableID = NULL, Offset = NULL, OffsetTypeID = NULL, CensorCode = NULL, QualifierID = NULL, MethodID = NULL, SourceID = NULL, SampleID = NULL, DerivedFromID = NULL, QualityControlLevelID = NULL, exact = FALSE)
 
-expand.where(w.o, var, var.name, exact = TRUE)
+expand.where(w.o, var, var.name, exact = TRUE, isnumeric=FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -71,6 +71,9 @@ Boolean indicating if search terms should be matched exactly or used as partial 
 }
   \item{var.name}{
   The name of the variable
+}
+  \item{isnumeric}{
+  Boolean indicating if variable is of type numeric (and does not need to be quoted)
 }
 }
 \details{

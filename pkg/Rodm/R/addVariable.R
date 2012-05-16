@@ -8,7 +8,7 @@ addVariable <- function(Code, Name,
 			TimeUnits=rep("Julian year", NROW(Code)),
 			DataType=rep("Unknown", NROW(Code)),
 			GeneralCategory=rep("Unknown", NROW(Code)),
-			NoDataValue=rep("Null", NROW(Code))
+			NoDataValue=rep(-999999, NROW(Code))
 		       	){
 	#Handle CV-Fields: VariableName, Speciation, SampleMedium, ValueType, DataType, GeneralCategory
 	stopifnot(length(Name) == length(Code))

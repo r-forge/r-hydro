@@ -11,7 +11,7 @@ addVariable,
 addQualityControlLevel,
 assembleDataWhereClause,   updateCV, 
 updateDataValues, 
-CVtables )
+CVtables, getDefaultDB )
 
 exportClasses("odm1_1", "odm1_1Ver", "observations")
 

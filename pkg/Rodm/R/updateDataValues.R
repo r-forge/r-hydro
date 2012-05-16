@@ -23,25 +23,25 @@ updateDataValues <- function(getDataResult, reason=NULL){
 	for(rec.id in to.update){
 		the.row <- which(getDataResult@ids==rec.id)
 		#make sure that ID is processed correctly in Iupdate if it is NA
-		the.tz <- guess.tz(getDataResult[the.row]@attributes$UTCOffset)
+		the.tz <- guess.tz(getDataResult[the.row]@attributes$utcoffset)
 		obj <- getOption("odm.handler")
 		IupdateDataValues(obj,ValueID=rec.id, 
 				#localDateTime=chr2date(index(getDataResult[the.row]@values), tz=the.tz),
 				localDateTime=index(getDataResult[the.row]@values),
 				value=sv(coredata(getDataResult[the.row]@values)),
-				valueAccuracy=sv(getDataResult[the.row]@attributes$ValueAccuracy),
+				valueAccuracy=sv(getDataResult[the.row]@attributes$valueaccuracy),
 				TZ=the.tz,
-				SiteID=getID("Site", getDataResult[the.row]@attributes$Site),
-				VariableID=getID("Variable",getDataResult[the.row]@attributes$Variable),
-				Offset=getDataResult[the.row]@attributes$OffsetValue,
-				OffsetTypeID=getID("OffsetType",getDataResult[the.row]@attributes$OffsetType),
-				CensorCode=sv(getDataResult[the.row]@attributes$CensorCode),
-				QualifierID=getID("Qualifier",getDataResult[the.row]@attributes$Qualifier),
-				MethodID=getID("Method",getDataResult[the.row]@attributes$Method),
-				SourceID=getID("Source",getDataResult[the.row]@attributes$Source),
-				SampleID=getID("Sample",getDataResult[the.row]@attributes$Sample),
+				SiteID=getID("Site", getDataResult[the.row]@attributes$site, remove.special.character=FALSE),
+				VariableID=getID("Variable",getDataResult[the.row]@attributes$variable, remove.special.character=FALSE),
+				Offset=sv(getDataResult[the.row]@attributes$offsetvalue),
+				OffsetTypeID=getID("OffsetType",getDataResult[the.row]@attributes$offsettype, remove.special.character=FALSE),
+				CensorCode=sv(getDataResult[the.row]@attributes$censorcode),
+				QualifierID=getID("Qualifier",getDataResult[the.row]@attributes$qualifier, remove.special.character=FALSE),
+				MethodID=getID("Method",getDataResult[the.row]@attributes$method, remove.special.character=FALSE),
+				SourceID=getID("Source",getDataResult[the.row]@attributes$source, remove.special.character=FALSE),
+				SampleID=getID("Sample",getDataResult[the.row]@attributes$sample, remove.special.character=FALSE),
 				DerivedFromID= sv(coredata(getDataResult[the.row]@derivedFrom)),
-				QualityControlLevelID=getID("QualityControlLevel",getDataResult[the.row]@attributes$QualityControlLevel))
+				QualityControlLevelID=getID("QualityControlLevel",getDataResult[the.row]@attributes$qualitycontrollevel, remove.special.character=FALSE))
 
 	}
 }

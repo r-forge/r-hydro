@@ -28,7 +28,7 @@ Use \code{\link{getMetadata}} to retrieve values.
 }
 \examples{
 #connect to standard database
-try(getID("Site", value="test"))
+getDefaultDB()
 #add data
 addOffsetType(Units="cm", Description="Above Ground Level")
 getMetadata(table="OffsetType", Description="Ground Level")

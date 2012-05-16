@@ -53,6 +53,10 @@ addDataValues <- function(DataZoo=NULL, Date=NULL, Value=NULL, ValueAccuracy=rep
 					cat("Data to import is not matching data in database for", sum(different, na.rm=TRUE), "values (See plot)\nWhat shall I do?\n  1) Dischard data to import and import remaining, missing data\n  2) Overwrite values in database with new values\n  0) Stop and let you modify the data to import before another attempt\nEnter a number (0-2) for your choise.\n")
 					choice <- "impossible"
 					attempts <- 0
+					if(!interactive()) {
+						choice=1
+						warning("non-interactive session. Not replacing data in database")
+					}
 					while(choice == "impossible"){
 						next.step <- readline("What is your choice? ")
 						choice <- switch(next.step, "1"=1,"2"=2,"0"=0, "impossible")

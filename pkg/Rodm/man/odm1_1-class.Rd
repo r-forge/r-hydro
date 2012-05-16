@@ -138,6 +138,10 @@ showClass("odm1_1Ver")
 
 	#dbGetQuery(con, "SELECT * FROM Versions")
 	sqhandler <-  new("odm1_1Ver", con=con)
+	\dontrun{
+           #without version management
+	   sqhandler <-  new("odm1_1", con=con)
+        }        
 	options(odm.handler=sqhandler)
    
         getMetadata("VariableName")

@@ -95,7 +95,35 @@ To retrieve data from the database, see \code{\link{getDataValues}} and \code{\l
 }
 \examples{
 #connect to database
-try(getID("Site", value="test"))
+getDefaultDB()
+
+\dontrun{
+#connect to postgreSQL database
+require("RObsDat")
+require("RPostgreSQL")
+m <- dbDriver("PostgreSQL")
+con <- dbConnect(m, user="a_user", password="secret", dbname="obsdat")
+sqhandler <-  new("odm1_1Ver", con=con)
+options(odm.handler=sqhandler)
+
+#connect to MySQL database
+require("RObsDat")
+require("RMySQL")
+m <- dbDriver("MySQL")
+con <- dbConnect(m, user="a_user", password="secret", dbname="obsdat")
+sqhandler <-  new("odm1_1Ver", con=con)
+options(odm.handler=sqhandler)
+
+#connect to SQLite database
+require("RObsDat")
+require("RSQLite")
+m <- dbDriver("SQLite")
+dbname = "database.db"
+con <- dbConnect(m, dbname = dbname)
+sqhandler <-  new("odm1_1Ver", con=con)
+options(odm.handler=sqhandler)
+
+}
 
 #Store metadata in database
 addSite(Code="test", Name="Virtual test site", x=-5, y=46, LatLongDatum="WGS84", Elevation=1500, State="Germany")
@@ -105,7 +133,7 @@ addQualityControlLevel(ID=6,Code="ok", Definition="The default")
 addISOMetadata(TopicCategory="Unknown", Title="Testdata", Abstract="This data is created to test the functions of RObsDat")
 addSource(Organization="Your Org", SourceDescription="Madeup data", SourceLink="RObsDat Documentation", ContactName="Yourself", Metadata="Testdata")
 
-example.data <- xts(1:366, seq(as.POSIXct("2010-01-01"), as.POSIXct("2011-01-01"), length.out=366))
+example.data <- xts(1:366, seq(as.POSIXct("2010-01-01", tz="UTC"), as.POSIXct("2011-01-01", tz="UTC"), length.out=366))
 example.data[50] <- 100
 example.data[200] <- 40
 

@@ -57,7 +57,7 @@ getDataValues <- function(ID=NULL, from=NULL, to=NULL, SiteID=NULL, VariableID=N
 	# neuere Datensätze durch alte Versionen ersetzen, zusätzliche Datensätze anhängen
 	if(!is.null(old.entry)){
 		replace.by.old.data <- entry@ids %in% old.entry@ids
-		version.col <- which(colnames(old.entry@attributes) == "VersionID")
+		version.col <- which(colnames(old.entry@attributes) == "versionid")
 		entry <- merge(entry[!replace.by.old.data], old.entry)
 	}
 

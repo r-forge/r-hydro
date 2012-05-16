@@ -7,7 +7,7 @@ Add detail information about the observation site
 Information about the spatial location at which data values have been collected.
 }
 \usage{
-addSite(Code, Name, x, y, Elevation = NULL, LatLongDatum, LocalProjection = NULL, isLocal = NULL, VerticalDatum = NULL, PositionAccuracy = NULL, State = NULL, County = NULL, Comment = NULL)
+addSite(Code, Name, x, y, Elevation = NULL, LatLongDatum, LocalProjection = NULL, isLocal = NULL, VerticalDatum = NULL, PositionAccuracy = 0, State = NULL, County = NULL, Comment = NULL)
 }
 \arguments{
   \item{Code}{
@@ -69,7 +69,8 @@ Use \code{\link{getMetadata}} to retrieve values.
 }
 \examples{
 #connect to standard database
-try(getID("Site", value="test"))
+getDefaultDB()
+
 #add data
 addSite(Code="10109000", Name="LOGAN RIVER ABOVE STATE DAM, NEAR LOGAN,UT", x=-100.47,
 y= 45.32, LatLongDatum="WGS84", Elevation="1432", VerticalDatum="NAVD88", PositionAccuracy=100, Stat="Utah")

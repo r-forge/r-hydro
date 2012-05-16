@@ -12,12 +12,15 @@ setClass("observations",
 setGeneric("merge", function(x,y,...) {standardGeneric("merge")})
 setMethod("merge", signature=signature(x="observations", y="observations"),
 	  function(x, y, ...){
+		  x.attributes.old <- x@attributes
+		  x@attributes[is.na(x@attributes)] <- -9999
+		  y@attributes[is.na(y@attributes)] <- -9999
 		  if(all(x@attributes==y@attributes)){
 			  to.ret <- new("observations",
 			  	values=rbind(x@values, y@values),
 			  	ids=rbind(x@ids, y@ids),
 			  	derivedFrom=rbind(x@derivedFrom, y@derivedFrom),
-				attributes=x@attributes)
+				attributes=x.attributes.old)
 	  	  } else {
 			  todo("Implement merge if attributes are differing")
 			  browser()
@@ -77,6 +80,9 @@ setMethod("==", signature=signature(e1="observations", e2="observations"),
 				stop("Unimplemented")
 			}
 			#comparing attributes
+			#work with NULL-values, which are represented as NA
+			e1@attributes[is.na(e1@attributes)] <- -9999
+			e2@attributes[is.na(e2@attributes)] <- -9999
 			if(any(e1@attributes!=e2@attributes)){
 				todo("What to do for differing attributes?")
 				browser()

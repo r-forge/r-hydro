@@ -42,10 +42,11 @@ Dominik Reusser
 }
 \examples{
 #connect to standard database
-try(getID("Site", value="test"))
+getDefaultDB()
 #add data
-updateCV()
+\dontrun{ updateCV() }
 addCV("VariableName", "test", "Test entry to check the possibility to add a term to a vocabulary.")
+
 getMetadata("VariableName", Term="test")
 }
 \keyword{utilities }
