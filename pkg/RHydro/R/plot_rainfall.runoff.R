@@ -53,6 +53,7 @@ q.units="mm/h", p.units="mm/h", mar=c(3,4,2,4)+0.1, cex.rain=1, ...){
             }
         }
         if(!is.na(max.rain)){  #set range for rain
+		opar <- par(no.readonly=TRUE)
                 plot.window(theXRange, c(2*max.rain,0))
                 show.rain.axis=TRUE
         }
@@ -67,5 +68,7 @@ q.units="mm/h", p.units="mm/h", mar=c(3,4,2,4)+0.1, cex.rain=1, ...){
             mtext(side=4, line=2, paste("preciptiation", p.units), cex=cex.rain)
         }
     }
+    #reset plot range
+    par(opar)
     legend("topright", inset=0.1, c("measured","modell"), lty=1, col=c(as.character(myColors$measured),as.character(myColors$modelled)))
 }

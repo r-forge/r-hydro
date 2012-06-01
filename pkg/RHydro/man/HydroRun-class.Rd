@@ -71,6 +71,7 @@ output <- topmodel(parameters[1:9], inputs, topidx, delay)
 
 detach(huagrahuma)
 
+\dontrun{
 library(RHydroWasimData)
 file=system.file("controllfile.$$$", package="RHydroWasimData")
 
@@ -80,6 +81,7 @@ plot(object, hydro.plot.type="rainfall-runoff")
 show(object)
 print(object)
 summary(object)
+}
 
 }
 \keyword{classes}

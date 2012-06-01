@@ -7,7 +7,7 @@
 \usage{
 plot_rainfall.runoff(rain, q.model, q.measured = NULL, myColors =
                  data.frame(measured = c("grey"), modelled =
-                 c("black"), rain = c("black")), q.units = "mm/h",
+                 c("black"), rain = c("grey")), q.units = "mm/h",
                  p.units = "mm/h", 
 		 mar = c(3, 4, 2, 4) + 0.1, cex.rain = 1, ...)
 }

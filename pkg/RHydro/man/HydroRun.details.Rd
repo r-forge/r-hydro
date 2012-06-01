@@ -41,11 +41,13 @@ get.runCount(object)
 \references{ thePaper }
 \author{ Dominik Reusser, Wouter Buytaert }
 \examples{
+\dontrun{
 library(RHydroWasimData)
 file=system.file("controllfile.$$$", package="RHydroWasimData")
 
 object <- wasim.read.Run(file)
 get.data.types(object)
 get.stations(object)
+}
 }
 \keyword{ utilities }
