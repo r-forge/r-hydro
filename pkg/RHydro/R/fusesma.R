@@ -16,11 +16,11 @@
 #   f:                             (optional) list of fluxes (containing also U)
 
 fusesma.sim <- function(DATA,mid,modlist,states=FALSE,fluxes=FALSE,
-                        deltim=1,fracstate0=0.25,rferr_add=0,rferr_mlt=1,fraclowz=0.5,
+                        deltim=1,fracstate0=0.25,rferr_add=0,rferr_mlt=1,
                         frchzne,fracten,maxwatr_1,percfrac,fprimqb,qbrate_2a,qbrate_2b,
                         qb_prms,maxwatr_2,baserte,rtfrac1,percrte,percexp,sacpmlt,
                         sacpexp,iflwrte,axv_bexp,sareamax,loglamb,tishape,qb_powr) {              
-                            
+    DATA                        
     stopifnot(c("P","E") %in% colnames(DATA))
     P <- DATA[,"P"]
     E <- DATA[,"E"]
@@ -122,7 +122,6 @@ fusesma.ranges <- function(deltim) {
          "sacpmlt"   = c(1, 250),                    # SAC model percltn mult for dry soil layer (-)
          "sacpexp"   = c(1, 5),                      # SAC model percltn exp for dry soil layer (-)
          "percfrac"  = c(0.05, 0.95),                # fraction of percltn to tension storage (-)
-         #"fraclowz"  = c(0.05, 0.95),               # fraction of soil excess to lower zone (-) # NOT USED!
          "iflwrte"   = c(0.01/deltim, 1000/deltim),  # interflow rate (mm day-1)                              # Affected by deltim
          "baserte"   = c(0.001/deltim, 1000/deltim), # baseflow rate (mm day-1)                               # Affected by deltim
          "qb_powr"   = c(1, 10),                     # baseflow exponent (-)

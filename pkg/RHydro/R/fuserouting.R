@@ -1,20 +1,21 @@
-fuserouting.sim <- function(U, mid, modlist, deltim=1, timedelay, size_frac_future = 500, alpha = 2.5, psave = 0.0) {    
+fuserouting.sim <- function(U, mid, modlist, deltim=1, timedelay) {    
    ## FUSE Routing model
    # Author: Claudia Vitolo
    #
    # Args:
    #   U:                             effective rainfall (sum of surface runoff, overflow, interflow, and baseflow)
-   #   qtdh:                          runoff element of the model structure (can be 81 or 82)
-   #   size_frac_future:              fraction of runoff in future time steps
-   #   deltim:                        time step
-   #   timedelay:                     mparam$timedelay (use a gamma distribution with shape parameter <- 2.5)
-   #   alpha:                         shape parameter
-   #   psave:                         cumulative probability at jtim-1
+   #   mid:                           model id number
+   #   modlist:                       list of models
+   #   deltim:                        time step (days)
+   #   timedelay:                     time delay in runoff (days) mparam$timedelay (use a gamma distribution with shape parameter <- 2.5)
    #
    # Returns:
    #   X:                             routed runoff
   
-   print("routing ...")
+   # print("routing ...")
+   # Assing standard parameters
+   size_frac_future = 500       # fraction of runoff in future time steps
+   alpha = 2.5                  # shape parameter
    
    # Read model structure
    qtdh <- modlist[mid,9]

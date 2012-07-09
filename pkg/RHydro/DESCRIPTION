@@ -5,10 +5,11 @@ Version: 2011-11
 Date: 2011-11-08
 Author: Dominik Reusser, Wouter Buytaert, Claudia Vitolo
 Maintainer: Dominik Reusser <dreusser@pik-potsdam.de>, Wouter Buytaert <w.buytaert@imperial.ac.uk>, Claudia Vitolo <c.vitolo@imperial.ac.uk>
-Depends: R (>= 2.4.0), methods, xts, sp, graphics, stats, lhs, deSolve, XML, qualV
+Depends: R (>= 2.14.0), methods, xts, sp, graphics, stats, lhs, deSolve, XML, qualV
 #Suggests: ncdf
 Description: This package provides classes and functions for hydrological analysis
 License: GPL
+LazyData: yes
 Collate: class.HydroModelParameters.R  class.HydroRun.R class.HydroModel.R
 	 class.HydroTopmodelParameters.R class.HydroWasimParameters.R
 	 get.data.types.R get.stations.R get.runCount.R 
@@ -54,5 +55,4 @@ Collate: class.HydroModelParameters.R  class.HydroRun.R class.HydroModel.R
   array2xml.R
   let2num.R
   perfindices.R
-
 
