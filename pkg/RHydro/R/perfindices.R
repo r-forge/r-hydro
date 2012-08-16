@@ -117,7 +117,7 @@ perfindices <- function(Po,Qo,Qs,Qb){
   
   prr     <- sum(Qs)/sum(Po)                                         # Rainfall-Runoff coefficient                                            
   pbfi    <- sum(Qb)/sum(Qs)                                         # Baseflow Index
-  psfdc   <- (log(t$l)-log(t$h))/(0.66 - 0.33)                       # Slope of flow duration curve
+  psfdc   <- (log(t$h)-log(t$l))/(0.66 - 0.33)                       # Slope of flow duration curve
   pse     <- sel(Po,Qs)                                              # Streamflow Elasticity
   phpc    <- diffhpc(Qo,Qs)                                          # Difference of High Pulse Count (observed - simulated)
   
