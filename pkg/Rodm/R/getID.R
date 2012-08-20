@@ -2,6 +2,8 @@ getID <- function(table, value,#, allowNoValue=FALSE
 		  #allowNoValue does not make sense as it is implemented
 		  remove.special.character=TRUE
 		  ){
+	  #return directly if no value is passed
+	if(length(value)==0) return(c())
 # Generate Table where to search for information - this could be done once only
 	lookup <- list(SpatialReference = c("ID", "SRSName", "SRSID"), 
 		       Site=c('ID', 'Name','Code'),
@@ -39,7 +41,15 @@ getID <- function(table, value,#, allowNoValue=FALSE
 	uvalue <- unique(value)
 	uvalueID <- c()
 	for(i in 1:length(uvalue)){
-		synonymID <- IgetSynonymID(getOption("odm.handler"), table=table, phrase=uvalue[i])
+		#make sure numeric values are treated as such
+		theUvalue <- uvalue[i]
+		numUvalue <- suppressWarnings(as.numeric(theUvalue))
+		if(!is.na(numUvalue)){
+			if(numUvalue==theUvalue){
+				theUvalue <- numUvalue
+			}
+		}
+		synonymID <- IgetSynonymID(getOption("odm.handler"), table=table, phrase=theUvalue)
 		if(length(synonymID)==1){
 			uvalueID[i] <- synonymID
 			next
@@ -50,13 +60,13 @@ getID <- function(table, value,#, allowNoValue=FALSE
 			if(NROW(entry)==0){
 				for(field in lookup[[table]]){
 					#Skip ID field if we have characters (causes trouble with postgeres
-					if(field == "ID" & is.character(uvalue[i])) next
-					command <- paste('entry <- unique(rbind(entry, Iget',table,'(options("odm.handler")[[1]], ',field,'="',uvalue[i],'", exact=',exact,')))', sep='')
+					if(field == "ID" & is.character(theUvalue)) next
+					command <- paste('entry <- unique(rbind(entry, Iget',table,'(options("odm.handler")[[1]], ',field,'="',theUvalue,'", exact=',exact,')))', sep='')
 					eval(parse(text=command))
 					#stop if we found too many results
 					if(NROW(entry)>1){ 
 						print(entry)
-						cat("Term '",uvalue[i],"' returns more than 1 values in table ",table , "\n", sep="")
+						cat("Term '",theUvalue,"' returns more than 1 values in table ",table , "\n", sep="")
 						cat("\n\n Please select matching row or hit 0 to stop\n")
 						if(!interactive()) stop("Error: no unique value in non-interactive session")
 						choice <- "impossible"
@@ -71,7 +81,7 @@ getID <- function(table, value,#, allowNoValue=FALSE
 							if(inval==10) choice = 0
 						} 
 						if(choice==0){
-							stop(paste("No value found related to", uvalue[i], 'in table', table))
+							stop(paste("No value found related to", theUvalue, 'in table', table))
 						} 
 						entry <- entry[choice,]
 

@@ -13,7 +13,7 @@ getDataMatrix obtaines data for a certain variable for all sites.
 getDataVersions displays all the versions available in the database.
 }
 \usage{
-getDataValues(ID = NULL, from = NULL, to = NULL, SiteID = NULL, VariableID = NULL, Offset = NULL, OffsetTypeID = NULL, CensorCode = NULL, QualifierID = NULL, MethodID = NULL, SourceID = NULL, SampleID = NULL, DerivedFromID = NULL, QualityControlLevelID = NULL, VersionID = NULL, VersionDate = NULL, show.deleted=FALSE)
+getDataValues(ID = NULL, from = NULL, to = NULL, Site = NULL, Variable = NULL, Offset = NULL, OffsetType = NULL, CensorCode = NULL, Qualifier = NULL, Method = NULL, Source = NULL, Sample = NULL, DerivedFromID = NULL, QualityControlLevel = NULL, VersionID = NULL, VersionDate = NULL, show.deleted=FALSE)
 
 getDataMatrix(variables, warn.missing = FALSE)
 
@@ -29,41 +29,41 @@ Starting date of the period for which to retrieve the information
   \item{to}{
 End date of the period for which to retrieve the information
 }
-  \item{SiteID}{
+  \item{Site}{
  Information about the Site at which the data was observed. 
 }
-  \item{VariableID}{
+  \item{Variable}{
  Information about what variable was observed. 
 }
   \item{Offset}{
  Information about the offset of the observation. See also OffsetType. 
 }
-  \item{OffsetTypeID}{
+  \item{OffsetType}{
  Information about the type of the offset as defined in the OffsetTypes table. See also \code{\link{addOffsetType}}. 
 }
   \item{CensorCode}{
  Information about the cesor used for the observation. 
 }
-  \item{QualifierID}{
+  \item{Qualifier}{
 Qualifying information that can note anything unusual or
 problematic about individual observations such as, for example, 'holding time for analysis
 exceeded' or 'incomplete or inexact daily total.'
 }
-  \item{MethodID}{
+  \item{Method}{
  The method of field data collection, which may specify 'how' a physical
 observation was made or collected
 }
-  \item{SourceID}{
+  \item{Source}{
 Reference to the original sources of the data, providing information sufficient to
 retrieve and reconstruct the data value from the original data files
 }
-  \item{SampleID}{
+  \item{Sample}{
 Information about physical samples analyzed in a laboratory to obtain an observation.
 }
   \item{DerivedFromID}{
 Reference to another record in the database, from which a value was derived.
 }
-  \item{QualityControlLevelID}{
+  \item{QualityControlLevel}{
 Level of quality controlled applied to a dataset.
 }
   \item{VersionID}{

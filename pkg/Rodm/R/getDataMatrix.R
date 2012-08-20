@@ -5,7 +5,7 @@ getDataMatrix <- function(variables, warn.missing=FALSE){
 	for(cc in 1:NROW(all.countries$Name)){
 		cat("  Processing country ", all.countries$Name[cc])
 		for(vv in seq(along=variables)){
-			value <- getDataValues(SiteID= all.countries$ID[cc], VariableID=getID("Variable", variables[vv]))$num$DataValue
+			value <- getDataValues(Site= all.countries$ID[cc], Variable=getID("Variable", variables[vv]))$num$DataValue
 			if(is.null(value)){
 				if(warn.missing){
 			       		warning("no value for Site",all.countries$Name[cc], " and Variable ", variables[vv],"\n")

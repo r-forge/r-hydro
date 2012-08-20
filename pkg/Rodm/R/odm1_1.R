@@ -693,23 +693,23 @@ setMethod("IaddSite",
 				theVerticalDatum <- svk(VerticalDatum, "VerticalDatumCV",rownum,object)
 				theLocalProjection <- svk(LocalProjection, "SpatialReference", rownum,object)
 
-				insert.query <- paste("INSERT INTO Sites (SiteCode, SiteName, Latitude, Longitude, LatLongDatumID, Elevation_m, VerticalDatum, LocalX, LocalY, LocalProjectionID, PosAccuracy_m, State, County, Comments) VALUES (\"", paste(
+				insert.query <- paste("INSERT INTO Sites (SiteCode, SiteName, Latitude, Longitude, LatLongDatumID, Elevation_m, VerticalDatum, LocalX, LocalY, LocalProjectionID, PosAccuracy_m, State, County, Comments) VALUES (", paste(
 
-						Code[rownum],
-						Name[rownum],
+						paste('"',Code[rownum], '"',sep=""),
+						paste('"',Name[rownum], '"',sep=""),
 						Latitude[rownum],
 						Longitude[rownum],
 						LatLongDatum[rownum],
 						theElevation,
-						theVerticalDatum,
+						paste('"',theVerticalDatum, '"',sep=""),
 						theLocalX,
 						theLocalY,
 						theLocalProjection,
 						thePosAccuracy,
-						theState,
-						theCounty,
-						theComment,
-						sep="\", \""), "\")", sep="")
+						paste('"',theState, '"',sep=""),
+						paste('"',theCounty, '"',sep=""),
+						paste('"',theComment, '"',sep=""),
+						sep=", "), ")", sep="")
 			 	run.query(object, insert.query )
 			}
 
@@ -772,7 +772,7 @@ setMethod("IgetNo",
 				  "Sample", "Samples", "LabSampleCode", "", "", "SampleID",
 				  "Method", "Methods", "MethodDescription", "MethodLink", "''", "MethodID",
 				  "QualityControlLevel", "QualityControlLevel", "QualityControlLevelCode", "Definition, Explanation, QualityControlLevelID", "'No Code', 'Default entry if no code is available', 999", "QualityControlLevelID",
-				  "ISOMetadata", "ISOMetadata", "Title", "TopicCategory", "'Unknown'", "MetadataID"
+				  "ISOMetadata", "ISOMetadata", "Title", "TopicCategory, Abstract", "'Unknown', 'Entry with unknown ISOMetadata'", "MetadataID"
 				),
 		  	byrow=TRUE, ncol=6)
 		CVtab <- paste(CVtables(), "CV", sep="")

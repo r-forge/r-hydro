@@ -49,10 +49,10 @@ exampleCommands <- function(){
 
 	getDataVersions()
 
-	versionQuery <- getDataValues(SiteID=1, VersionID=1)
+	versionQuery <- getDataValues(Site=1, VersionID=1)
 
 	plot(versionQuery)
-	versionQuery <- getDataValues(SiteID=1, VersionID=2)
+	versionQuery <- getDataValues(Site=1, VersionID=2)
 	plot(versionQuery)
 
 }

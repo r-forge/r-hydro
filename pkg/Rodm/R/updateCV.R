@@ -1,4 +1,6 @@
 updateCV <- function(){
+	stopifnot(require(SSOAP))
+	
 	def <- processWSDL("http://his.cuahsi.org/ODMCV_1_1/ODMCV_1_1.asmx?WSDL")
 
 	ff <- genSOAPClientInterface(def=def)

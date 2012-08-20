@@ -24,9 +24,6 @@ import(
   methods,
   RColorBrewer,
   maptools,
-  sp,
-  SSOAP,
-  XMLSchema,
-  testthat
+  sp
 )
 

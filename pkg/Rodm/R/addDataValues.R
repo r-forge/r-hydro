@@ -5,6 +5,9 @@ addDataValues <- function(DataZoo=NULL, Date=NULL, Value=NULL, ValueAccuracy=rep
 
 	todo("UnitConversion")
 	if(is.null(DataZoo) & (is.null(Date) | is.null(Value))) stop("You must provide information either as DataZoo or Date and Value")
+	if(!is.null(Value)){
+		stopifnot(is.numeric(Value))
+	}
 
 	if(is.null(Date)) Date <- index(DataZoo)
 	stopifnot("POSIXt" %in%  class(Date))
@@ -41,7 +44,7 @@ addDataValues <- function(DataZoo=NULL, Date=NULL, Value=NULL, ValueAccuracy=rep
 		#check for existing entries
 		database.entries  <- NULL
 		todo("add ValueAccuracy")
-		database.entries <- getDataValues(from=time.range[1], to=time.range[2], SiteID=unique(SiteID[,column]), VariableID=unique(VariableID[,column]), Offset=unique(Offset[,column]), OffsetTypeID=unique(OffsetTypeID[,column]), CensorCode=unique(CensorCodeNum[,column]), QualifierID=unique(QualifierID[,column]), MethodID=unique(MethodID[,column]), SourceID=unique(SourceID[,column]), SampleID=unique(SampleID[,column]),QualityControlLevelID=unique(QualityControlLevelID[,column]), show.deleted=TRUE)
+		database.entries <- getDataValues(from=time.range[1], to=time.range[2], Site=unique(SiteID[,column]), Variable=unique(VariableID[,column]), Offset=unique(Offset[,column]), OffsetType=unique(OffsetTypeID[,column]), CensorCode=unique(CensorCodeNum[,column]), Qualifier=unique(QualifierID[,column]), Method=unique(MethodID[,column]), Source=unique(SourceID[,column]), Sample=unique(SampleID[,column]),QualityControlLevel=unique(QualityControlLevelID[,column]), show.deleted=TRUE)
 		if(NROW(database.entries)>0){
 			to.test <- merge(database.entries@values, DataZoo[,column])
 			names(to.test) <- c("inDatabase", "toImport")

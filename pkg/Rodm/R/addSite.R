@@ -1,4 +1,4 @@
-addSite <- function(Code, Name, x, y, Elevation=NULL, LatLongDatum, LocalProjection=NULL, isLocal=NULL, VerticalDatum=NULL,PositionAccuracy=0, State=NULL, County=NULL, Comment=NULL){
+addSite <- function(Code, Name, x, y, Elevation, LatLongDatum, LocalProjection=NULL, isLocal=NULL, VerticalDatum=NULL,PositionAccuracy=0, State=NULL, County=NULL, Comment=NULL){
 	#mandatory fields: Code, Name, Lat, Long, LatLongDatum
 
 	#check from referencetables: SpatialReferences -> LatLongDatum, LocalProjection
@@ -19,11 +19,12 @@ addSite <- function(Code, Name, x, y, Elevation=NULL, LatLongDatum, LocalProject
 		stopifnot(length(VerticalDatum) == length(Code))
 		VertDatID <- getID("VerticalDatum",VerticalDatum)
 	} else {
-		VertDatID <- rep(NA, length(Code))
+		VertDatID <- rep(getID("VerticalDatum", "Unknown"), length(Code))
 	}
 
 	if(NROW(existing <- getMetadata("Site",Name=Name))>0){
-		warning(paste("Skiping existing Site:", Name))
+		warning(paste("Skiping existing Site:", existing[,3], "\n"))
+		print("Unimplemented. Nothing importet")
 		return()
 	}
 	#transform coordinates

@@ -1,2 +1,5 @@
 library("RObsDat")
-test_package("RObsDat")
+if(require(testthat)){
+	test_package("RObsDat")
+} else {
+}

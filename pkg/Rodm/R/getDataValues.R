@@ -1,5 +1,14 @@
-getDataValues <- function(ID=NULL, from=NULL, to=NULL, SiteID=NULL, VariableID=NULL, Offset=NULL, OffsetTypeID=NULL, CensorCode=NULL, QualifierID=NULL, MethodID=NULL, SourceID=NULL, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID=NULL, VersionID=NULL, VersionDate=NULL,show.deleted=FALSE ){
+getDataValues <- function(ID=NULL, from=NULL, to=NULL, Site=NULL, Variable=NULL, Offset=NULL, OffsetType=NULL, CensorCode=NULL, Qualifier=NULL, Method=NULL, Source=NULL, Sample=NULL, DerivedFromID=NULL, QualityControlLevel=NULL, VersionID=NULL, VersionDate=NULL,show.deleted=FALSE ){
 
+	SiteID <- getID("Site", Site)
+	VariableID <- getID("Variable", Variable)
+	OffsetTypeID <- getID("OffsetType", OffsetType)
+	QualifierID <- getID("Qualifier", Qualifier)
+	MethodID <- getID("Method", Method)
+	SourceID <- getID("Source", Source)
+	SampleID <- getID("Sample", Sample)
+	QualityControlLevelID <- getID("QualityControlLevel", QualityControlLevel)
+	
 	all.args <- list(SiteID=SiteID, VariableID=VariableID, Offset=Offset, OffsetTypeID=OffsetTypeID, CensorCode=CensorCode, QualifierID=QualifierID, MethodID=MethodID, SourceID=SourceID, SampleID=SampleID, DerivedFromID=DerivedFromID, QualityControlLevelID=QualityControlLevelID, VersionID=VersionID, VersionDate=VersionDate)
 	#check if only single constraints are used -> necessary
 	# because we need to expand it in addDataValues
