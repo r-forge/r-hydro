@@ -1,9 +1,7 @@
 \name{fusesma.sim}
 \alias{fusesma.sim}
 \title{Implementation of the framework for hydrological modelling FUSE - Soil Moisture Accounting model}
-\description{
-  Implementation of the 2011 Fortran version of FUSE by Martyn Clark.
-}
+\description{Loss module derived from the Fortran version of FUSE by Martyn Clark (2011).}
 \usage{
 fusesma.sim(DATA, mid, modlist, states, fluxes, 
     deltim, fracstate0, rferr_add, rferr_mlt, 
@@ -45,9 +43,9 @@ fusesma.sim(DATA, mid, modlist, states, fluxes,
 }
 
 \details{
-fusesma.sim() is a function to generate an ensemble of SOIL MOISTURE ACCOUNTING models, therefore can be also used in the HYDROMAD framework (see hydromad package: http://hydromad.catchment.org/).
+fusesma.sim() is a function to generate an ensemble of SOIL MOISTURE ACCOUNTING models. It is compatible with the HYDROMAD framework (see hydromad package: http://hydromad.catchment.org/).
 
-fusesma.sim() can simulate an indefinite number of model structures. The default list is a \code{modlist} dataframe contained in the data folder of this package. 
+fusesma.sim() can simulate several model structures. The default list is a \code{modlist} dataframe contained in the data folder of this package. 
 # TO DO: An alternative list can also be defined by the user.
 In modlist each row identifies a model structure, and each column identifies a different element of the model structure:
 

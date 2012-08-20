@@ -1,17 +1,17 @@
 \name{fuserouting.sim}
 \alias{fuserouting.sim}
 \title{Implementation of the framework for hydrological modelling FUSE - Routing model}
-\description{Implementation of the 2011 Fortran version of FUSE by Martyn Clark}
-\usage{fuserouting.sim(U, mid, modlist, deltim, timedelay)}
+\description{Routing module derived from the Fortran version of FUSE by Martyn Clark (2011)}
+\usage{fuserouting.sim(U, mid, modlist, timedelay, deltim)}
 \arguments{
   \item{U}{Instantaneous runoff computed using fusesma.sim}
   \item{mid}{model id number in Model List 2011(see below for details)}
   \item{modlist}{Model List 2011}
-  \item{deltim}{observation time step in days}
   \item{timedelay}{time delay in runoff (days)}
+  \item{deltim}{observation time step (days)}
 }
 
-\details{fuserouting.sim() is a routing model which uses a two parameter Gamma distribution. It can be also used in the HYDROMAD framework (see hydromad package: http://hydromad.catchment.org/).}
+\details{fuserouting.sim() is a routing module based on a two parameter Gamma distribution. It takes in input the instantaneous discharge and returns the routed discharge. It is compatible with the HYDROMAD framework (see hydromad package: http://hydromad.catchment.org/).}
 
 \value{The function returns an array of simulated "routed" discharges. It can be used after calculating instantaneous discharges with \code{fusesma.sim}.}
 
@@ -21,7 +21,7 @@ Clark M. P., McMillan H. K., Collins D. B. G., Kavetski D. and Woods R. A. (2011
 
 \author{Claudia Vitolo, Imperial College London}
 %%\note{}
-\seealso{\code{\link{fuserouting.sim}}}
+\seealso{\code{\link{fusesma.sim}}}
 
 \examples{
 data(modlist)
@@ -41,7 +41,7 @@ Qinst <- fusesma.sim (fuse.DATA,mid,modlist,deltim,fracstate0,states=FALSE,fluxe
                         fuse.parameters$loglamb,fuse.parameters$tishape,fuse.parameters$qb_powr)
                         
 # returns the routed runoff
-Qrout <- fuserouting.sim(Qinst, mid, modlist, deltim, fuse.parameters$timedelay)
+Qrout <- fuserouting.sim(Qinst, mid, modlist, fuse.parameters$timedelay, deltim)
 
 }
 

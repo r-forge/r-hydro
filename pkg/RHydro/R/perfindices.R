@@ -109,17 +109,17 @@ perfindices <- function(Po,Qo,Qs,Qb){
   t <- fdc(Qs,lQ.thr=0.66,hQ.thr=0.33)
   
   theRes <- ccf(Qo,Qs, plot=FALSE)
-  plt    <- theRes$lag[min(which(theRes$acf==max(theRes$acf)))]      # lagtime (from tiger)
-  pme    <- mean(Qs - Qo, na.rm = TRUE)                              # mean error
-  pmaoe  <- MAOE(Qo,Qs)                                              # mean absolute ordinal error (from qualV)
-  pns    <- 1-EF(Qo,Qs)                                              # Complement to 1 of Nash-Sutcliffe efficiency (from qualV)
-  prmse  <- RMSE(Qo,Qs)                                              # Root mean square error (from qualV)
+  plt    <- theRes$lag[min(which(theRes$acf==max(theRes$acf)))]      # lagtime (from tiger) - it should tend to zero
+  pme    <- mean(Qs - Qo, na.rm = TRUE)                              # mean error - it should tend to zero
+  pmaoe  <- MAOE(Qo,Qs)                                              # mean absolute ordinal error (from qualV) - it should tend to zero
+  pns    <- 1-EF(Qo,Qs)                                              # Complement to 1 of Nash-Sutcliffe efficiency (from qualV) - it should tend to zero
+  prmse  <- RMSE(Qo,Qs)                                              # Root mean square error (from qualV) - it should tend to zero
   
   prr     <- sum(Qs)/sum(Po)                                         # Rainfall-Runoff coefficient                                            
   pbfi    <- sum(Qb)/sum(Qs)                                         # Baseflow Index
   psfdc   <- (log(t$h)-log(t$l))/(0.66 - 0.33)                       # Slope of flow duration curve
   pse     <- sel(Po,Qs)                                              # Streamflow Elasticity
-  phpc    <- diffhpc(Qo,Qs)                                          # Difference of High Pulse Count (observed - simulated)
+  phpc    <- diffhpc(Qo,Qs)                                          # Difference of High Pulse Count (observed - simulated) - it should tend to zero
   
   p <- list("plt"=plt,"pme"=pme,"pmaoe"=pmaoe,"pns"=pns,"prmse"=prmse,"prr"=prr,"pbfi"=pbfi,"psfdc"=psfdc,"pse"=pse,"phpc"=phpc)
   
