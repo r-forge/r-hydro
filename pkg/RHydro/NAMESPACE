@@ -2,6 +2,7 @@ useDynLib(RHydro)
 
 export(fusesma.sim,
        fuserouting.sim,
+       perfindices,
        NSeff,
        get.data.types,
        get.stations,
