@@ -60,7 +60,7 @@ upstates <- function(smodl,mparam,dparam,state) {
      free_2a <- -999                                            # primary reservoir (undefined)
      free_2b <- -999                                            # secondary reservoir (undefined)
      free_2  <- max(0, state[["watr_2"]] - dparam$maxtens_2)    # free storage
-     tens_2  <- min(state[["watr_2"]]-free_2, dparam$maxtens_2) # tension storage                                                         
+     tens_2  <- min(state[["watr_2"]], dparam$maxtens_2) # tension storage                                                         
    }
    
    if (smodl$arch2 == 32) {  
