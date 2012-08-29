@@ -91,8 +91,16 @@ fusesma.sim <- function(DATA,mid,modlist,states=FALSE,fluxes=FALSE,
                   "dparam" = dparam,
                   atol = 1e-2, rtol = 1e-2)
     
+    print("updating states ...")
+    state2 <- matrix(NA, nrow=dim(state1)[1],ncol=dim(state1)[2])
+    colnames(state2) <- colnames(state1)
+    state2[,"time"] <- state1[,"time"]
+    for (r in 1:dim(state1)[1]) {
+        state2[r,2:11] <- upstates(smodl,mparam,dparam,state1[r,2:11])
+    }
+
     print("computing fluxes ...")
-    allfluxes <- outfluxes(deltim,smodl,P,E,mparam,dparam,state1)
+    allfluxes <- outfluxes(deltim,smodl,P,E,mparam,dparam,state2)
     
     # print("converting effective rainfall into zoo object ...")
     # make it a time series object again
@@ -101,9 +109,9 @@ fusesma.sim <- function(DATA,mid,modlist,states=FALSE,fluxes=FALSE,
     # U[bad] <- NA
 
     if (states == FALSE && fluxes == FALSE) results <- allfluxes$U
-    if (states == TRUE  && fluxes == FALSE) results <- list("s"=state1,"U"=allfluxes$U)
+    if (states == TRUE  && fluxes == FALSE) results <- list("s"=state2,"U"=allfluxes$U)
     if (states == FALSE && fluxes == TRUE)  results <- allfluxes
-    if (states == TRUE  && fluxes == TRUE)  results <- list("s"=state1,"f"=allfluxes)
+    if (states == TRUE  && fluxes == TRUE)  results <- list("s"=state2,"f"=allfluxes)
 
     return(results)
 }
