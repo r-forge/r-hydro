@@ -22,7 +22,7 @@ upstates <- function(smodl,mparam,dparam,state) {
      free_1  <- max(xmin, state[["watr_1"]] - dparam$maxtens_1) # free storage
      tens_1a <- -999                                            # 1st tension store (undefined)
      tens_1b <- -999                                            # 2nd tension store (undefined)
-     tens_1  <- min(state[["watr_1"]]-free_1, dparam$maxtens_1) # tension storage 
+     tens_1  <- min(state[["watr_1"]], dparam$maxtens_1) # tension storage 
    }
      
    if (smodl$arch1 == 22) {
