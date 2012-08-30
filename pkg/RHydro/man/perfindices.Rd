@@ -49,7 +49,7 @@ deltim <- 1
 fracstate0 <- 0.25
 
 # returns the instantaneous runoff
-X <- fusesma.sim (fuse.DATA,mid,modlist,deltim,fracstate0,
+X <- fusesma.sim (fuse.DATA,mid,modlist,fracstate0,
                       states=FALSE,fluxes=TRUE,
                       fuse.parameters$rferr_add,fuse.parameters$rferr_mlt,
                       fuse.parameters$frchzne,fuse.parameters$fracten,

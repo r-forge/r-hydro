@@ -4,7 +4,7 @@
 \description{Loss module derived from the Fortran version of FUSE by Martyn Clark (2011).}
 \usage{
 fusesma.sim(DATA, mid, modlist, states, fluxes, 
-    deltim, fracstate0, rferr_add, rferr_mlt, 
+    fracstate0, rferr_add, rferr_mlt, 
     frchzne,fracten,maxwatr_1,percfrac,fprimqb,qbrate_2a,qbrate_2b,
     qb_prms,maxwatr_2,baserte,rtfrac1,percrte,percexp,sacpmlt,
     sacpexp,iflwrte,axv_bexp,sareamax,loglamb,tishape,qb_powr)
@@ -15,7 +15,6 @@ fusesma.sim(DATA, mid, modlist, states, fluxes,
   \item{modlist}{list of availabe models}
   \item{states}{list of internal state variables}
   \item{fluxes}{list of fluxes}
-  \item{deltim}{observation time step in days}
   \item{fracstate0}{initial store fraction (initialization)}
   \item{rferr_add}{additive rainfall error (mm)}
   \item{rferr_mlt}{multiplicative rainfall error (-)}
@@ -129,11 +128,10 @@ data(modlist)
 data(mopex)
 
 mid <- 5
-deltim <- 1
 fracstate0 <- 0.25
 
 # returns the instantaneous runoff
-Qinst <- fusesma.sim (fuse.DATA,mid,modlist,deltim,fracstate0,
+Qinst <- fusesma.sim (fuse.DATA,mid,modlist,fracstate0,
                       states=FALSE,fluxes=FALSE,
                       fuse.parameters$rferr_add,fuse.parameters$rferr_mlt,
                       fuse.parameters$frchzne,fuse.parameters$fracten,
