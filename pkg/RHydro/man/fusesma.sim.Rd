@@ -45,19 +45,19 @@ fusesma.sim(DATA, mid, modlist, states, fluxes,
 fusesma.sim() is a function to generate an ensemble of SOIL MOISTURE ACCOUNTING models. It is compatible with the HYDROMAD framework (see hydromad package: http://hydromad.catchment.org/).
 
 fusesma.sim() can simulate several model structures. The default list is a \code{modlist} dataframe contained in the data folder of this package. 
-# TO DO: An alternative list can also be defined by the user.
+%% TO DO: An alternative list can also be defined by the user.
 In modlist each row identifies a model structure, and each column identifies a different element of the model structure:
 
 \tabular{ll}{
-first column    \tab mid   = model id number\cr
-second column 	\tab rferr = type of rainfall error (optional)\cr
-third column	\tab arch1 = architecture of the upper soil layer\cr
-fourth column 	\tab arch2 = architecture of the lower soil layer\cr
-fifth column 	\tab qsurf = surface runoff\cr
-sixth column 	\tab qperc = vertical drainage\cr
-seventh column 	\tab esoil = evapotranspiration\cr
-eighth column	\tab qintf = interflow\cr
-ninth column 	\tab q_tdh = routing\cr
+first column   \tab mid   = model id number\cr
+second column  \tab rferr = type of rainfall error (optional)\cr
+third column	 \tab arch1 = architecture of the upper soil layer\cr
+fourth column  \tab arch2 = architecture of the lower soil layer\cr
+fifth column 	 \tab qsurf = surface runoff\cr
+sixth column 	 \tab qperc = vertical drainage\cr
+seventh column \tab esoil = evapotranspiration\cr
+eighth column	 \tab qintf = interflow\cr
+ninth column 	 \tab q_tdh = routing\cr
 }  
 
 For each element of the model structure, several model decisions can be made (see Clark et al. 2011 for details):
@@ -117,10 +117,8 @@ The function returns an array of simulated "instantaneous" discharges. If necess
 
 Clark M. P., McMillan H. K., Collins D. B. G., Kavetski D. and Woods R. A. (2011), Hydrological field data from a modeller's perspective: Part 2: process-based evaluation of model hypotheses. Hydrological Processes, 25: 523-543. doi: 10.1002/hyp.7902
 
-%See also \url{http://...} for more examples on how to run fuse in R.
 }
 \author{Claudia Vitolo, Imperial College London}
-% \note{}
 
 \seealso{\code{\link{fuserouting.sim}}}
 \examples{

@@ -34,11 +34,7 @@ The 5 catchment descriptors are:
 
 \value{The function returns a list of 10 indices.}
 
-%%\references{}
-
 \author{Claudia Vitolo, Imperial College London}
-%%\note{}
-%%\seealso{}
 
 \examples{
 data(modlist)
@@ -65,7 +61,7 @@ X <- fusesma.sim (fuse.DATA,mid,modlist,fracstate0,
                       fuse.parameters$qb_powr)
                         
 # returns the routed runoff
-Qrout <- fuserouting.sim(X$U, mid, modlist, deltim, fuse.parameters$timedelay)
+Qrout <- fuserouting.sim(X$U, mid, modlist, fuse.parameters$timedelay, deltim)
 
 Po <- fuse.DATA[,"P"]
 Qo <- fuse.DATA[,"Q"]
