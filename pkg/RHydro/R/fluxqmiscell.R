@@ -1,9 +1,10 @@
-fluxqmiscell <- function(deltim,arch1,arch2,state,mparam,dparam,eff_ppt,qrunoff,qperc_12) {
-   # Compute overflow fluxes as a fraction of influxes:
+fluxqmiscell <- function(arch1,arch2,state,mparam,dparam,eff_ppt,qrunoff,qperc_12,x=1) {
+   # Computes miscellaneous fluxes using 2 methods:
+   # (x=1) OVERFLOW FLUXES AS A FRACTION OF INFLUXES
+   # (x=2) OVERFLOW FLUXES COMPUTED AS A RESIDUAL OF AVAILABLE STORAGE
    # Author: Claudia Vitolo
    #
    # Args:
-   #   deltim:                        timestep
    #   arch1:                         architecture of the upper soil layer 
    #   arch2:                         architecture of the lower soil layer 
    #   state:                         model states at time "t" 
@@ -31,8 +32,6 @@ fluxqmiscell <- function(deltim,arch1,arch2,state,mparam,dparam,eff_ppt,qrunoff,
    oflow_2a    <- 0
    oflow_2b    <- 0
    oflow_2     <- 0
-   
-   x <- 1
    
    switch(x,    
           
@@ -92,32 +91,32 @@ fluxqmiscell <- function(deltim,arch1,arch2,state,mparam,dparam,eff_ppt,qrunoff,
     if(arch1 == 21) {          # upper layer defined by a single state variable
        rchr2excs   <- 0
        tens2free_1 <- 0         # no tension stores
-       oflow_1     <- max(0, (eff_ppt - qrunoff) - (mparam$maxwatr_1 - state[["watr_1"]])/deltim) # compute over-flow of free water
+       oflow_1     <- max(0, (eff_ppt - qrunoff) - (mparam$maxwatr_1 - state[["watr_1"]])) # compute over-flow of free water
     }
    
     if(arch1 == 22) {          # upper layer broken up into tension and free storage
        rchr2excs   <- 0   # no separate recharge zone (flux should never be used)
-       tens2free_1 <- max(0, (eff_ppt - qrunoff) - (dparam$maxtens_1 - state[["tens_1"]])/deltim) # compute flow from tension storage to free storage (mm s-1)
-       oflow_1     <- max(0,  tens2free_1      - (dparam$maxfree_1 - state[["free_1"]])/deltim)   # compute over-flow of free water
+       tens2free_1 <- max(0, (eff_ppt - qrunoff) - (dparam$maxtens_1 - state[["tens_1"]])) # compute flow from tension storage to free storage (mm s-1)
+       oflow_1     <- max(0,  tens2free_1      - (dparam$maxfree_1 - state[["free_1"]]))   # compute over-flow of free water
     }
    
     if(arch1 == 23) {          # tension storage sub-divided into recharge and excess
-       rchr2excs   <- max(0, (eff_ppt - qrunoff) - (dparam$maxtens_1a - state[["tens_1a"]])/deltim) # compute flow from recharge to excess (mm s-1)
-       tens2free_1 <- max(0,  rchr2excs   - (dparam$maxtens_1b - state[["tens_1b"]])/deltim)        # compute flow from tension storage to free storage (mm s-1)
-       oflow_1     <- max(0,  tens2free_1 - (dparam$maxfree_1  - state[["free_1"]])/deltim)         # compute over-flow of free water
+       rchr2excs   <- max(0, (eff_ppt - qrunoff) - (dparam$maxtens_1a - state[["tens_1a"]])) # compute flow from recharge to excess (mm s-1)
+       tens2free_1 <- max(0,  rchr2excs   - (dparam$maxtens_1b - state[["tens_1b"]]))        # compute flow from tension storage to free storage (mm s-1)
+       oflow_1     <- max(0,  tens2free_1 - (dparam$maxfree_1  - state[["free_1"]]))         # compute over-flow of free water
     }
 
     if(arch2 == 31) {          # no tension store
        tens2free_2 <- 0
        oflow_2a    <- 0
        oflow_2b    <- 0
-       oflow_2     <- max(0, qperc_12 - (mparam$maxwatr_2 - state[["watr_2"]])/deltim) # compute over-flow of free water
+       oflow_2     <- max(0, qperc_12 - (mparam$maxwatr_2 - state[["watr_2"]])) # compute over-flow of free water
     }   
    
     if(arch2 == 32){           # tension reservoir plus two parallel tanks
-       tens2free_2 <- max(0, qperc_12*(1-mparam$percfrac) - (dparam$maxtens_2  - state[["tens_2"]] )/deltim)                   # compute flow from tension storage to free storage (mm s-1)
-       oflow_2a    <- max(0, (qperc_12*(mparam$percfrac/2) + tens2free_2/2) - (dparam$maxfree_2a - state[["free_2a"]])/deltim) # compute over-flow of free water in the primary reservoir
-       oflow_2b    <- max(0, (qperc_12*(mparam$percfrac/2) + tens2free_2/2) - (dparam$maxfree_2b - state[["free_2b"]])/deltim) # compute over-flow of free water in the secondary reservoir
+       tens2free_2 <- max(0, qperc_12*(1-mparam$percfrac) - (dparam$maxtens_2  - state[["tens_2"]] ))                   # compute flow from tension storage to free storage (mm s-1)
+       oflow_2a    <- max(0, (qperc_12*(mparam$percfrac/2) + tens2free_2/2) - (dparam$maxfree_2a - state[["free_2a"]])) # compute over-flow of free water in the primary reservoir
+       oflow_2b    <- max(0, (qperc_12*(mparam$percfrac/2) + tens2free_2/2) - (dparam$maxfree_2b - state[["free_2b"]])) # compute over-flow of free water in the secondary reservoir
        oflow_2     <- oflow_2a + oflow_2b   # compute total overflow
     }
 

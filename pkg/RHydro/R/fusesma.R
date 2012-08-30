@@ -7,7 +7,6 @@
 #   modlist:                       list of model structures ordered by model id
 #   states:                        boolean. If states=TRUE, the output contains the list of state variables
 #   fluxes:                        boolean. If fluxes=TRUE, the output contains the list of fluxes (last element of the list is U)
-#   deltim:                        time step: deltim = 1 (daily time step), 1/24 (hourly time step), 1/24/4 (15 min time step)
 #   fracstate...qb_powr:           input parameters
 #
 # Returns:
@@ -16,7 +15,7 @@
 #   f:                             (optional) list of fluxes (containing also U)
 
 fusesma.sim <- function(DATA,mid,modlist,states=FALSE,fluxes=FALSE,
-                        deltim=1,fracstate0=0.25,rferr_add=0,rferr_mlt=1,
+                        fracstate0=0.25,rferr_add=0,rferr_mlt=1,
                         frchzne,fracten,maxwatr_1,percfrac,fprimqb,qbrate_2a,qbrate_2b,
                         qb_prms,maxwatr_2,baserte,rtfrac1,percrte,percexp,sacpmlt,
                         sacpexp,iflwrte,axv_bexp,sareamax,loglamb,tishape,qb_powr) {              
@@ -77,18 +76,16 @@ fusesma.sim <- function(DATA,mid,modlist,states=FALSE,fluxes=FALSE,
     # Solve derivatives
     times      <- seq(1, length(P), by = 1) # by = 1 means that solver timestep = data timestep
 
-    parameters <- c("deltim" = deltim) 
+    parameters <- list("mparam" = mparam,"dparam" = dparam) 
     
     print("computing state variables ...")
     state1 <- ode("y" = state0, 
                   "times" = times, 
                   "func" = mstate_eqn, 
-                  "parms" = deltim, 
+                  "parms" = parameters, 
                   "ppt" = P, 
                   "pet" = E, 
                   "smodl" = smodl, 
-                  "mparam" = mparam, 
-                  "dparam" = dparam,
                   atol = 1e-2, rtol = 1e-2)
     
     print("updating states ...")
@@ -100,7 +97,7 @@ fusesma.sim <- function(DATA,mid,modlist,states=FALSE,fluxes=FALSE,
     }
 
     print("computing fluxes ...")
-    allfluxes <- outfluxes(deltim,smodl,P,E,mparam,dparam,state2)
+    allfluxes <- outfluxes(smodl,P,E,mparam,dparam,state2)
     
     # print("converting effective rainfall into zoo object ...")
     # make it a time series object again

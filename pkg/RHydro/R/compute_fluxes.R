@@ -1,9 +1,8 @@
-compute_fluxes <- function(deltim,smodl,mppt,mpet,mparam,dparam,state) {
+compute_fluxes <- function(smodl,mppt,mpet,mparam,dparam,state) {
    # Compute Fluxes
    # Author: Claudia Vitolo
    #
    # Args:
-   #   deltim:                        time step
    #   smodl:                         list of model components
    #   mppt:                          rain+snow melt at time "t"
    #   mpet:                          potential evapotranspiration at time "t"
@@ -70,7 +69,7 @@ compute_fluxes <- function(deltim,smodl,mppt,mpet,mparam,dparam,state) {
    #if (qbase_2 < 0) browser()
    
    # compute overflow (miscellaneous fluxes)
-   temp <- fluxqmiscell(deltim,smodl$arch1,smodl$arch2,state,mparam,dparam,eff_ppt,qrunoff,qperc_12)
+   temp <- fluxqmiscell(smodl$arch1,smodl$arch2,state,mparam,dparam,eff_ppt,qrunoff,qperc_12)
    rchr2excs   <- temp[[1]]
    tens2free_1 <- temp[[2]]
    tens2free_2 <- temp[[3]]

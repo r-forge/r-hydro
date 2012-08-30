@@ -1,27 +1,26 @@
-mstate_eqn <- function(t, state, parameters, ppt, pet, smodl, mparam, dparam)     {
+mstate_eqn <- function(t, state, parameters, ppt, pet, smodl)     {
    # Model's Differential Equations
    # Author: Claudia Vitolo
    #
    # Args:
    #   t:                             time
    #   state:                         model states at time "t" 
-   #   parameters:                    parameters for differential equations
+   #   parameters:                    parameters for differential equations: model parameters + derived model parameters
    #   ppt:                           rain+snow melt time series 
    #   pet:                           potential evapotranspiration time series
    #   smodl:                         list of model components
-   #   mparam:                        model parameters
-   #   dparam:                        derived model parameters
    #
    # Returns:
    #   List of parameters.
-  
-   deltim <- as.numeric(parameters[1])
+
+   mparam <- parameters$mparam
+   dparam <- parameters$dparam
   
    # compute fluxes:
    mppt   <- as.numeric(ppt[t])
    mpet   <- as.numeric(pet[t])
    state  <- upstates(smodl,mparam,dparam,state)
-   m_flux <- compute_fluxes(deltim,smodl,mppt,mpet,mparam,dparam,state)
+   m_flux <- compute_fluxes(smodl,mppt,mpet,mparam,dparam,state)
 
    # computes derivatives (rate of change) of all states for all model combinations
    dtens_1a <- 0

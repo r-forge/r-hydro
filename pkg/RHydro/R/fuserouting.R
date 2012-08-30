@@ -6,7 +6,7 @@ fuserouting.sim <- function(U, mid, modlist, timedelay, deltim=1) {
    #   U:                             effective rainfall (sum of surface runoff, overflow, interflow, and baseflow)
    #   mid:                           model id number
    #   modlist:                       list of models
-   #   deltim:                        time step (days)
+   #   deltim:                        data time step: deltim = 1 (daily time step), 1/24 (hourly time step), 1/24/4 (15 min time step)
    #   timedelay:                     time delay in runoff (days) mparam$timedelay (use a gamma distribution with shape parameter <- 2.5)
    #
    # Returns:
@@ -14,7 +14,7 @@ fuserouting.sim <- function(U, mid, modlist, timedelay, deltim=1) {
   
    # print("routing ...")
    # Assing standard parameters
-   size_frac_future = 500       # fraction of runoff in future time steps
+   size_frac_future = 500/deltim       # fraction of runoff in future time steps
    alpha = 2.5                  # shape parameter
    
    # Read model structure

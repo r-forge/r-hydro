@@ -1,9 +1,8 @@
-outfluxes <- function(deltim,smodl,P,E,mparam,dparam,state1) {
+outfluxes <- function(smodl,P,E,mparam,dparam,state1) {
    # Output Fluxes
    # Author: Claudia Vitolo
    #
    # Args:
-   #   deltim:                        time step
    #   smodl:                         list of model components
    #   P:                             rain+snow melt time series 
    #   E:                             potential evapotranspiration time series
@@ -39,7 +38,7 @@ outfluxes <- function(deltim,smodl,P,E,mparam,dparam,state1) {
    
    for (index in seq(along = P)) { 
        #if (index == 720) browser()
-       w_flux   <- compute_fluxes(deltim,smodl,P[index],E[index],mparam,dparam,state1[index,2:11])
+       w_flux   <- compute_fluxes(smodl,P[index],E[index],mparam,dparam,state1[index,2:11])
        eff_ppt[index]     <- w_flux$eff_ppt
        satarea[index]     <- w_flux$satarea
        qrunoff[index]     <- w_flux$qrunoff 
