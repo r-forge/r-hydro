@@ -113,7 +113,7 @@ fusesma.sim <- function(DATA,mid,modlist,states=FALSE,fluxes=FALSE,
     return(results)
 }
 
-fusesma.ranges <- function(deltim) {
+fusesma.ranges <- function() {
     list("rferr_add" = c(0, 0),                      # additive rainfall error (mm)
          "rferr_mlt" = c(1, 1),                      # multiplicative rainfall error (-)
          "maxwatr_1" = c(25, 500),                   # depth of the upper soil layer (mm)
@@ -122,17 +122,17 @@ fusesma.ranges <- function(deltim) {
          "frchzne"   = c(0.05, 0.95),                # fraction tension storage in recharge zone (-)
          "fprimqb"   = c(0.05, 0.95),                # fraction storage in 1st baseflow reservoir (-)
          "rtfrac1"   = c(0.05, 0.95),                # fraction of roots in the upper layer (-)
-         "percrte"   = c(0.01/deltim, 1000/deltim),  # percolation rate (mm day-1)                            # Affected by deltim
+         "percrte"   = c(0.01, 1000),                # percolation rate (mm day-1)                           
          "percexp"   = c(1, 20),                     # percolation exponent (-)
          "sacpmlt"   = c(1, 250),                    # SAC model percltn mult for dry soil layer (-)
          "sacpexp"   = c(1, 5),                      # SAC model percltn exp for dry soil layer (-)
          "percfrac"  = c(0.05, 0.95),                # fraction of percltn to tension storage (-)
-         "iflwrte"   = c(0.01/deltim, 1000/deltim),  # interflow rate (mm day-1)                              # Affected by deltim
-         "baserte"   = c(0.001/deltim, 1000/deltim), # baseflow rate (mm day-1)                               # Affected by deltim
+         "iflwrte"   = c(0.01, 1000),                # interflow rate (mm day-1)                              
+         "baserte"   = c(0.001, 1000),               # baseflow rate (mm day-1)                               
          "qb_powr"   = c(1, 10),                     # baseflow exponent (-)
-         "qb_prms"   = c(0.001/deltim, 0.25/deltim), # baseflow depletion rate (day-1)                        # Affected by deltim
-         "qbrate_2a" = c(0.001/deltim, 0.25/deltim), # baseflow depletion rate 1st reservoir (day-1)          # Affected by deltim
-         "qbrate_2b" = c(0.001/deltim, 0.25/deltim), # baseflow depletion rate 2nd reservoir (day-1)          # Affected by deltim
+         "qb_prms"   = c(0.001, 0.25),               # baseflow depletion rate (day-1)                        
+         "qbrate_2a" = c(0.001, 0.25),               # baseflow depletion rate 1st reservoir (day-1)          
+         "qbrate_2b" = c(0.001, 0.25),               # baseflow depletion rate 2nd reservoir (day-1)          
          "sareamax"  = c(0.05, 0.95),                # maximum saturated area (-)
          "axv_bexp"  = c(0.001, 3),                  # ARNO/VIC "b" exponent (-)
          "loglamb"   = c(5, 10),                     # mean value of the topographic index (m)

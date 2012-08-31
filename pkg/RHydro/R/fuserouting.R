@@ -51,7 +51,7 @@ fuserouting.sim <- function(U, mid, modlist, timedelay, deltim=1) {
    return(X)
 }
 
-#fuserouting.ranges <- function(deltim) {
+#fuserouting.ranges <- function() {
 #    list("timedelay" = c(0.01, 5),        # time delay in runoff (days)
 #}
     
