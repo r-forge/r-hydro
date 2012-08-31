@@ -12,9 +12,9 @@ fuserouting.sim <- function(U, mid, modlist, timedelay, deltim=1) {
    # Returns:
    #   X:                             routed runoff
   
-   # print("routing ...")
+   print("routing ...")
    # Assing standard parameters
-   size_frac_future = 500/deltim       # fraction of runoff in future time steps
+   size_frac_future = 500       # fraction of runoff in future time steps
    alpha = 2.5                  # shape parameter
    
    # Read model structure
