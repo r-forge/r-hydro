@@ -35,10 +35,10 @@ mstate_eqn <- function(t, state, parameters, ppt, pet, smodl)     {
    dfree_2  <- 0
 
    # compute derivatives for states in the upper layer*********************************************************************
-  # upper layer defined by a single state variable
+   # upper layer defined by a single state variable
    if(smodl$arch1 == 21) {                       
      dwatr_1  <- m_flux$eff_ppt    - m_flux$qrunoff    - m_flux$evap_1  - m_flux$qperc_12 - m_flux$qintf_1 - m_flux$oflow_1
-     if (state[["tens_1"]] == dparam$maxtens_1){
+     if (state[["watr_1"]] > dparam$maxtens_1){
        dtens_1  <- 0
        dfree_1  <- dwatr_1
      }else{
@@ -65,7 +65,7 @@ mstate_eqn <- function(t, state, parameters, ppt, pet, smodl)     {
    # single state
    if(smodl$arch2 == 31 || smodl$arch2 == 33 || smodl$arch2 == 34 || smodl$arch2 == 35) { 
      dwatr_2  <- m_flux$qperc_12 - m_flux$evap_2 - m_flux$qbase_2 - m_flux$oflow_2
-     if (state[["tens_2"]] == dparam$maxtens_2){
+     if (state[["watr_2"]] > dparam$maxtens_2){
        dtens_2  <- 0
        dfree_2  <- dwatr_2
      }else{
