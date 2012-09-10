@@ -74,7 +74,7 @@ fusesma.sim <- function(DATA,mid,modlist,states=FALSE,fluxes=FALSE,
     state0 <- initstates(smodl,mparam,dparam,fracstate0)    
     
     # Solve derivatives
-    times      <- seq(1, length(P), by = 1) # by = 1 means that solver timestep = data timestep
+    times      <- seq(1, length(P), by = 1) 
 
     parameters <- list("mparam" = mparam,"dparam" = dparam) 
     
@@ -87,14 +87,17 @@ fusesma.sim <- function(DATA,mid,modlist,states=FALSE,fluxes=FALSE,
                   "pet" = E, 
                   "smodl" = smodl, 
                   atol = 1e-2, rtol = 1e-2)
-    
-    print("updating states ...")
-    state2 <- matrix(NA, nrow=dim(state1)[1],ncol=dim(state1)[2])
-    colnames(state2) <- colnames(state1)
-    state2[,"time"] <- state1[,"time"]
-    for (r in 1:dim(state1)[1]) {
-        state2[r,2:11] <- upstates(smodl,mparam,dparam,state1[r,2:11])
-    }
+
+    state2 <- data.frame("tens_1a" = state1[,"states.tens_1a"],
+                "tens_1b" = state1[,"states.tens_1b"],
+                "tens_1"  = state1[,"states.tens_1"],
+                "free_1"  = state1[,"states.free_1"],
+                "watr_1"  = state1[,"states.watr_1"],
+                "tens_2"  = state1[,"states.tens_2"],
+                "free_2a" = state1[,"states.free_2a"],
+                "free_2b" = state1[,"states.free_2b"],
+                "watr_2"  = state1[,"states.watr_2"],
+                "free_2"  = state1[,"states.free_2"]  )
 
     print("computing fluxes ...")
     allfluxes <- outfluxes(smodl,P,E,mparam,dparam,state2)
