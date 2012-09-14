@@ -86,7 +86,7 @@ fusesma.sim <- function(DATA,mid,modlist,states=FALSE,fluxes=FALSE,
                   "ppt" = P, 
                   "pet" = E, 
                   "smodl" = smodl, 
-                  atol = 1e-2, rtol = 1e-2)
+                  atol = 1e-3, rtol = 1e-3)
 
     state2 <- data.frame("tens_1a" = state1[,"states.tens_1a"],
                 "tens_1b" = state1[,"states.tens_1b"],
