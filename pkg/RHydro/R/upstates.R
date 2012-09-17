@@ -48,19 +48,21 @@ upstates <- function(smodl,mparam,dparam,state) {
    }
    
    # LOWER LAYER------------------------------------------------------------------------
-   if(smodl$arch2 == 31 || smodl$arch2 == 33 || smodl$arch2 == 34 || smodl$arch2 == 35) {
+   if(smodl$arch2 == 31 || smodl$arch2 == 33 || smodl$arch2 == 34) {
+   #if(smodl$arch2 == 31 || smodl$arch2 == 33 || smodl$arch2 == 34 || smodl$arch2 == 35) {
      #case('unlimfrc_2','unlimpow_2','topmdexp_2','fixedsiz_2') single baseflow reservoir
      # (update state)
-     if (smodl$arch2 == 35) {
-       watr_2  <- state[["watr_2"]]                             # total storage
-     }else{
-       watr_2  <- max(xmin*mparam$maxwatr_2,state[["watr_2"]])  # total storage
-     }     
+     #if (smodl$arch2 == 35) {   # option not contained in modlist!
+     #  watr_2  <- state[["watr_2"]]                             # total storage
+     #}else{
+     #  watr_2  <- max(xmin*mparam$maxwatr_2,state[["watr_2"]])  # total storage
+     #}     
+     watr_2  <- max(xmin*mparam$maxwatr_2,state[["watr_2"]])    # total storage
      # (derive state)
      free_2a <- -999                                            # primary reservoir (undefined)
      free_2b <- -999                                            # secondary reservoir (undefined)
      free_2  <- max(0, state[["watr_2"]] - dparam$maxtens_2)    # free storage
-     tens_2  <- min(state[["watr_2"]], dparam$maxtens_2) # tension storage                                                         
+     tens_2  <- min(state[["watr_2"]], dparam$maxtens_2)        # tension storage                                                         
    }
    
    if (smodl$arch2 == 32) {  

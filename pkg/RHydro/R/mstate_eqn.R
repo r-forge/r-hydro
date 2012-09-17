@@ -13,9 +13,11 @@ mstate_eqn <- function(t, state, parameters, ppt, pet, smodl)     {
    # Returns:
    #   List of parameters.
 
+   #print(t)   
+
    mparam <- parameters$mparam
    dparam <- parameters$dparam
-  
+   
    # compute fluxes:
    mppt   <- as.numeric(ppt[t])
    mpet   <- as.numeric(pet[t])
@@ -34,15 +36,15 @@ mstate_eqn <- function(t, state, parameters, ppt, pet, smodl)     {
    if(smodl$arch1 == 22) {                        
      dtens_1  <- m_flux$eff_ppt     - m_flux$qrunoff    - m_flux$evap_1  - m_flux$tens2free_1
      dfree_1  <- m_flux$tens2free_1 - m_flux$qperc_12 - m_flux$qintf_1 - m_flux$oflow_1
-     dwatr_1  <- dtens_1 + dfree_1
+     #dwatr_1  <- dtens_1 + dfree_1
    }
    # tension storage sub-divided into recharge and excess
    if(smodl$arch1 == 23) {                        
      dtens_1a <- m_flux$eff_ppt     - m_flux$qrunoff  - m_flux$evap_1a     - m_flux$rchr2excs
      dtens_1b <- m_flux$rchr2excs   - m_flux$evap_1b  - m_flux$tens2free_1
      dfree_1  <- m_flux$tens2free_1 - m_flux$qperc_12 - m_flux$qintf_1     - m_flux$oflow_1
-     dtens_1  <- dtens_1a + dtens_1b
-     dwatr_1  <- dtens_1  + dfree_1
+     #dtens_1  <- dtens_1a + dtens_1b
+     #dwatr_1  <- dtens_1  + dfree_1
    }
 
    # compute derivatives for states in the lower layer************************************************************
@@ -51,12 +53,12 @@ mstate_eqn <- function(t, state, parameters, ppt, pet, smodl)     {
      dwatr_2  <- m_flux$qperc_12 - m_flux$evap_2 - m_flux$qbase_2 - m_flux$oflow_2
    }
    # tension reservoir plus two parallel tanks
-   if(smodl$arch2 == 32) {                        
+   if(smodl$arch2 == 32) {                      
      dtens_2  <- m_flux$qperc_12*(1-mparam$percfrac) - m_flux$evap_2        - m_flux$tens2free_2
      dfree_2a <- m_flux$qperc_12*(mparam$percfrac/2) + m_flux$tens2free_2/2 - m_flux$qbase_2a    - m_flux$oflow_2a
      dfree_2b <- m_flux$qperc_12*(mparam$percfrac/2) + m_flux$tens2free_2/2 - m_flux$qbase_2b    - m_flux$oflow_2b
-     dfree_2  <- dfree_2a + dfree_2b
-     dwatr_2  <- dtens_2  + dfree_2
+     #dfree_2  <- dfree_2a + dfree_2b
+     #dwatr_2  <- dtens_2  + dfree_2
    }
    
    return(list(c("dtens_1a" = dtens_1a, 
