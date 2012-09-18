@@ -21,8 +21,8 @@ fluxqmiscell <- function(arch1,arch2,state,mparam,dparam,eff_ppt,qrunoff,qperc_1
    #   tens2free_2 <- flow from tension storage to free storage in the lower layer (mm day-1)
    #   oflow_1     <- overflow from the upper soil layer (mm day-1)
    #   oflow_2     <- overflow from the lower soil layer (mm day-1)
-   #   oflow_2a     <- overflow from the lower soil layer (mm day-1)
-   #   oflow_2b     <- overflow from the lower soil layer (mm day-1)
+   #   oflow_2a    <- overflow from the lower soil layer (mm day-1)
+   #   oflow_2b    <- overflow from the lower soil layer (mm day-1)
 
    rchr2excs   <- 0
    tens2free_1 <- 0

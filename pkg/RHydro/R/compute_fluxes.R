@@ -14,7 +14,8 @@ compute_fluxes <- function(smodl,mppt,mpet,mparam,dparam,state) {
    #   List of fluxes at time "t"
 
    # set all fluxes to zero at the start of time step
-   eff_ppt     <- satarea     <- qrunoff     <- evap_1a     <- evap_1b     <- evap_1      <- evap_2      <- rchr2excs   <- tens2free_1 <- tens2free_2 <- qintf_1     <- qperc_12    <- qbase_2     <- qbase_2a    <- qbase_2b    <- oflow_1     <- oflow_2     <- oflow_2a    <- oflow_2b    <- 0
+   eff_ppt <- satarea <- qrunoff <- evap_1a <- evap_1b <- evap_1 <- evap_2 <- rchr2excs <- tens2free_1 <- tens2free_2 <- 0
+   qintf_1 <- qperc_12 <- qbase_2 <- qbase_2a    <- qbase_2b <- oflow_1 <- oflow_2 <- oflow_2a <- oflow_2b <- 0
 
    # compute effective rainfall
    eff_ppt   <- fluxrain(smodl$rferr,mppt,mparam$rferr_add,mparam$rferr_mlt)      
@@ -45,7 +46,7 @@ compute_fluxes <- function(smodl,mppt,mpet,mparam,dparam,state) {
    qbase_2  <- temp[[3]]
    
    # compute overflow (miscellaneous fluxes)
-   temp <- fluxqmiscell(smodl$arch1,smodl$arch2,state,mparam,dparam,eff_ppt,qrunoff,qperc_12)
+   temp <- fluxqmiscell(smodl$arch1,smodl$arch2,state,mparam,dparam,eff_ppt,qrunoff,qperc_12,x=1)
    rchr2excs   <- temp[[1]]
    tens2free_1 <- temp[[2]]
    tens2free_2 <- temp[[3]]

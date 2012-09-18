@@ -39,7 +39,8 @@ fusesma.sim <- function(DATA,mid,modlist,states=FALSE,fluxes=FALSE,
                 "q_tdh"=modlist[mid,9])
        
     # All model parameters [LIST]
-    mparam0 <- list("rferr_add" = rferr_add,
+    #mparam0 <- list("rferr_add" = rferr_add,
+    mparam <- list("rferr_add" = rferr_add,
                     "rferr_mlt" = rferr_mlt,
                     "frchzne"   = frchzne,
                     "fracten"   = fracten,
@@ -65,7 +66,7 @@ fusesma.sim <- function(DATA,mid,modlist,states=FALSE,fluxes=FALSE,
                     )
     
     # Isolate model parameters to use for this run [LIST]
-    mparam <- assign_par(smodl, mparam0)
+    #mparam <- assign_par(smodl, mparam0)
     
     # compute derived parameters (bucket sizes, etc.) [LIST]
     dparam <- par_derive(smodl,mparam)                 
