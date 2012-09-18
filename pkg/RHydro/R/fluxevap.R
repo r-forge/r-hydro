@@ -53,7 +53,7 @@ fluxevap <- function(arch1,arch2,esoil,fpet,mparam,dparam,tens_1a, tens_1b, tens
        if(esoil == 62) evap_2 <- (fpet-evap_1) * (tens_2/dparam$maxtens_2)
        if(esoil == 61) evap_2 <- fpet * dparam$rtfrac2 * (tens_2/dparam$maxtens_2)
      }
-     if(arch1 == "case('23") evap_2 <- 0           # lower-layer evap is zero
+     if(arch1 == 23) evap_2 <- 0                   # lower-layer evap is zero
    }
    
    if(arch2 == 33 || arch2 == 34 || arch2 == 35) evap_2 <- 0
