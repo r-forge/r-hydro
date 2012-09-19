@@ -26,13 +26,10 @@ Clark M. P., McMillan H. K., Collins D. B. G., Kavetski D. and Woods R. A. (2011
 data(modlist)
 data(mopex)
 
-mid <- 5
-deltim <- 1
-fracstate0 <- 0.25
-
 # returns the instantaneous runoff
-Qinst <- fusesma.sim (fuse.DATA,mid,modlist,fracstate0,
+Qinst <- fusesma.sim (fuse.DATA,mid=5,modlist,deltim=1,
                       states=FALSE,fluxes=FALSE,
+                      fracstate0=0.25,
                       fuse.parameters$rferr_add,fuse.parameters$rferr_mlt,
                       fuse.parameters$frchzne,fuse.parameters$fracten,
                       fuse.parameters$maxwatr_1,fuse.parameters$percfrac,
@@ -47,7 +44,7 @@ Qinst <- fusesma.sim (fuse.DATA,mid,modlist,fracstate0,
                       fuse.parameters$qb_powr)
                         
 # returns the routed runoff
-Qrout <- fuserouting.sim(Qinst, mid, modlist, fuse.parameters$timedelay, deltim)
+Qrout <- fuserouting.sim(Qinst, mid=5, modlist, fuse.parameters$timedelay, deltim=1)
 
 }
 

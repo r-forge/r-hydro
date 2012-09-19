@@ -14,7 +14,7 @@
 #   s:                             (optional) list of state variables 
 #   f:                             (optional) list of fluxes (containing also U)
 
-fusesma.sim <- function(DATA,mid,modlist,states=FALSE,fluxes=FALSE,
+fusesma.sim <- function(DATA,mid,modlist,deltim,states=FALSE,fluxes=FALSE,
                         fracstate0=0.25,rferr_add=0,rferr_mlt=1,
                         frchzne,fracten,maxwatr_1,percfrac,fprimqb,qbrate_2a,qbrate_2b,
                         qb_prms,maxwatr_2,baserte,rtfrac1,percrte,percexp,sacpmlt,
@@ -87,6 +87,7 @@ fusesma.sim <- function(DATA,mid,modlist,states=FALSE,fluxes=FALSE,
                   "ppt" = P, 
                   "pet" = E, 
                   "smodl" = smodl, 
+                  "deltim" = deltim,
                   atol = 1e-3, rtol = 1e-3)
 
     state2 <- data.frame("tens_1a" = state1[,"states.tens_1a"],

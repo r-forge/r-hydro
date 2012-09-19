@@ -3,7 +3,7 @@
 \title{Implementation of the framework for hydrological modelling FUSE - Soil Moisture Accounting model}
 \description{Loss module derived from the Fortran version of FUSE by Martyn Clark (2011).}
 \usage{
-fusesma.sim(DATA, mid, modlist, states, fluxes, 
+fusesma.sim(DATA,mid,modlist,deltim, states, fluxes, 
     fracstate0, rferr_add, rferr_mlt, 
     frchzne,fracten,maxwatr_1,percfrac,fprimqb,qbrate_2a,qbrate_2b,
     qb_prms,maxwatr_2,baserte,rtfrac1,percrte,percexp,sacpmlt,
@@ -13,6 +13,7 @@ fusesma.sim(DATA, mid, modlist, states, fluxes,
   \item{DATA}{data.frame containing observations. It consists of 3 columns: Rainfall (P), Potential Evapo-Transpiration (E) and Streamflow (Q)}
   \item{mid}{model id number in Model List 2011(see below for details)}
   \item{modlist}{list of availabe models}
+  \item{deltim}{observation time step (days)}
   \item{states}{list of internal state variables}
   \item{fluxes}{list of fluxes}
   \item{fracstate0}{initial store fraction (initialization)}
@@ -125,12 +126,10 @@ Clark M. P., McMillan H. K., Collins D. B. G., Kavetski D. and Woods R. A. (2011
 data(modlist)
 data(mopex)
 
-mid <- 5
-fracstate0 <- 0.25
-
 # returns the instantaneous runoff
-Qinst <- fusesma.sim (fuse.DATA,mid,modlist,fracstate0,
+Qinst <- fusesma.sim (fuse.DATA,mid=5,modlist,deltim=1,
                       states=FALSE,fluxes=FALSE,
+                      fracstate0=0.25,
                       fuse.parameters$rferr_add,fuse.parameters$rferr_mlt,
                       fuse.parameters$frchzne,fuse.parameters$fracten,
                       fuse.parameters$maxwatr_1,fuse.parameters$percfrac,

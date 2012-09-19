@@ -1,4 +1,4 @@
-mstate_eqn <- function(t, state, parameters, ppt, pet, smodl)     {
+mstate_eqn <- function(t, state, parameters, ppt, pet, smodl,deltim)     {
    # Model's Differential Equations
    # Author: Claudia Vitolo
    #
@@ -12,9 +12,6 @@ mstate_eqn <- function(t, state, parameters, ppt, pet, smodl)     {
    #
    # Returns:
    #   List of parameters.
-
-   #print(t)   
-   #if (t >=314.693) browser()
 
    mparam <- parameters$mparam
    dparam <- parameters$dparam
@@ -57,16 +54,16 @@ mstate_eqn <- function(t, state, parameters, ppt, pet, smodl)     {
      dfree_2b <- m_flux$qperc_12*(mparam$percfrac/2) + m_flux$tens2free_2/2 - m_flux$qbase_2b    - m_flux$oflow_2b
    }
    
-   return(list(c("dtens_1a" = dtens_1a, 
-                 "dtens_1b" = dtens_1b, 
-                 "dtens_1"  = dtens_1, 
-                 "dfree_1"  = dfree_1, 
-                 "dwatr_1"  = dwatr_1, 
-                 "dtens_2"  = dtens_2, 
-                 "dfree_2a" = dfree_2a, 
-                 "dfree_2b" = dfree_2b, 
-                 "dwatr_2"  = dwatr_2,
-                 "dfree_2"  = dfree_2   ),"states"= state ))
+   return(list(c("dtens_1a" = dtens_1a*deltim, 
+                 "dtens_1b" = dtens_1b*deltim, 
+                 "dtens_1"  = dtens_1*deltim, 
+                 "dfree_1"  = dfree_1*deltim, 
+                 "dwatr_1"  = dwatr_1*deltim, 
+                 "dtens_2"  = dtens_2*deltim, 
+                 "dfree_2a" = dfree_2a*deltim, 
+                 "dfree_2b" = dfree_2b*deltim, 
+                 "dwatr_2"  = dwatr_2*deltim,
+                 "dfree_2"  = dfree_2*deltim   ),"states"= state ))
                  
 }
 

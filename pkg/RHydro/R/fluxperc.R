@@ -14,7 +14,7 @@ fluxperc <- function(qperc,mparam,dparam,free_1, watr_1, watr_2) {
    #   Percolation
 
    
-   qperc_12 <- 0
+   #qperc_12 <- 0
    
    # CASE('perc_f2sat') = water from (field cap to sat) avail for percolation
    if(qperc == 51) qperc_12 <- mparam$percrte * (free_1/dparam$maxfree_1)^mparam$percexp   
@@ -22,7 +22,7 @@ fluxperc <- function(qperc,mparam,dparam,free_1, watr_1, watr_2) {
    # CASE('perc_lower') = perc defined by moisture content in lower layer (SAC)
    # (compute lower-zone percolation demand -- multiplier on maximum percolation, then percolation)
    if(qperc == 52) {   
-      if (watr_2/mparam$maxwatr_2>1) {
+      if (watr_2/mparam$maxwatr_2 > 1) {
         lz_pd <- 1 
       } else{
         lz_pd <- 1 + mparam$sacpmlt*(1 - watr_2/mparam$maxwatr_2)^mparam$sacpexp

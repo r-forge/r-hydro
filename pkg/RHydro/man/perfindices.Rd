@@ -40,13 +40,10 @@ The 5 catchment descriptors are:
 data(modlist)
 data(mopex)
 
-mid <- 5
-deltim <- 1
-fracstate0 <- 0.25
-
 # returns the instantaneous runoff
-X <- fusesma.sim (fuse.DATA,mid,modlist,fracstate0,
+X <- fusesma.sim (fuse.DATA,mid=5,modlist,deltim=1,
                       states=FALSE,fluxes=TRUE,
+                      fracstate0=0.25,
                       fuse.parameters$rferr_add,fuse.parameters$rferr_mlt,
                       fuse.parameters$frchzne,fuse.parameters$fracten,
                       fuse.parameters$maxwatr_1,fuse.parameters$percfrac,
@@ -61,7 +58,7 @@ X <- fusesma.sim (fuse.DATA,mid,modlist,fracstate0,
                       fuse.parameters$qb_powr)
                         
 # returns the routed runoff
-Qrout <- fuserouting.sim(X$U, mid, modlist, fuse.parameters$timedelay, deltim)
+Qrout <- fuserouting.sim(X$U, mid=5, modlist, fuse.parameters$timedelay, deltim=1)
 
 Po <- fuse.DATA[,"P"]
 Qo <- fuse.DATA[,"Q"]
