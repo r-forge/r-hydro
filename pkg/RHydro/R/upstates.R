@@ -70,17 +70,15 @@ upstates <- function(smodl,mparam,dparam,state) {
      watr_2  <- tens_2 + free_2                # total storage
    }
      
-     state_new <- c("tens_1a" = tens_1a,
-                    "tens_1b" = tens_1b,
-                    "tens_1"  = tens_1,
-                    "free_1"  = free_1,
-                    "watr_1"  = watr_1,
-                    "tens_2"  = tens_2,
-                    "free_2a" = free_2a,
-                    "free_2b" = free_2b,
-                    "watr_2"  = watr_2,
-                    "free_2"  = free_2  )
-     
-   return(state_new)
+   return(c("tens_1a" = tens_1a,
+            "tens_1b" = tens_1b,
+            "tens_1"  = tens_1,
+            "free_1"  = free_1,
+            "watr_1"  = watr_1,
+            "tens_2"  = tens_2,
+            "free_2a" = free_2a,
+            "free_2b" = free_2b,
+            "watr_2"  = watr_2,
+            "free_2"  = free_2  ))
 }
 

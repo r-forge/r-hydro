@@ -11,7 +11,7 @@ initstates <- function(smodl,mparam,dparam,fracstate0) {
    # Returns:
    #   Initial condition for state variables
 
-   xmin <- 0 #1e-06
+   xmin <- 1e-06
   
    # initialize model states (upper layer and lower layer)
    tens_1a <- -999   # Excess Tension storage Upper Layer
@@ -51,16 +51,14 @@ initstates <- function(smodl,mparam,dparam,fracstate0) {
      tens_2  <- watr_2 - free_2
    }
   
-   state0    <- c("tens_1a" = tens_1a,
-                  "tens_1b" = tens_1b,
-                  "tens_1"  = tens_1,
-                  "free_1"  = free_1,
-                  "watr_1"  = watr_1,
-                  "tens_2"  = tens_2,
-                  "free_2a" = free_2a,
-                  "free_2b" = free_2b,
-                  "watr_2"  = watr_2,
-                  "free_2"  = free_2  )
-  
-   return(state0)
+   return(c("tens_1a" = tens_1a,
+            "tens_1b" = tens_1b,
+            "tens_1"  = tens_1,
+            "free_1"  = free_1,
+            "watr_1"  = watr_1,
+            "tens_2"  = tens_2,
+            "free_2a" = free_2a,
+            "free_2b" = free_2b,
+            "watr_2"  = watr_2,
+            "free_2"  = free_2  ))
 }

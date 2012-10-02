@@ -40,29 +40,27 @@ outfluxes <- function(smodl,P,E,mparam,dparam,state) {
        # compute effective rainfall (sum of surface runoff, overflow, interflow, and baseflow)
        U[index] <- w_flux$qrunoff + w_flux$oflow_1 + w_flux$qintf_1 + w_flux$oflow_2 + w_flux$qbase_2
    }
-
-   allfluxes <- list("eff_ppt"     = eff_ppt,
-                 "satarea"     = satarea,
-                 "qrunoff"     = qrunoff,
-                 "evap_1a"     = evap_1a,
-                 "evap_1b"     = evap_1b,
-                 "evap_1"      = evap_1,
-                 "evap_2"      = evap_2,
-                 "rchr2excs"   = rchr2excs,
-                 "tens2free_1" = tens2free_1,
-                 "oflow_1"     = oflow_1,
-                 "tens2free_2" = tens2free_2,
-                 "qintf_1"     = qintf_1,
-                 "qperc_12"    = qperc_12,
-                 "qbase_2"     = qbase_2,
-                 "qbase_2a"    = qbase_2a,
-                 "qbase_2b"    = qbase_2b,
-                 "oflow_2"     = oflow_2,
-                 "oflow_2a"    = oflow_2a,
-                 "oflow_2b"    = oflow_2b,
-                 "U" = U)
    
-   return(allfluxes)
+   return(list("eff_ppt"     = eff_ppt,
+               "satarea"     = satarea,
+               "qrunoff"     = qrunoff,
+               "evap_1a"     = evap_1a,
+               "evap_1b"     = evap_1b,
+               "evap_1"      = evap_1,
+               "evap_2"      = evap_2,
+               "rchr2excs"   = rchr2excs,
+               "tens2free_1" = tens2free_1,
+               "oflow_1"     = oflow_1,
+               "tens2free_2" = tens2free_2,
+               "qintf_1"     = qintf_1,
+               "qperc_12"    = qperc_12,
+               "qbase_2"     = qbase_2,
+               "qbase_2a"    = qbase_2a,
+               "qbase_2b"    = qbase_2b,
+               "oflow_2"     = oflow_2,
+               "oflow_2a"    = oflow_2a,
+               "oflow_2b"    = oflow_2b,
+               "U" = U))
 
 }
 

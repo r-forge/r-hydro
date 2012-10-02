@@ -7,7 +7,7 @@
 #   modlist:                       list of model structures ordered by model id
 #   states:                        boolean. If states=TRUE, the output contains the list of state variables
 #   fluxes:                        boolean. If fluxes=TRUE, the output contains the list of fluxes (last element of the list is U)
-#   fracstate...qb_powr:           input parameters
+#   fracstate...qb_powr:           model parameters (collected as mparam)
 #
 # Returns:
 #   U:                             Instantaneous runoff      
@@ -39,7 +39,6 @@ fusesma.sim <- function(DATA,mid,modlist,deltim,states=FALSE,fluxes=FALSE,
                 "q_tdh"=modlist[mid,9])
        
     # All model parameters [LIST]
-    #mparam0 <- list("rferr_add" = rferr_add,
     mparam <- list("rferr_add" = rferr_add,
                     "rferr_mlt" = rferr_mlt,
                     "frchzne"   = frchzne,
@@ -64,9 +63,6 @@ fusesma.sim <- function(DATA,mid,modlist,deltim,states=FALSE,fluxes=FALSE,
                     "tishape"   = tishape,
                     "qb_powr"   = qb_powr 
                     )
-    
-    # Isolate model parameters to use for this run [LIST]
-    #mparam <- assign_par(smodl, mparam0)
     
     # compute derived parameters (bucket sizes, etc.) [LIST]
     dparam <- par_derive(smodl,mparam)                 

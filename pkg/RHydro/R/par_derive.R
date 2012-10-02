@@ -4,7 +4,31 @@ par_derive <- function(smodl,mparam) {
    #
    # Args:
    #   smodl:                         list of model components
-   #   mparam:                        list of parameters obtained from assign_par
+   #   mparam:                        list of model parameters containing the following:
+   #                                     rferr_add = additive rainfall error (mm day-1)
+   #                                     rferr_mlt = multiplicative rainfall error (-)
+   #                                     frchzne   = prms: frac tension storage in recharge zone (-)
+   #                                     fracten   = frac total storage as tension storage (-)
+   #                                     maxwatr_1 = maximum total storage in layer1 (mm)
+   #                                     percfrac  = fraction of percolation to tension storage (-)
+   #                                     fprimqb   = sac: fraction of baseflow in primary resvr (-)
+   #                                     qbrate_2a = baseflow depletion rate for primary resvr (day-1)
+   #                                     qbrate_2b = baseflow depletion rate for secondary resvr (day-1)
+   #                                     qb_prms   = baseflow depletion rate (day-1)
+   #                                     maxwatr_2 = maximum total storage in layer2 (mm)
+   #                                     baserte   = baseflow rate (mm day-1)
+   #                                     rtfrac1   = fraction of roots in the upper layer (-)
+   #                                     percrte   = percolation rate (mm day-1)
+   #                                     percexp   = percolation exponent (-)
+   #                                     sacpmlt   = multiplier in the sac model for dry lower layer (-)
+   #                                     sacpexp   = exponent in the sac model for dry lower layer (-)
+   #                                     iflwrte   = interflow rate (mm day-1)
+   #                                     axv_bexp  = arno/vic "b" exponent
+   #                                     sareamax  = maximum saturated area
+   #                                     loglamb   = mean value of the log-transformed topographic index (m)
+   #                                     tishape   = shape parameter for the topo index gamma distribution (-)
+   #                                     qb_powr   = baseflow exponent (-)
+   #                                     fraclowz  = fraction of soil excess to lower zone (-) # NOT USED
    #
    # Returns:
    #   List of derived parameters.
@@ -36,17 +60,17 @@ par_derive <- function(smodl,mparam) {
    qbsat <- qbsaturatn(smodl$arch2,mparam,maxfree_2a,maxfree_2b,powlamb)
 
    return(list("maxtens_1"   = maxtens_1,
-                  "maxtens_2"   = maxtens_2,
-                  "maxfree_1"   = maxfree_1,
-                  "maxfree_2"   = maxfree_2,
-                  "maxtens_1a"  = maxtens_1a,
-                  "maxtens_1b"  = maxtens_1b,
-                  "maxfree_2a"  = maxfree_2a,
-                  "maxfree_2b"  = maxfree_2b,
-                  "maxpow"      = maxpow,
-                  "powlamb"     = powlamb,
-                  "qbsat"       = qbsat,
-                  "rtfrac2"     = rtfrac2))
+               "maxtens_2"   = maxtens_2,
+               "maxfree_1"   = maxfree_1,
+               "maxfree_2"   = maxfree_2,
+               "maxtens_1a"  = maxtens_1a,
+               "maxtens_1b"  = maxtens_1b,
+               "maxfree_2a"  = maxfree_2a,
+               "maxfree_2b"  = maxfree_2b,
+               "maxpow"      = maxpow,
+               "powlamb"     = powlamb,
+               "qbsat"       = qbsat,
+               "rtfrac2"     = rtfrac2))
 
 }
 

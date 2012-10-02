@@ -4,8 +4,8 @@ fluxbaseflow <- function(arch2,mparam,qbsat,free_2a, free_2b, watr_2) {
    #
    # Args:
    #   arch2:         smodl$arch2
-   #   mparam:        useful model parameters
-   #   qbsat:         dparam$qbsat
+   #   mparam:        model parameters
+   #   qbsat:         derived parameter (for a description see par_derive.R)
    #   free_2a:       Free Storage Primary Baseflow Reservoir
    #   free_2b:       Free Storage Secondary Baseflow Reservoir
    #   watr_2:        Total Storage Lower Layer
@@ -15,7 +15,6 @@ fluxbaseflow <- function(arch2,mparam,qbsat,free_2a, free_2b, watr_2) {
    
    qbase_2a  <- 0
    qbase_2b  <- 0
-   qbase_2   <- 0
    
    # baseflow reservoir of fixed size
    if(arch2 == 31) qbase_2  <- mparam$baserte * (watr_2/mparam$maxwatr_2) ^ mparam$qb_powr 

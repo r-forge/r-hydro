@@ -55,27 +55,25 @@ compute_fluxes <- function(smodl,mppt,mpet,mparam,dparam,state) {
    oflow_2a    <- temp[[6]]
    oflow_2b    <- temp[[7]]
    
-   flux1 <- list("eff_ppt"     = eff_ppt,
-                 "satarea"     = satarea,
-                 "qrunoff"     = qrunoff,
-                 "evap_1a"     = evap_1a,
-                 "evap_1b"     = evap_1b,
-                 "evap_1"      = evap_1,
-                 "evap_2"      = evap_2,
-                 "rchr2excs"   = rchr2excs,
-                 "tens2free_1" = tens2free_1,
-                 "tens2free_2" = tens2free_2,
-                 "qintf_1"     = qintf_1,
-                 "qperc_12"    = qperc_12,
-                 "qbase_2"     = qbase_2,
-                 "qbase_2a"    = qbase_2a,
-                 "qbase_2b"    = qbase_2b,
-                 "oflow_1"     = oflow_1,
-                 "oflow_2"     = oflow_2,
-                 "oflow_2a"     = oflow_2a,
-                 "oflow_2b"     = oflow_2b)
-
-   return(flux1)
+   return(list("eff_ppt"     = eff_ppt,
+               "satarea"     = satarea,
+               "qrunoff"     = qrunoff,
+               "evap_1a"     = evap_1a,
+               "evap_1b"     = evap_1b,
+               "evap_1"      = evap_1,
+               "evap_2"      = evap_2,
+               "rchr2excs"   = rchr2excs,
+               "tens2free_1" = tens2free_1,
+               "tens2free_2" = tens2free_2,
+               "qintf_1"     = qintf_1,
+               "qperc_12"    = qperc_12,
+               "qbase_2"     = qbase_2,
+               "qbase_2a"    = qbase_2a,
+               "qbase_2b"    = qbase_2b,
+               "oflow_1"     = oflow_1,
+               "oflow_2"     = oflow_2,
+               "oflow_2a"     = oflow_2a,
+               "oflow_2b"     = oflow_2b))
 
 }
 

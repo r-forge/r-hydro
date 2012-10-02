@@ -19,7 +19,7 @@ mstate_eqn <- function(t, state, parameters, ppt, pet, smodl,deltim)     {
    # compute fluxes:
    mppt   <- as.numeric(ppt[t])
    mpet   <- as.numeric(pet[t])
-   state  <- upstates(smodl,mparam,dparam,state)
+   state  <- upstates(smodl,mparam,dparam,state) # TODO: update states at the end of this routine (at the moment, this is incompatible with solver).
    m_flux <- compute_fluxes(smodl,mppt,mpet,mparam,dparam,state)
 
    # initialize derivatives (rate of change) of all states

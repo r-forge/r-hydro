@@ -42,9 +42,7 @@ fluxqsatexcess <- function(mqsurf,eff_ppt,mparam,dparam,tens_1, watr_1, watr_2) 
 
    qrunoff <- eff_ppt * satarea   # compute surface runoff
    
-   results <- c(satarea,qrunoff)
-   
-   return(results)
+   return(c(satarea,qrunoff))
 
 }
 

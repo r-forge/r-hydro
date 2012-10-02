@@ -108,7 +108,7 @@ perfindices <- function(Po,Qo,Qs,Qb){
   
   t <- fdc(Qs,lQ.thr=0.66,hQ.thr=0.33)
   theRes <- ccf(Qo,Qs, plot=FALSE)
-  
+
   lagtime <- theRes$lag[min(which(theRes$acf==max(theRes$acf)))] # lagtime (from tiger) - it should tend to zero
   meanerr <- mean(Qs - Qo, na.rm = TRUE)                         # mean error - it should tend to zero
   meanaoe <- MAOE(Qo,Qs)                                         # mean absolute ordinal error (from qualV) - it should tend to zero

@@ -8,7 +8,7 @@ fluxevap <- function(arch1,arch2,esoil,fpet,mparam,dparam,tens_1a, tens_1b, tens
    #   esoil:                         smodl$esoil
    #   fpet:                          mpet
    #   mparam:                        model parameters
-   #   dparam:                        derived model parameters
+   #   dparam:                        derived parameters
    #   tens_1a:                       tens_1a
    #   tens_1b:                       tens_1b
    #   tens_1:                        tens_1
@@ -58,9 +58,7 @@ fluxevap <- function(arch1,arch2,esoil,fpet,mparam,dparam,tens_1a, tens_1b, tens
    
    if(arch2 == 33 || arch2 == 34 || arch2 == 35) evap_2 <- 0
 
-   results <- c(evap_1a,evap_1b,evap_1,evap_2)
-
-   return(results)
+   return(c(evap_1a,evap_1b,evap_1,evap_2))
 
 }
 
