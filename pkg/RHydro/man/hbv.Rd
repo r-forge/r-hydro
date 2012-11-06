@@ -12,7 +12,7 @@ hbv - simulation using hydrological model HBV
 }
 \usage{
 hbv(pars, init, prec, delta_t=1, unithg=NULL)
-hbv.prerun(init=NULL, prec, max_pre_runs=20, storage_tolerance=0.1, prerun_length=(365*24*60/5), verbose=TRUE,...)
+hbv.prerun(init=NULL, max_pre_runs=20, storage_tolerance=0.1, prerun_length=(365*24*60/5), verbose=TRUE,...)
 
 }
 %- maybe also 'usage' for other objects documented here.
@@ -22,7 +22,7 @@ hbv.prerun(init=NULL, prec, max_pre_runs=20, storage_tolerance=0.1, prerun_lengt
   \item{pars}{
 named vector holding the HBV parameters
 \code{cfmax=2.4}  degree day factor for snow melt  [mm/Â°C/d]
-\code{tt=0}    temperature threshold below which precipitation falls as snow [Â°C]
+\code{tt=0}    temperature threshold below which precipitation falls as snow [°C]
 \code{fc=200}     field capacity [mm] 
 \code{minsm}   minimum soil moisture for storage sm [mm]
 \code{beta}    parameter to control the fraction of rain and snow melt partitioned for groundwater recharge [-]
@@ -35,7 +35,7 @@ named vector holding the HBV parameters
 \code{k2}     storage coefficient of soil lower zone [1/d]
 \code{maxbas} Length of (triangular) unit hydrograph [timesteps]. See details.
 \code{etpmean=5} mean evaporation [mm/d]
-\code{tmean=10} mean temperatures [Â°C]
+\code{tmean=10} mean temperatures [ÂC]
 
 \code{n} (real) number of storages in linear storage cascade. Overrides pars["maxbas"], overridden by \code{unithg}.
 \code{k} decay constant for linear storage cascade. Overrides pars["maxbas"], overridden by \code{unithg}.
@@ -52,21 +52,25 @@ named vector holding the HBV state variables for initialisation
 	vector holding rainfall in equidistant timesteps of \code{delta_t} in mm
 }
 
-\item{delta_t}{
-length of timesteps in \code{prec} in days. 
+\item{temp = pars["tmean"]}{
+	vector holding temperature in equidistant timesteps of \code{delta_t} in °C
 }
 
-\item{unithg}{vector of dimensionless unit hydrograph (should sum up to 1). Overrides \code{pars[c("maxbas","n","k")]}.}
+\item{delta_t=1}{
+length of timesteps in \code{prec} in days
+}
 
-\item{max_pre_runs}{maximum number of pre-run iterations}
+\item{unithg=NULL} vector of dimensionless unit hydrograph (should sum up to 1). Overrides \code{pars[c("maxbas","n","k")]}.
 
-\item{storage_tolerance}{While any of the storages has changed by more than this values, the pre-run phase is repeated}
+\item{max_pre_runs=20} maximum number of pre-run iterations
 
-\item{prerun_length}{number of timesteps from \code{prec} to use for pre-run phase (typically a year)}
+\item{storage_tolerance=0.1} While any of the storages has changed by more than this values, the pre-run phase is repeated
 
-\item{verbose}{additional text output during pre-run iterations}
+\item{prerun_length=365*24*60/5} number of timesteps from \code{prec} to use for pre-run phase (typically a year)
 
-\item{...}{additional parameters passed to \code{hbv}}
+\item{verbose=TRUE} additional text output during pre-run iterations
+
+\item{...} additional parameters passed to \code{hbv}
 
 }
 
@@ -83,12 +87,12 @@ The function returns a list \code{list(q, snow, sm, suz, slz)} with
   \item{snow }{(scalar) snow storage at end of run [mm]}
   \item{sm }{(scalar)soil moisture storage at end of run [mm]}
   \item{suz }{(scalar)soil upper zone storage at end of run [mm]}
-  \item{slz}{(scalar)soil lower zone storage at end of run [mm]}
+  \item{slz} {(scalar)soil lower zone storage at end of run [mm]}
     
 }
 \references{
   BergstrÃ¶m, S. (1976) 
-  Development and application of a conceptual runoff model for Scandinavian catchments. \emph{SMHI Reports RHO}, No. 7, NorrkÃ¶ping.
+  Development and application of a conceptual runoff model for Scandinavian catchments. \emph{SMHI Reports RHO}, No. 7, Norrköping.
   
   Heistermann, M. & Kneis, D. (2011)
   Benchmarking quantitative precipitation estimation by conceptual rainfall-runoff modeling, \emph{Water Resour. Res.,}
@@ -101,17 +105,20 @@ Maik Heistermann, David Kneis, Till Francke
 - still in development, use with care, all comments welcome -
 }
 
+
+\seealso{
+ \code{\link{none}}
+}
+
 \examples{
 data(huagrahuma)
 prec.day <- aggregate(huagrahuma$inputs$P, 
       by=strftime(index(huagrahuma$inputs$P), "\%d.\%m.\%Y"))
 
 #use standard parameters and initialization
-#ToDo: get it running...
 hbv(pars=0, init=0, prec = prec.day , delta_t=1)
  
 }
 
 \keyword{ ~modelling }
 \keyword{ utilities }
-

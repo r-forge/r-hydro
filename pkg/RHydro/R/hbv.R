@@ -1,12 +1,12 @@
 # Wrapper for the external hbv in Fortran (Flib.f03)
-hbv = function (pars, init, prec, delta_t=1, unithg=NULL) {
+hbv = function (pars, init=NULL, prec, temp=NULL, delta_t=1, unithg=NULL) {
   # Checks
   if (any(is.na(prec))) { # stop("NA not allowed in input vector.")  
     return(rep(NA,length(prec)))
   } else {
   
   #for storages, use these default values if not specified from outside
-    if (length(init)==0) init=0
+    if (is.null(init) | (length(init)==0)) init=0
     if (is.na(init['snow'])) init['snow']=0
     if (is.na(init['sm']))   init['sm']  =200
     if (is.na(init['suz']))  init['suz'] =0
@@ -17,7 +17,7 @@ hbv = function (pars, init, prec, delta_t=1, unithg=NULL) {
     if (is.na(pars['beta']))  pars['beta'] =0.2
     if (is.na(pars['fc']))  pars['fc'] =200
     if (is.na(pars['etpmean']))  pars['etpmean'] =5
-    if (is.na(pars['tmean']))  pars['tmean'] =10
+    if (is.na(pars['tmean']))  pars['tmean'] =10.
     if (is.na(pars['cfmax']))  pars['cfmax'] =2.4
     if (is.na(pars['tt']))  pars['tt'] =0
 
@@ -25,10 +25,12 @@ hbv = function (pars, init, prec, delta_t=1, unithg=NULL) {
     if (is.na(pars['k_perc']))  pars['k_perc'] =0.1
     if (is.na(pars['luz']))  pars['luz'] =0.1
     if (is.na(pars['minsm']))  pars['minsm'] =0.1
+		pars['minsm']= min(pars['minsm'], pars['fc'])  #residual water content must be below field capacity
     if (is.na(pars['k0']))  pars['k0'] =0.1
     if (is.na(pars['k1']))  pars['k1'] =0.1
     if (is.na(pars['k2']))  pars['k2'] =0.1
     
+    if (is.null(temp))  temp = rep(pars['tmean'],length(prec))
  
     if (!is.null(unithg))  #custom specifivcation of unit hydrograph 
     {
@@ -50,7 +52,7 @@ hbv = function (pars, init, prec, delta_t=1, unithg=NULL) {
     # Call the fortran subroutine
     out= .Fortran("hbv",    
       p         = as.double(prec),
-      t         = as.double(rep(10.,length(prec))),
+      t         = as.double(temp),
       vect_len  = as.integer(length(prec)),
       snow      = as.double(init['snow']),
       sm        = as.double(init['sm']),

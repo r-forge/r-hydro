@@ -1,8 +1,8 @@
 Package: RHydro
 Type: Package
 Title: Classes for hydrological modelling and analysis, similar to ArcHydro
-Version: 2011-11
-Date: 2011-11-08
+Version: 2011-11.1
+Date: 2012-11-06
 Author: Dominik Reusser, Wouter Buytaert, Claudia Vitolo
 Maintainer: Dominik Reusser <dreusser@pik-potsdam.de>, Wouter Buytaert <w.buytaert@imperial.ac.uk>, Claudia Vitolo <c.vitolo@imperial.ac.uk>
 Depends: R (>= 2.14.0), methods, xts, sp, graphics, stats, lhs, deSolve, XML, qualV
