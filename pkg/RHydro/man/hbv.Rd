@@ -6,7 +6,7 @@
 hbv - simulation using hydrological model HBV
 }
 \description{
-\code{hbv} simulates discharge from a given rainfall time series using a simple 0-D version of the hydrological model HBV (Bergström,) as implemented in Heistermann & Kneis (2011) with simple routing using custom, triangular hydrograph or linear storage cascade. \code{hbv_prerun} applies \code{hbv} while repeating a pre-run phase ("warm up") as long as any of the storages change by more than \code{storage_tolerance}
+\code{hbv} simulates discharge from a given rainfall time series using a simple 0-D version of the hydrological model HBV (Bergström, 1976) as implemented in Heistermann & Kneis (2011) with simple routing using custom, triangular hydrograph or linear storage cascade. \code{hbv_prerun} applies \code{hbv} while repeating a pre-run phase ("warm up") as long as any of the storages change by more than \code{storage_tolerance}
 }
 \usage{
 hbv(pars, init=NULL, prec, temp=NULL, delta_t=1, unithg=NULL)
@@ -100,7 +100,7 @@ The function returns a list \code{list(q, snow, sm, suz, slz)} with
 Maik Heistermann, David Kneis, Till Francke
 }
 \note{
-- still in development, use with care, all comments welcome -
+These functions are still in development, use with care, all comments welcome!
 }
 
 \examples{
@@ -113,5 +113,5 @@ hbv(pars=0, init=0, prec = prec.day , delta_t=1)
  
 }
 
-\keyword{ ~modelling }
+\keyword{ modelling }
 \keyword{ utilities }
