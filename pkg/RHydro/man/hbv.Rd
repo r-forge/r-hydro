@@ -1,9 +1,7 @@
-﻿\name{hbv}
+\name{hbv}
+\encoding{UTF-8}
 \alias{hbv}
 \alias{hbv.prerun}
-\Rdversion{1.1}
-\encoding{utf8}
-
 \title{
 hbv - simulation using hydrological model HBV
 }
@@ -52,23 +50,23 @@ named vector holding the HBV state variables for initialisation
 	vector holding rainfall in equidistant timesteps of \code{delta_t} in mm
 }
 
-\item{temp = pars["tmean"]}{
+\item{temp}{
 	vector holding temperature in equidistant timesteps of \code{delta_t} in °C
 }
 
-\item{delta_t=1}{
+\item{delta_t}{
 length of timesteps in \code{prec} in days
 }
 
-\item{unithg=NULL}{ vector of dimensionless unit hydrograph (should sum up to 1). Overrides \code{pars[c("maxbas","n","k")]}.}
+\item{unithg}{ vector of dimensionless unit hydrograph (should sum up to 1). Overrides \code{pars[c("maxbas","n","k")]}.}
 
-\item{max_pre_runs=20}{maximum number of pre-run iterations}
+\item{max_pre_runs}{maximum number of pre-run iterations}
 
-\item{storage_tolerance=0.1}{While any of the storages has changed by more than this values, the pre-run phase is repeated}
+\item{storage_tolerance}{While any of the storages has changed by more than this values, the pre-run phase is repeated}
 
-\item{prerun_length=365*24*60/5} number of timesteps from \code{prec} to use for pre-run phase (typically a year)
-
-\item{verbose=TRUE}{additional text output during pre-run iterations}
+\item{prerun_length}{number of timesteps from \code{prec} to use for pre-run phase (typically a year)
+}
+\item{verbose}{additional text output during pre-run iterations}
 
 \item{...}{additional parameters passed to \code{hbv}}
 
@@ -103,11 +101,6 @@ Maik Heistermann, David Kneis, Till Francke
 }
 \note{
 - still in development, use with care, all comments welcome -
-}
-
-
-\seealso{
- \code{\link{none}}
 }
 
 \examples{

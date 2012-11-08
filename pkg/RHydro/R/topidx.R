@@ -18,7 +18,8 @@ topidx <- function(DEM, res, river=NA) {
   ## calling the function
 
   result <- .C("topidx",
-               PACKAGE = "topmodel",
+               #PACKAGE = "topmodel", # EJP: topmodel heritage...
+               PACKAGE = "RHydro",
                as.double(DEM),
                as.integer(river),
                as.integer(my.nrow),
