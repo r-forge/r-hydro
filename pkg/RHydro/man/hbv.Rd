@@ -19,31 +19,34 @@ hbv.prerun(init=NULL, prec, max_pre_runs=20, storage_tolerance=0.1, prerun_lengt
 
   \item{pars}{
 named vector holding the HBV parameters
-\code{cfmax=2.4}  degree day factor for snow melt  [mm/°C/d]
-\code{tt=0}    temperature threshold below which precipitation falls as snow [°C]
-\code{fc=200}     field capacity [mm] 
-\code{minsm}   minimum soil moisture for storage sm [mm]
-\code{beta}    parameter to control the fraction of rain and snow melt partitioned for groundwater recharge [-]
-\code{lp}     fraction of soil moisture-field capacity-ratio above which actual evapotranspiration equals potential evapotranspiration [-]
-\code{corr=1}   correction factor for potential evapotranspiration [-]
-\code{k_perc} percolation coefficient [1/d]
-\code{k0}     fast storage coefficient of soil upper zone [1/d]
-\code{luz}    threshold above which soil upper zone storage empties at rate computed by storage coefficient K0 [mm]
-\code{k1}     slow storage coefficient of soil upper zone [1/d]
-\code{k2}     storage coefficient of soil lower zone [1/d]
-\code{maxbas} Length of (triangular) unit hydrograph [timesteps]. See details.
-\code{etpmean=5} mean evaporation [mm/d]
-\code{tmean=10} mean temperatures [°C]
-
-\code{n} (real) number of storages in linear storage cascade. Overrides pars["maxbas"], overridden by \code{unithg}.
-\code{k} decay constant for linear storage cascade. Overrides pars["maxbas"], overridden by \code{unithg}.
+\describe{
+\item{\code{cfmax=2.4}}{degree day factor for snow melt  [mm/°C/d]}
+\item{\code{tt=0}}{  temperature threshold below which precipitation falls as snow [°C]}
+\item{\code{fc=200}}{field capacity [mm] }
+\item{\code{minsm}}{minimum soil moisture for storage sm [mm]}
+\item{\code{beta}}{parameter to control the fraction of rain and snow melt partitioned for groundwater recharge [-]}
+\item{\code{lp}}{fraction of soil moisture-field capacity-ratio above which actual evapotranspiration equals potential evapotranspiration [-]}
+\item{\code{corr=1}}{correction factor for potential evapotranspiration [-]}
+\item{\code{k_perc}}{percolation coefficient [1/d]}
+\item{\code{k0}}{fast storage coefficient of soil upper zone [1/d]}
+\item{\code{luz}}{threshold above which soil upper zone storage empties at rate computed by storage coefficient K0 [mm]}
+\item{\code{k1}}{slow storage coefficient of soil upper zone [1/d]}
+\item{\code{k2}}{storage coefficient of soil lower zone [1/d]}
+\item{\code{maxbas}}{Length of (triangular) unit hydrograph [timesteps]. See details.}
+\item{\code{etpmean=5}}{mean evaporation [mm/d]}
+\item{\code{tmean=10}}{mean temperatures [°C]}
+\item{\code{n}}{(real) number of storages in linear storage cascade. Overrides pars["maxbas"], overridden by \code{unithg}.}
+\item{\code{k}}{decay constant for linear storage cascade. Overrides pars["maxbas"], overridden by \code{unithg}.}
+}
 }
   \item{init}{
 named vector holding the HBV state variables for initialisation
-\code{'snow'=0} snow storage [mm]
-\code{'sm'=200} soil moisture storage [mm]
-\code{'suz'=0}  soil upper zone storage [mm]
-\code{'slz'=0}  soil lower zone storage [mm]
+\describe{
+\item{\code{'snow'=0}}{snow storage [mm]}
+\item{\code{'sm'=200}}{soil moisture storage [mm]}
+\item{\code{'suz'=0}}{soil upper zone storage [mm]}
+\item{\code{'slz'=0}}{soil lower zone storage [mm]}
+}
 }
  
 \item{prec}{
@@ -81,11 +84,13 @@ If \code{unithg} is specified, \code{pars[c("maxbas","n","k")]} are ignored. If 
 The function returns a list \code{list(q, snow, sm, suz, slz)} with
 %%  ~Describe the value returned
 %%  If it is a LIST, use
+\describe{
   \item{q}{(vector) modelled discharge [mm]}
   \item{snow}{(scalar) snow storage at end of run [mm]}
   \item{sm}{(scalar)soil moisture storage at end of run [mm]}
   \item{suz}{(scalar)soil upper zone storage at end of run [mm]}
   \item{slz}{(scalar)soil lower zone storage at end of run [mm]}
+}
     
 }
 \references{
