@@ -37,7 +37,7 @@ The 4 catchment descriptors are:
 \author{Claudia Vitolo, Imperial College London; Till Francke, University of Potsdam}
 
 \seealso{
- \code{\link{runoff_coeff}}, \code{\link{fdc_slope}, \code{\link{sel}},code{\link{bfi}}
+ \code{\link{runoff_coeff}}, \code{\link{fdc_slope}}, \code{\link{sel}},code{\link{bfi}}
 }
 
 \examples{
