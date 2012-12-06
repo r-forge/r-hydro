@@ -35,18 +35,35 @@ void topidx(double *inputdem,
   rivermap = (int **) R_alloc(*nrow, sizeof(int *));
 
   for(i=0; i<*nrow; i++){
+    dem[i]   = (double *) R_alloc(*ncol, sizeof(double));
+    atb[i]   = (double *) R_alloc(*ncol, sizeof(double));
+    area[i]  = (double *) R_alloc(*ncol, sizeof(double));
     slope[i] = (double *) R_alloc(*ncol, sizeof(double));
-    }
+    rivermap[i] = (int *) R_alloc(*ncol, sizeof(int));
+  }
+
+  /* experiment to reuse input vectors instead of copying.
+   * Does generate errors, so disabled */
 
   /* connect matrix pointers to in- and output arrays */
   /* Note: R fills matrices per column, so first index is row,
      second is column */
 
-  for(i=0; i<*nrow; i++){
+/*  for(i = 0; i < *nrow; i++){
     dem[i]   = &inputdem[*ncol * i];
     atb[i]   = &output[*ncol * i];
     area[i]  = &output[(*ncol * i) + (*ncol * *nrow)];
     rivermap[i] = &inputriver[*ncol * i];
+  } */
+
+
+  /* copy input to dem (R fills matrices per column) */
+
+  for(j=0; j< *ncol; j++){
+    for(i=0; i< *nrow; i++){
+      dem[i][j] = inputdem[i+(*nrow)*j];
+      rivermap[i][j] = inputriver[i+(*nrow)*j];
+    }
   }
 
   /* initialisation */
@@ -246,8 +263,21 @@ void topidx(double *inputdem,
       }
     }
   }
+
+  /*  Rprintf("\nNumber of sinks or boundaries: %i\n",nsink); */
+
+  /* format output */
+
+  for(j=0; j < *ncol; j++){
+    for(i=0; i < *nrow; i++){
+      if(atb[i][j] == exclude) area[i][j] = exclude;
+      output[i + (*nrow * j)] = atb[i][j];
+      output[*nrow * *ncol + i + (*nrow * j)] = area[i][j];
+    }
+  }
   return;
 }
+
 
 
 

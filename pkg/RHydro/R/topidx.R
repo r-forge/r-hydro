@@ -1,41 +1,44 @@
-topidx <- function(DEM, res, river=NA) {
-
-  ## data preparation and checking
+topidx <- function(DEM, river=NA) {
   
-  DEM <- as(DEM, "matrix")
-  if(min(as.vector(DEM[!is.na(DEM)])) < -9000)
-    stop("DEM contains unrealistic values (< -9000)")
-  DEM[is.na(DEM)] <- -9999
+  stopifnot(is(DEM, "SpatialGridDataFrame"))
 
-  my.nrow <- dim(DEM)[1]
-  my.ncol <- dim(DEM)[2]
+  ## TODO: check that we have equidistant projection
+
+  ## check resolution
+  stopifnot(DEM@grid@cellsize[1] == DEM@grid@cellsize[2])
+
+  ## check layers
+
+  if(ncol(DEM@data) > 1) stop("DEM contains too many layers")
+  
+  ## check unrealistic values
+  if(min(DEM@data < -9000)) stop("DEM contains unrealistic values (< -9000)")
+  DEM@data[is.na(DEM@data)] <- -9999
 
   if(!is.na(river)) {
     river <- as(river, "matrix")
     if(min(river) < 0) stop("Error: the object 'river' should only contain positive values")
-  } else river = rep(0, my.nrow * my.ncol)
+  } else river = rep(0, length(DEM))
   
   ## calling the function
 
   result <- .C("topidx",
-               #PACKAGE = "topmodel", # EJP: topmodel heritage...
                PACKAGE = "RHydro",
-               as.double(DEM),
+               as.double(as.matrix(DEM)),
                as.integer(river),
-               as.integer(my.nrow),
-               as.integer(my.ncol),
-               as.double(res),
-               as.double(res),
+               as.integer(DEM@grid@cells.dim[1]),
+               as.integer(DEM@grid@cells.dim[2]),
+               as.double(DEM@grid@cellsize[1]),
+               as.double(DEM@grid@cellsize[2]),
                result = double(length(DEM)*2))$result
 
   ## formatting the results
 
-  atb  <- matrix(result[1:(my.nrow*my.ncol)],nrow=my.nrow)
-  area <- matrix(result[(my.nrow*my.ncol+1):(my.nrow*my.ncol*2)],nrow=my.nrow)
-
-  atb[atb < -9000] <- NA
-  area[area < -9000] <- NA
-
-  return(list(atb = atb,area = area))
+  result[result < -9000] <- NA
+  out <- DEM
+  out@data <- data.frame(DEM = DEM@data,
+                         atb = result[1:length(DEM)],
+                         area = result[(length(DEM) + 1):length(result)])
+  return(out)
 
 }

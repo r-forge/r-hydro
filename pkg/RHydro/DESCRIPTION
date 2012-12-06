@@ -1,6 +1,6 @@
 Package: RHydro
 Type: Package
-Title: Classes for hydrological modelling and analysis, similar to ArcHydro
+Title: Classes and methods for hydrological modelling and analysis
 Version: 2011-11.2
 Date: 2012-11-08
 Author: Dominik Reusser, Wouter Buytaert, Claudia Vitolo
