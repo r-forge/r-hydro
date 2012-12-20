@@ -19,7 +19,9 @@ export(fusesma.sim,
 ##       "$.HydroRun",
 	long.wave.radiation.balance,
         sat.vap.pres,
-      hbv, abc, hbv.prerun
+      hbv, abc, hbv.prerun,
+      runoff_coeff, time_of_conc, c_smooth, fdc_slope, sel, bfi,
+      hpc, q10, rising_limb_density, fft_fit, filter_ratio
 	)
 
 exportClasses(
