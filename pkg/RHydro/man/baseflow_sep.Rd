@@ -32,7 +32,7 @@ method-specific paramters, see details.
 
 \code{method="constant_slope"} separates base flow by drawing a line with constant slope from the minima of the hydrograph to the next intersection with it. Dingman (2002) recommends for the parameter \code{c_slope} a value depending on catchment area A (A < 20 mi²): c_slope = 0.05 ft³/s * A. You do the math, imperial units suck.
 
-\code{method="RLSWM"} re-scaled LOWESS-smoothed window minima. Determines the minima in a moving window of \code{window_size} timesteps and smoothes them using LOWESS with parameter \code{f_lowess}. If at any timestep baseflow is larger than the runoff, the entire baseflow-series is shrunk linearly.
+\code{method="RLSWM"} re-scaled LOWESS-smoothed window minima. Determines the minima in a moving window of \code{window_size} timesteps and smoothes them using \code{\link{lowess}} with parameter \code{f_lowess}. If at any timestep baseflow is larger than the runoff, the entire baseflow-series is shrunk linearly.
 }
 
 
@@ -58,9 +58,14 @@ Till Francke
 
 
 \seealso{
- code{\link{bfi}}
+ \code{\link{bfi}}
 }
 
 \examples{
+rainfall = fuse.DATA[,"P"]
+runoff = fuse.DATA[,"Q"]
 
+bf = baseflow_sep(runoff, method="RLSWM", parms=c(window_size=50, f_lowess=0.2))
+plot(runoff, type="l")
+lines(bf, col="red")
 }

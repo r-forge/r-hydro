@@ -54,9 +54,7 @@ fdc <- function (x,
 }
 
 #slope of flow duration curve for given quantiles
-fdc_slope <- function (runoff,
-                       lQ.thr=0.66,
-                       hQ.thr=0.33, ...) {
+fdc_slope <- function (runoff, lQ.thr=0.66, hQ.thr=0.33) {
   t= fdc(x=runoff, lQ.thr=lQ.thr, hQ.thr=hQ.thr)
   return(as.numeric((log(t$h)-log(t$l))/(lQ.thr-hQ.thr))) #as.numeric to strip the name-attribute
 }
@@ -215,6 +213,7 @@ fft_fit <- function (runoff, rainfall, doplot=FALSE) {
     
     lines(resampled$x,predict(o_p), col="red")
     lines(resampled$x,predict(o_q), col="blue")
+    legend("bottomleft",legend=c("rain","fit(rain)","runoff","fit(runoff)"), lty=1, col=c("black","red","grey","blue"))
   }
   return(cbind(p=c(slopes_p=slope(o_p)$x[,"Est."], breakp=o_p$psi[,"Est."]),
                q=c(slopes_p=slope(o_q)$x[,"Est."], breakp=o_q$psi[,"Est."])))

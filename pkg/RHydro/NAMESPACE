@@ -21,7 +21,7 @@ export(fusesma.sim,
         sat.vap.pres,
       hbv, abc, hbv.prerun,
       runoff_coeff, time_of_conc, c_smooth, fdc_slope, sel, bfi,
-      hpc, q10, rising_limb_density, fft_fit, filter_ratio
+      hpc, q10, rising_limb_density, fft_fit, filter_ratio, baseflow_sep
 	)
 
 exportClasses(
