@@ -8,7 +8,7 @@ Baseflow separation
 Various baseflow separation methods
 }
 \usage{
-baseflow_sep(runoff, method=c("DFM", "constant_slope", "RLSWM"), parms=c(c=0.925, c_slope=diff(range(runoff))/length(runoff)/2, window_size=10, f_lowess=0.1))
+baseflow_sep(runoff, method="DFM", parms=c(c=0.925, c_slope=diff(range(runoff))/length(runoff)/2, window_size=10, f_lowess=0.1))
 }
 
 
@@ -28,7 +28,7 @@ method-specific paramters, see details.
 }
 
 \details{
-\code{method="DFM"} selects baseflow separation using a single-pass digital filter method (e.g. Sawicz et al, 2011). It uses the parameter \code{c}.
+\code{method="DFM"} (default) selects baseflow separation using a single-pass digital filter method (e.g. Sawicz et al, 2011). It uses the parameter \code{c}.
 
 \code{method="constant_slope"} separates base flow by drawing a line with constant slope from the minima of the hydrograph to the next intersection with it. Dingman (2002) recommends for the parameter \code{c_slope} a value depending on catchment area A (A < 20 mi²): c_slope = 0.05 ft³/s * A. You do the math, imperial units suck.
 
@@ -47,7 +47,7 @@ vector holding base flow time series
 
 
 \references{
-Sawicz, K., Wagener, T., Sivapalan, M., Troch, P. a., & Carrillo, G. (2011). Catchment classification: empirical analysis of hydrologic similarity based on catchment function in the eastern USA. \emph{Hydrology and Earth System Sciences}, 15(9), 2895–2911. http://dx.doi.org/10.5194/hess-15-2895-2011  
+Sawicz, K., Wagener, T., Sivapalan, M., Troch, P. A., & Carrillo, G. (2011). Catchment classification: empirical analysis of hydrologic similarity based on catchment function in the eastern USA. \emph{Hydrology and Earth System Sciences}, 15(9), 2895–2911. http://dx.doi.org/10.5194/hess-15-2895-2011  
   
 Dingman, S. L. (2002). Physical hydrology. Upper Saddle River, NJ: Prentice Hall.  
 }

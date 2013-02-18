@@ -177,7 +177,7 @@ q10 <- function(runoff){ #Flow exceeded 10% of the time divided by Q50 (Clausen 
 fft_fit <- function (runoff, rainfall, doplot=FALSE) {
   #fit two-segmented linear regression into log-log-plot of FFT of time series
   
-  library(segmented)
+  if (!require(segmented)) stop("Function fft_fit needs package 'segmented', please install.")
   y_p=fft(scale(rainfall))
   y_q=fft(scale(runoff))
   
