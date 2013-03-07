@@ -154,7 +154,7 @@ CREATE TABLE  Sources (
  ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='The Sources table lists the original sources of the data, providing information sufficient to retrieve and reconstruct the data value from the original data files if necessary.';
 
 CREATE TABLE  Units (
-	UnitsID int(11)  NOT NULL COMMENT 'Unique integer identifier that identifies each unit.',
+	UnitsID int(11)  NOT NULL auto_increment  COMMENT 'Unique integer identifier that identifies each unit.',
 	UnitsName  varchar(255) NOT NULL COMMENT 'Full text name of the units.', 
 	UnitsType  varchar(255) NOT NULL COMMENT 'Text value that specifies the dimensions of the units.', 
 	UnitsAbbreviation varchar(255) NOT NULL COMMENT 'Text abbreviation for the units.',  

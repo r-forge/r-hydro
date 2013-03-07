@@ -6,16 +6,26 @@ addDataValues <- function(DataZoo=NULL, Date=NULL, Value=NULL, ValueAccuracy=rep
 	todo("UnitConversion")
 	if(is.null(DataZoo) & (is.null(Date) | is.null(Value))) stop("You must provide information either as DataZoo or Date and Value")
 	if(!is.null(Value)){
-		stopifnot(is.numeric(Value))
+		#stopifnot(is.numeric(Value))
 	}
 
 	if(is.null(Date)) Date <- index(DataZoo)
 	stopifnot("POSIXt" %in%  class(Date))
 	if(NROW(Date)==1){Date <- rep(Date, NROW(Value))}
+	Date.by.col <- NROW(Date)==NCOL(Value) 
+
 	if(is.null(Value)) Value <- coredata(DataZoo)
 	if(is.null(dim(Value))) dim(Value)  <-  c(NROW(Value),NCOL(Value) )
 
-	if(is.null(DataZoo)) DataZoo <- xts(Value, order.by=Date)
+	#Replace empty strings by NA and issue warning
+	emptyValue <- Value == ""
+	emptyValue[is.na(emptyValue)]  <- FALSE
+	if(any(emptyValue)){
+		Value[emptyValue] <- NA
+		warning("Some data values included empty strings. These are treated as NA.")
+	}
+
+	#if(is.null(DataZoo)) DataZoo <- xts(Value, order.by=Date)
 
 	
 
@@ -37,63 +47,117 @@ addDataValues <- function(DataZoo=NULL, Date=NULL, Value=NULL, ValueAccuracy=rep
 	#Date <- expandVar(Date, nrow=NROW(Value), ncol=NCOL(Value))
 	ValueAccuracy <- expandVar(ValueAccuracy, nrow=NROW(Value), ncol=NCOL(Value))
 
-	time.range <- range(Date)
+
 	
 	for(column in 1:NCOL(Value)){
 		cat("Importing column ", column, "out of", NCOL(Value), "\n")
-		#check for existing entries
-		database.entries  <- NULL
-		todo("add ValueAccuracy")
-		database.entries <- getDataValues(from=time.range[1], to=time.range[2], Site=unique(SiteID[,column]), Variable=unique(VariableID[,column]), Offset=unique(Offset[,column]), OffsetType=unique(OffsetTypeID[,column]), CensorCode=unique(CensorCodeNum[,column]), Qualifier=unique(QualifierID[,column]), Method=unique(MethodID[,column]), Source=unique(SourceID[,column]), Sample=unique(SampleID[,column]),QualityControlLevel=unique(QualityControlLevelID[,column]), show.deleted=TRUE)
-		if(NROW(database.entries)>0){
-			to.test <- merge(database.entries@values, DataZoo[,column])
-			names(to.test) <- c("inDatabase", "toImport")
-			if(any(different <- abs(to.test$inDatabase - to.test$toImport) > tolerance, na.rm=TRUE)){
-				if(interactive()){
-					plot.zoo(to.test$inDatabase, col="green", main=paste("Import of column", column), ylim=range(coredata(to.test)))
-					points(to.test$toImport[different], col="red")
-					legend("top", c("database records", "differing (to import)"), col=c("green", "red"), lty=c(1,NA), pch=c(NA,1))
-					cat("Data to import is not matching data in database for", sum(different, na.rm=TRUE), "values (See plot)\nWhat shall I do?\n  1) Dischard data to import and import remaining, missing data\n  2) Overwrite values in database with new values\n  0) Stop and let you modify the data to import before another attempt\nEnter a number (0-2) for your choise.\n")
-					choice <- "impossible"
-					attempts <- 0
-					if(!interactive()) {
-						choice=1
-						warning("non-interactive session. Not replacing data in database")
-					}
-					while(choice == "impossible"){
-						next.step <- readline("What is your choice? ")
-						choice <- switch(next.step, "1"=1,"2"=2,"0"=0, "impossible")
-						attempts <- attempts + 1
-						if(attempts == 10) choice <- 0
-					} 
-				} else {
-					 choice <- 1 #Don't change too much
-				}
+		#Determine all cases of unique IDs
+		metadata <- data.frame( Site=SiteID[,column], Variable=VariableID[,column], 
+				Offset=Offset[,column], OffsetType=OffsetTypeID[,column], 
+				CensorCode=CensorCodeNum[,column], Qualifier=QualifierID[,column],
+			       	Method=MethodID[,column], Source=SourceID[,column], 
+				Sample=SampleID[,column],QualityControlLevel=QualityControlLevelID[,column])
+		c.m <- unique(metadata) #cases.metadata
+		metadata$rownr <- 1:NROW(metadata)
+		#import unique cases of metadata seperately (e.g. Worldbank)
+		for(ca in 1:NROW(c.m)){ #each case
 
-				if(choice==0){
-					cat("returning a xts object with the data in the database and the data to be imported\n")
-					return(to.test)
-				} else if (choice==2){
-					to.update <- database.entries
-					database.entries@values[different] <- to.test$toImport[different]
-					updateDataValues(database.entries[different], paste("Replacement upon import on", date()))
-				}
-				#nothing to do for choice 1 because is.na(different) is false for differing values, so data will not be importet
+			#select corresponding data from DataZoo
+			row.sel <- sort(merge(c.m[ca,], metadata, all.y=FALSE)$rownr)
+			if(Date.by.col){
+			    import.dates.check <- Date[column]
+			    if(length(row.sel)>1){
+				cat("Conflicting data in import data set: multiple values with same metadata and time stamp\n")
+				cat("Dates affected: ", strftime(import.dates.check), "\n")
+				cat("ID of metadata:\n")
+				print(c.m[ca,])
+				stop()
 
-
-				
+			    }
+			} else {
+			    import.dates.check <- Date[row.sel]
 			}
-			the.missing <- is.na(different)
-			do.import <- !is.na(to.test$toImport) & the.missing
-			to.import <- to.test$toImport[do.import]
-		} else {
-			to.import <- Value[,column]
-			do.import <- rep(TRUE, NROW(Value))
+			idc.duplicates <- duplicated(import.dates.check)
+			if(any(idc.duplicates)){
+				cat("Conflicting data in import data set: multiple values with same metadata and time stamp\n")
+				cat("Dates affected: ", strftime(unique(import.dates.check[idc.duplicates])), "\n")
+				cat("ID of metadata:\n")
+				print(c.m[ca,])
+				stop()
+			}
+
+			#check for existing entries
+			database.entries  <- NULL
+			if(Date.by.col){
+				time.range <- range(Date[column])
+				order.date <- Date[column]
+
+			} else {
+				time.range <- range(Date)
+				order.date <- Date[row.sel]
+			}
+			database.entries <- getDataValues(from=time.range[1], to=time.range[2], Site=c.m$Site[ca], Variable=c.m$Variable[ca], Offset=c.m$Offset[ca], OffsetType=c.m$OffsetType[ca], CensorCode=c.m$CensorCodeNum[ca], Qualifier=c.m$Qualifier[ca], Method=c.m$Method[ca], Source=c.m$Source[ca], Sample=c.m$Sample[ca],QualityControlLevel=c.m$QualityControlLevel[ca], show.deleted=TRUE, all.ID=TRUE)
+			if(NROW(database.entries)>0){
+				to.test <- merge(database.entries@values, xts(Value[row.sel,column], order.by=order.date), join="right")
+				stopifnot(NROW(to.test) == NROW(row.sel))
+				names(to.test) <- c("inDatabase", "toImport")
+				if(any(different <- (abs(to.test$inDatabase - to.test$toImport) > tolerance), na.rm=TRUE)){
+					if(interactive()){
+						plot.zoo(to.test$inDatabase, col="green", main=paste("Import of column", column), ylim=range(coredata(to.test), na.rm=TRUE), type="b")
+						points(to.test$toImport[different], col="red")
+						legend("top", c("database records", "differing (to import)"), col=c("green", "red"), lty=c(1,NA), pch=c(NA,1))
+						cat("Data to import is not matching data in database for", sum(different, na.rm=TRUE), "values (See plot)\nWhat shall I do?\n  1) Dischard data to import and import remaining, missing data\n  2) Overwrite values in database with new values\n  0) Stop and let you modify the data to import before another attempt\nEnter a number (0-2) for your choise.\n")
+						choice <- "impossible"
+						attempts <- 0
+						if(!interactive()) {
+							choice=1
+							warning("non-interactive session. Not replacing data in database")
+						}
+						while(choice == "impossible"){
+							next.step <- readline("What is your choice? ")
+							choice <- switch(next.step, "1"=1,"2"=2,"0"=0, "impossible")
+							attempts <- attempts + 1
+							if(attempts == 10) choice <- 0
+						} 
+					} else {
+						 choice <- 1 #Don't change too much
+					}
+
+					if(choice==0){
+						cat("returning a xts object with the data in the database and the data to be imported\n")
+						return(to.test)
+					} else if (choice==2){
+						to.update <- database.entries
+						database.entries@values[different] <- to.test$toImport[different]
+						updateDataValues(database.entries[different], paste("Replacement upon import on", date()))
+					}
+					#nothing to do for choice 1 because is.na(different) is false for differing values, so data will not be importet
+
+
+					
+				}
+				the.missing <- is.na(different)
+				do.import <- !is.na(to.test$toImport) & the.missing
+				to.import <- to.test$toImport[do.import]
+			} else {
+				to.import <- Value[row.sel,column]
+				do.import <- rep(FALSE, NROW(Value))
+				do.import[row.sel] <- TRUE
+			}
+			if(any(do.import)){
+				#browser()
+				if(Date.by.col){
+					theDate <- rep(Date[column], sum(do.import))
+				} else {
+					theDate <- Date[do.import]
+				}
+				thetz <- as.numeric(strftime(theDate, "%z"))
+				todo("Correct functioning of tz")
+
+				IaddDataValues(getOption("odm.handler"),localDateTime=theDate, values=to.import, TZ=thetz, SiteID=SiteID[do.import,column], VariableID=VariableID[do.import,column], Offset=Offset[do.import,column], OffsetTypeID=OffsetTypeID[do.import,column], CensorCode=CensorCodeNum[do.import], QualifierID=QualifierID[do.import,column], MethodID=MethodID[do.import,column], SourceID=SourceID[do.import,column], SampleID=SampleID[do.import,column],QualityControlLevelID=QualityControlLevelID[do.import,column], valueAccuracy=ValueAccuracy[do.import,column])
+			}
+			#import data
 		}
-		if(any(do.import)){
-			IaddDataValues(getOption("odm.handler"),localDateTime=Date[do.import], values=to.import, TZ=strftime(Date, "%z")[do.import], SiteID=SiteID[do.import,column], VariableID=VariableID[do.import,column], Offset=Offset[do.import,column], OffsetTypeID=OffsetTypeID[do.import,column], CensorCode=CensorCodeNum[do.import], QualifierID=QualifierID[do.import,column], MethodID=MethodID[do.import,column], SourceID=SourceID[do.import,column], SampleID=SampleID[do.import,column],QualityControlLevelID=QualityControlLevelID[do.import,column], valueAccuracy=ValueAccuracy[do.import,column])
-		}
-		#import data
 	}
 
 

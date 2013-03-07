@@ -57,6 +57,53 @@ exampleCommands <- function(){
 
 }
 
+test_that("NA data does not produce an error", {
+	example(addDataValues)
+	example.data <- xts(c(5,6,NA), seq(as.POSIXct("2012-01-01", tz="UTC"), as.POSIXct("2013-01-01", tz="UTC"), length.out=3))
+	addDataValues(example.data, Site="test", Variable="test_dist",  Source="Madeup", QualityControlLevel="ok")
+	})
+
+
+test_that("multicolumn import works correctly with timeseries", {
+	example(addDataValues)
+	example.data <- xts(data.frame(a=1:3, b=4:6), seq(as.POSIXct("2012-01-01", tz="UTC"), as.POSIXct("2013-01-01", tz="UTC"), length.out=3))
+	
+	addVariable(Name="Distance", Unit="cm", ValueType="Field Observation", GeneralCategory="Instrumentation", Code="test_dist_2")
+	addVariable(Name="Distance", Unit="cm", ValueType="Field Observation", GeneralCategory="Instrumentation", Code="test_dist_3")
+
+	addDataValues(example.data, Site="test", Variable=c("test_dist_2", "test_dist_3"),  Source="Madeup", QualityControlLevel="ok")
+
+	inDB <- getDataMatrix(variables=c("test_dist_2", "test_dist_3"), select.time=index(example.data))
+	expect_that(inDB$data[1,1,], is_equivalent_to(coredata(example.data)[,1]))
+	expect_that(inDB$data[1,2,], is_equivalent_to(coredata(example.data)[,2]))
+	unlink("RODM.db")
+
+	})
+
+test_that("multicolumn import works correctly with multi variable, multi site data", {
+	example(addDataValues)
+	example.data <- data.frame(a=1:3, b=4:6)
+
+	
+	addVariable(Code="test_dist_2", Name="Distance", Unit="cm", ValueType="Field Observation", GeneralCategory="Instrumentation")
+	addVariable(Name="Distance", Unit="cm", ValueType="Field Observation", GeneralCategory="Instrumentation", Code="test_dist_3")
+
+	addSite(Code="test_2", Name="Virtual test site 2", x=-5, y=46, LatLongDatum="WGS84", Elevation=1500, State="Germany")
+	addSite(Code="test_3", Name="Virtual test site 3", x=-5, y=46, LatLongDatum="WGS84", Elevation=1500, State="Germany")
+
+	addDataValues(Date=as.POSIXct("2012-01-01", tz="UTC"), Value=example.data, Site=c("test","test_2","test_3"), Variable=c("test_dist_2", "test_dist_3"),  Source="Madeup", QualityControlLevel="ok")
+
+
+	#let's fail if too many entries in database
+	options(warn=2)
+	inDB <- getDataMatrix(variables=c("test_dist_2", "test_dist_3"), select.time=as.POSIXct("2012-01-01", tz="UTC"))
+	options(warn=1)
+	expect_that(inDB[,1], equals(example.data[,1]))
+	expect_that(inDB[,2], equals(example.data[,2]))
+	unlink("RODM.db")
+
+	})
+
 
 test_that("no duplicates are generated from multiple calls", {
 	#Setup
@@ -80,7 +127,34 @@ test_that("no duplicates are generated from multiple calls", {
 	expect_that(c.data, equals(NROW(getDataValues()@values)))
 		})
 
+test_that("Duplicates in dataset to import are detected", {
+	example(addDataValues)
+	example.data4 <- cbind(101:109)
+	addVariable(Name="Water depth", Unit="cm", ValueType="Field Observation", GeneralCategory="Instrumentation", Code="test_height")
 
+	date.data4 <- seq(as.POSIXct("2011-02-02", tz="UTC"), as.POSIXct("2012-01-01", tz="UTC"), length.out=3)
+	expect_error(addDataValues(Value=example.data4, Date=rep(date.data4, 3), Site="test", Variable=rep(c("test_height", "test_dist", "test_height"), each=3),  Source="Madeup", QualityControlLevel="ok"))
+
+
+		})
+
+test_that("Multicolumn-Data can be imported", {
+	example(addDataValues)
+	addVariable(Name="Water depth", Unit="cm", ValueType="Field Observation", GeneralCategory="Instrumentation", Code="test_height")
+	example.data2 <- xts(2001:2366, seq(as.POSIXct("2010-01-01", tz="UTC"), as.POSIXct("2011-01-01", tz="UTC"), length.out=366))
+	addDataValues(example.data2, Site="test", Variable="test_height",  Source="Madeup", QualityControlLevel="ok")
+
+	example.data3 <- xts(cbind(1:10,11:20), seq(as.POSIXct("2011-01-02", tz="UTC"), as.POSIXct("2012-01-01", tz="UTC"), length.out=10))
+	addDataValues(example.data3, Site="test", Variable=c("test_height", "test_dist"),  Source="Madeup", QualityControlLevel="ok")
+
+
+	#Worldbank example
+	example.data4 <- cbind(101:120)
+	date.data4 <- seq(as.POSIXct("2011-02-02", tz="UTC"), as.POSIXct("2012-01-01", tz="UTC"), length.out=10)
+	addDataValues(Value=example.data4, Date=c(date.data4, date.data4), Site="test", Variable=rep(c("test_height", "test_dist"), each=10),  Source="Madeup", QualityControlLevel="ok")
+
+
+		})
 test_that("Download of QUASHI vocabulary works", {
 	#Setup
 	try(getMetadata("Site"))

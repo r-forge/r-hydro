@@ -106,7 +106,7 @@ Use \code{\link{getMetadata}} to retrieve values.
 getDefaultDB()
 #add data
 addISOMetadata(TopicCategory="inlandWaters", Title="FAOStat land use", MetadataLink="faostat.fao.org/site/377/default.aspx")
-addSource(Organization="FAO", SourceDescription="FAO Stat Land Use", SourceLink="http://faostat.fao.org/site/377/default.aspx#ancor", ContactName="AskFAOSTAT: http://www.fao.org/askfao/agriculturalstatisticaldata/en/")
+addSource(Organization="FAO", SourceDescription="FAO Stat Land Use", SourceLink="http://faostat.fao.org/site/377/default.aspx#ancor", ContactName="AskFAOSTAT: http://www.fao.org/askfao/agriculturalstatisticaldata/en/", Metadata="FAOStat land use")
 getMetadata(table="Source", Description="Land Use")
 }
 \keyword{ utilities }

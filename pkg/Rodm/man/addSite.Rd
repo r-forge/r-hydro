@@ -7,7 +7,10 @@ Add detail information about the observation site
 Information about the spatial location at which data values have been collected.
 }
 \usage{
-addSite(Code, Name, x, y, Elevation, LatLongDatum, LocalProjection = NULL, isLocal = NULL, VerticalDatum = NULL, PositionAccuracy = 0, State = NULL, County = NULL, Comment = NULL)
+addSite(Code, Name, x, y, Elevation = rep(0, length(Code)),
+                 LatLongDatum, LocalProjection = NULL, isLocal = NULL,
+                 VerticalDatum = NULL, PositionAccuracy = rep(0,
+                 length(Code)), State = NULL, County = NULL, Comment = NULL)
 }
 \arguments{
   \item{Code}{

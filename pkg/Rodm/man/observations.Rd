@@ -3,8 +3,13 @@
 \docType{class}
 \alias{observations-class}
 \alias{observations}
+\alias{merge}
 \alias{==,observations,observations-method}
+\alias{merge,observations,observations-method}
 \alias{[,observations-method}
+\alias{show,observations-method}
+\alias{$,observations-method}
+\alias{plot,observations,ANY-method}
 \title{
 Observations class - contains data from odm-database
 }
@@ -25,7 +30,11 @@ Objects are generaly returned from \code{\link{getDataValues}} and can be modifi
 \section{Methods}{
   \describe{
     \item{==}{\code{signature(x = "observations", y = "observations")}: compares data sets }
+    \item{merge}{\code{signature(x = "observations", y = "observations")}: merging two data sets. See also \code{\link{merge.xts}} }
     \item{[}{\code{signature(object = "observations")}: allows acces to certain rows of the dataset }
+    \item{$}{\code{signature(object = "observations")}: allows acces to certain rows of the dataset }
+    \item{show}{\code{signature(x = "observations")}: ... }
+    \item{plot}{\code{signature(x = "observations", y="ANY")}: ... }
 }}
 
 \references{

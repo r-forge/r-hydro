@@ -13,9 +13,15 @@ getDataMatrix obtaines data for a certain variable for all sites.
 getDataVersions displays all the versions available in the database.
 }
 \usage{
-getDataValues(ID = NULL, from = NULL, to = NULL, Site = NULL, Variable = NULL, Offset = NULL, OffsetType = NULL, CensorCode = NULL, Qualifier = NULL, Method = NULL, Source = NULL, Sample = NULL, DerivedFromID = NULL, QualityControlLevel = NULL, VersionID = NULL, VersionDate = NULL, show.deleted=FALSE)
+getDataValues(ID = NULL, from = NULL, to = NULL, Site = NULL,
+                 Variable = NULL, Offset = NULL, OffsetType = NULL,
+                 CensorCode = NULL, Qualifier = NULL, Method = NULL,
+                 Source = NULL, Sample = NULL, DerivedFromID = NULL,
+                 QualityControlLevel = NULL, VersionID = NULL,
+                 VersionDate = NULL, show.deleted = FALSE, 
+		 all.ID = FALSE)
 
-getDataMatrix(variables, warn.missing = FALSE)
+getDataMatrix(variables, aggregate, select.time = "latest",  warn.missing = FALSE)
 
 getDataVersions()
 }
@@ -79,8 +85,17 @@ Include records that have been deleted (see details about version management)
   \item{variables}{
 name of the variables for which to retrieve a data matrix.
 }
+  \item{aggregate}{
+  aggregation function to aggregate multiple values in DataMatrix. Only used if select.time = NULL
+}
+  \item{select.time}{
+  POSIX time object: What point in time should be used to fill the DataMatrix? 
+}
   \item{warn.missing}{
 Boolean indicating if missing information should be reported.
+}
+  \item{all.ID}{
+Boolean: Can the function assume that all values are passed as ID. Reduces number of Database queries. Do not use normally, mainly for internal use.
 }
 }
 \details{
@@ -99,5 +114,21 @@ For information how to insert data into the database \code{\link{addDataValues}}
 }
 \examples{
 getDefaultDB()
+
+#Put data into the database
+example(addDataValues)
+
+# Get a list of available variables with ID's)
+getMetadata("Variable")$Name 
+
+# Get ID of variable of interest 
+var.id <- getID("Variable", "Distance") 
+
+# Get data
+data <- getDataValues(Variable="Distance", Site="test site") # returns data object of class 'observations' with 4 slots
+
+# Get data values:
+data@values #returns data object of class 'xts'
+
 }
 \keyword{ utilities }

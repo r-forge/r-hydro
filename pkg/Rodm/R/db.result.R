@@ -36,24 +36,67 @@ setMethod("plot", signature=(x="observations"),
 		plot.zoo(new.xts, ...)
 	  }
 )
+setMethod("summary", signature=(object="observations"),
+	  function(object){
+		  for(i in 1:NCOL(object@values)){
+			  print(t(object@attributes[i,]))
+			  print(summary(object@values[,i]))
+		  }
+	  }
+)
+
+setMethod("show", signature=(object="observations"),
+	  function(object){
+		  cat(sum(!is.na(object@values))," observations from database query\n")
+		  cat("Sites: ", paste(unique(object@attributes$site), collapse="; "), "\n")
+		  cat("Variables: ", paste(unique(substr(object@attributes$variable, 1,15)), collapse="; "), "\n\n")
+
+
+	  }
+)
+setMethod("$", signature=signature(x="observations"),
+		function(x, name){
+		att <- x@attributes
+		matches <- matrix(grepl(name,as.matrix(att)), ncol=NCOL(att))
+		sel <- which(rowSums(matches) > 0)
+		if(length(sel) != 1){
+			stop("No unique selection of a column according to attributes")
+		}
+		to.ret <- x[,sel]
+		browser()
+		return(to.ret)
+})
 setMethod("[", signature=signature(x="observations"),
 		function(x,i,j,...,drop=FALSE){
 			if(!missing(j)){
-				todo("Implement indexing with multiple entries for observations")
-				browser()
-				stop("Missing implementation")
+				if(NCOL(x@values)==1){
+					stop("Wrong dimensions")
+				}
+				if(missing(i)){
+					to.ret <- new("observations", values = x@values[,j],
+					       ids = x@ids[,j],
+					       derivedFrom = x@derivedFrom[,j],
+					       attributes = x@attributes[j,])
+		       		} else {
+					to.ret <- new("observations", values = x@values[i,j],
+					       ids = x@ids[i,j],
+					       derivedFrom = x@derivedFrom[i,j],
+					       attributes = x@attributes[j,])
+				}
+
+
 			}
 			if(NCOL(x@values)>1){
-				todo("Implement indexing for multiple cols")
-				#relatively easy for values, ids
-				#make sure correct attributes are returned
-				browser()
-				stop("Missing implementation")
-			}
-			to.ret <- new("observations", values = x@values[i],
-			       ids = x@ids[i],
-			       derivedFrom = x@derivedFrom[i],
-			       attributes = x@attributes)
+				to.ret <- new("observations", values = x@values[i,],
+				       ids = x@ids[i,],
+				       derivedFrom = x@derivedFrom[i,],
+				       attributes = x@attributes)
+			} else {
+				to.ret <- new("observations", values = x@values[i],
+				       ids = x@ids[i],
+				       derivedFrom = x@derivedFrom[i],
+				       attributes = x@attributes)
+	                }
 	                return(to.ret)
 		}
 )

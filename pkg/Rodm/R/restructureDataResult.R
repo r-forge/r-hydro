@@ -32,9 +32,39 @@ restructureDataResult <- function(to.ret, value.numeric=TRUE){
 
 
 				if(sum(sel) != length(unique(order.by[sel]))){
-					cat("Multiple entries with the same metadata. Can not restructure the data. A dataframe with the problematic metadata is returned\n")
-					browser()
-					return(id2name(metadata)[dataset,])
+					dup <- duplicated(to.ret[,-1])
+					if(any(dup)){
+						ids <- to.ret$valueid[sel]
+						sel[sel] <- !dup
+						if(sum(sel) != length(unique(order.by[sel]))){
+							cat("Multiple entries with the same metadata, but not duplicates (?). Resolve in browser.\n")
+							browser()
+						} else {
+							warning(paste("Some duplicated entries in database in the dataset with ids", paste(ids, collapse="; ") ))
+						}
+
+
+
+					} else {
+						dup <- duplicated(to.ret[,-c(1,2)])
+						if(any(dup)){
+							ids <- to.ret$valueid[sel]
+							sel[sel] <- !dup
+							if(sum(sel) != length(unique(order.by[sel]))){
+								cat("Multiple entries with the same metadata, but not duplicates (?). Part2. Resolve in browser.\n")
+								browser()
+							} else {
+								warning(paste("Entries in database with conflicting data with ids", paste(ids, collapse="; ") ))
+							}
+
+
+
+						} else {
+							cat("Multiple entries with the same metadata. Can not restructure the data. A dataframe with the problematic metadata is returned\n")
+							browser()
+							return(id2name(metadata)[dataset,])
+						}
+					}
 				}
 				if(dataset==1){
 					if(value.numeric){

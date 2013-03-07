@@ -9,12 +9,9 @@ have CUASHI add the term to the official vocabulary through their webpage:
 http://his.cuahsi.org/mastercvreg/
 }
 \usage{
-addUnits(ID, Name, Type, Abbreviation)
+addUnits(Name, Type, Abbreviation)
 }
 \arguments{
-  \item{ID}{
-Unique ID
-}
   \item{Name}{
 Name of the unit. e.g. square meter
 }
@@ -38,7 +35,7 @@ Dominik Reusser
 \examples{
 getDefaultDB()
 #add data
-addUnits(ID="dsm", Name="decisiemens per meter", Type="Electrical Conductivity", Abbreviation="dS/m")
+addUnits(Name="decisiemens per meter", Type="Electrical Conductivity", Abbreviation="dS/m")
 getMetadata("Units", Name="per meter")
 }
 \keyword{ utilities }

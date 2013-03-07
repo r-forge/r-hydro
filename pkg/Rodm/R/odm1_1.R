@@ -1,5 +1,6 @@
 setClass("odm1_1",
-	representation= representation(con = "DBIConnection")
+	representation= representation(con = "DBIConnection", checked = "logical"),
+	prototype = list(con=NULL, checked=FALSE)
 	)
 setClass("odm1_1Ver", contains="odm1_1"	)
 
@@ -7,7 +8,7 @@ setClass("odm1_1Ver", contains="odm1_1"	)
 setGeneric("IdbState", function(object) {standardGeneric("IdbState")})
 setGeneric("IgetSite", function(object, ID=NULL, Code=NULL, Name=NULL, x=NULL, y=NULL, Elevation=NULL, LatLongDatum=NULL, exact=FALSE ) { standardGeneric("IgetSite")}) 
 setGeneric("IgetUnits", function(object, ID=NULL, Name=NULL, Type=NULL, Abbreviation=NULL, exact=FALSE ) { standardGeneric("IgetUnits")}) 
-setGeneric("IaddUnits", function(object, ID, Name, Type, Abbreviation ) { standardGeneric("IaddUnits")}) 
+setGeneric("IaddUnits", function(object, Name, Type, Abbreviation ) { standardGeneric("IaddUnits")}) 
 setGeneric("IaddSpatialReference", function(object, ID, SRSName, SRSID, IsGeographic, Notes ) { standardGeneric("IaddSpatialReference")}) 
 setGeneric("IgetVariable", function(object, ID=NULL, Code=NULL, Name=NULL, Speciation=NULL, Unit=NULL, Medium=NULL,exact=FALSE, ...  ) { standardGeneric("IgetVariable")}) 
 setGeneric("IgetQualifier", function(object, ID=NULL, Code=NULL, Description=NULL, ...  ) { standardGeneric("IgetQualifier")}) 
@@ -55,6 +56,7 @@ setGeneric("IaddCV", function(object, table, term, definition){standardGeneric("
 setGeneric("IgetCV", function(object, table, term, definition, exact=FALSE){standardGeneric("IgetCV")})
 setGeneric("IaddSynonym", function(object, phrase, table, id){standardGeneric("IaddSynonym")})
 setGeneric("IgetSynonymID", function(object, phrase, table){standardGeneric("IgetSynonymID")})
+setGeneric("IgetSynonyms", function(object, phrase, table){standardGeneric("IgetSynonyms")})
 
 setGeneric("IgetNo", function(object, table) {standardGeneric("IgetNo")})
 
@@ -65,6 +67,7 @@ setGeneric("IgetNo", function(object, table) {standardGeneric("IgetNo")})
 
 setMethod("IgetCV", signature(object = "NULL"), h.m)
 setMethod("IgetSynonymID", signature(object = "NULL"), h.m)
+setMethod("IgetSynonyms", signature(object = "NULL"), h.m)
 setMethod("IdbState", signature(object = "NULL"), h.m)
 setMethod("IaddCV", signature(object = "NULL"), h.m)
 setMethod("IgetSite", signature(object = "NULL"), h.m)
@@ -101,6 +104,8 @@ setMethod("IaddSource", signature(object = "NULL"), h.m)
 setMethod("IaddISOMetadata", signature(object = "NULL"), h.m)
 
 check.version <- function(object, version){
+		if(getOption("odm.handler")@checked==TRUE) return()
+
 		if(mdbExistsTable(object@con, "ODMVersion")){
 			query = "SELECT * FROM ODMVersion"
 		        if(getOption("verbose.queries", default=FALSE)) print(query)
@@ -111,6 +116,7 @@ check.version <- function(object, version){
 			if(res[,1]!=version){
 				stop("Invalid Database version. Expected ",version,", obtained ",res[,1])
 			}
+
 		} else {
 			warning("Creating database structure")
 			run.sql.script(object@con, system.file("odm1_1_raw.sql", package="RObsDat"))
@@ -127,6 +133,9 @@ check.version <- function(object, version){
 		        if(getOption("verbose.queries", default=FALSE)) print(query)
 			dbGetQuery(object@con, query)
 		}
+		han <- getOption("odm.handler")
+		han@checked <- TRUE
+		options(odm.handler=han)
 }
  
 setMethod("IdbState", signature(object = "odm1_1"), 
@@ -733,14 +742,20 @@ setMethod("IaddDataValues",
 
 				#without Foreign Key
 				theOffset <- sv(Offset, rownum)
+				thevalue <- sv(values, rownum)
+				if(thevalue=="NULL") next # skip NA values from importing
 				thevalueAccuracy <- sv(valueAccuracy, rownum)
 				thelocalDateTime <- sv(localDateTime, rownum)
 				theTZ <- sv(TZ, rownum)
+				if(theTZ=="NULL"){
+					theTZ <- "+0"
+					warning("There was a TZ value of 'NULL', replaced by 'UTC'")
+				}
 				theDerivedFromID <- sv(DerivedFromID, rownum)
 
-				insert.query <- paste("INSERT INTO DataValues (DataValue, ValueAccuracy, LocalDateTime, UTCOffset, DateTimeUTC, SiteID, VariableID, OffsetValue, OffsetTypeID, CensorCode, QualifierID, MethodID, SourceID, SampleID, DerivedFromID, QualityControlLevelID) VALUES (", paste(values[rownum],
+				insert.query <- paste("INSERT INTO DataValues (DataValue, ValueAccuracy, LocalDateTime, UTCOffset, DateTimeUTC, SiteID, VariableID, OffsetValue, OffsetTypeID, CensorCode, QualifierID, MethodID, SourceID, SampleID, DerivedFromID, QualityControlLevelID) VALUES (", paste(thevalue,
 						thevalueAccuracy,
-						paste("'", strftime(thelocalDateTime, "%Y-%m-%d %H:%M:%S", tz=theTZ ), "'", sep=""),
+						paste("'", strftime(thelocalDateTime, "%Y-%m-%d %H:%M:%S", tz=as.character(theTZ) ), "'", sep=""),
 						theTZ , 
 						paste("'", strftime(thelocalDateTime, tz="GMT", ), "'", sep=""), 
 						theSiteID, theVariableID,
@@ -836,6 +851,7 @@ setMethod("IgetCV",
 	  function(object, table, term, definition, exact=FALSE){
 		  #check for valid tables
 		  stopifnot(table %in% CVtables())
+		        definition <- substr(definition, 1, 255)
 		  	where.object <- list(where.clause = "", the.and  = "")
 
 			where.object <- expand.where(where.object, term, "Term", exact=exact)
@@ -854,6 +870,7 @@ setMethod("IaddCV",
 	  function(object, table, term, definition){
 		  #check for valid tables
 		  stopifnot(table %in% CVtables())
+		        definition <- substr(definition, 1, 255)
 			query <- paste("INSERT INTO ",table,"CV (Term, Definition) Values (\"", term, "\",\"",definition,"\")"  , sep="")
 			res <- run.query(object, query )
 			return(res)
@@ -861,8 +878,8 @@ setMethod("IaddCV",
 )
 setMethod("IaddUnits",
 	  signature(object= "odm1_1"),
-	  function(object, ID, Name, Type, Abbreviation){
-			query <- paste("INSERT INTO Units (UnitsID, UnitsName, UnitsType, UnitsAbbreviation) Values (\"", ID, "\",\"",Name, "\",\"", Type ,"\",\"",Abbreviation,"\")"  , sep="")
+	  function(object, Name, Type, Abbreviation){
+			query <- paste("INSERT INTO Units (UnitsName, UnitsType, UnitsAbbreviation) Values (\"",Name, "\",\"", Type ,"\",\"",Abbreviation,"\")"  , sep="")
 			res <- run.query(object, query )
 			return(res)
 	  }
@@ -895,6 +912,18 @@ setMethod("IgetSynonymID",
 				return(NULL)
 			} else {
 				return(res[,1])
+			}
+
+	       })
+setMethod("IgetSynonyms",
+	       signature(object= "odm1_1"),
+	       function(object){
+		       query <- paste('SELECT * FROM Synonyms ')
+			res <- run.query(object, query)
+			if(NCOL(res)==0){
+				return(NULL)
+			} else {
+				return(res)
 			}
 
 	       })

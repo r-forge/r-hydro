@@ -5,7 +5,8 @@ addOffsetType,             getDataMatrix,
 addSite,                   getDataValues,       
 addSource,                 getDataVersions,     
 addSpatialReferences,      getID,               
-addSynonym,                getMetadata,         
+addSynonym, exportSynonyms, importSynonyms,
+getMetadata,         
 addUnits,                              
 addVariable,                                
 addQualityControlLevel,
@@ -15,15 +16,14 @@ CVtables, getDefaultDB )
 
 exportClasses("odm1_1", "odm1_1Ver", "observations")
 
+exportMethods(show, plot, merge)
+
 # Import all packages listed as Imports or Depends
 import(
   xts,
   zoo,
   DBI,
   vwr,
-  methods,
-  RColorBrewer,
-  maptools,
-  sp
+  methods
 )
 

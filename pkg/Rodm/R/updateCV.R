@@ -1,5 +1,6 @@
 updateCV <- function(){
 	stopifnot(require(SSOAP))
+	stopifnot(require(XML))
 	
 	def <- processWSDL("http://his.cuahsi.org/ODMCV_1_1/ODMCV_1_1.asmx?WSDL")
 
@@ -9,7 +10,7 @@ updateCV <- function(){
 	test <-     xmlToList(xmlParse(ans, asText = TRUE))
 	sapply(test$Records, function(x){
 				if(any(names(x)!="count")){
-					suppressWarnings(addUnits(ID=x$UnitsID, Name=x$UnitsName, Type=x$UnitsType, Abbreviation=x$UnitsAbbreviation))
+					suppressWarnings(addUnits(Name=x$UnitsName, Type=x$UnitsType, Abbreviation=x$UnitsAbbreviation))
 				}
 
 		})

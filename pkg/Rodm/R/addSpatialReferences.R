@@ -12,7 +12,7 @@ addSpatialReferences <- function(ID, SRSID, Name, IsGeographic, Notes){
 		#check existing
 		if(NROW(IgetSpatialReference(getOption("odm.handler"), ID=ID[i], SRSName=Name[i], SRSID=SRSID[i], IsGeographic=IsGeographic, Notes=Notes[i]))>0){
 			warning(paste("Skiping existing entry:", Name[i]))
-			return()
+			next
 		}
 		warning(paste("Extending SpatialReferences table which should not be necessary. Please propose new term to CUASHI at http://his.cuahsi.org/mastercvreg/", sep=""))
 		IaddSpatialReference(getOption("odm.handler"), ID=ID[i], SRSName=Name[i], SRSID=SRSID[i], IsGeographic=IsGeographic, Notes=Notes[i])

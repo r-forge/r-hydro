@@ -1,8 +1,42 @@
-addSite <- function(Code, Name, x, y, Elevation, LatLongDatum, LocalProjection=NULL, isLocal=NULL, VerticalDatum=NULL,PositionAccuracy=0, State=NULL, County=NULL, Comment=NULL){
+addSite <- function(Code, Name, x, y, Elevation=rep(0, length(Code)), LatLongDatum, LocalProjection=NULL, isLocal=NULL, VerticalDatum=NULL,PositionAccuracy=rep(0, length(Code)), State=NULL, County=NULL, Comment=NULL){
 	#mandatory fields: Code, Name, Lat, Long, LatLongDatum
 
 	#check from referencetables: SpatialReferences -> LatLongDatum, LocalProjection
 	stopifnot(length(LatLongDatum) == length(Code))
+	stopifnot(length(Name) == length(Code))
+	stopifnot(length(x) == length(Code))
+	stopifnot(length(y) == length(Code))
+	stopifnot(length(Elevation) == length(Code))
+	stopifnot(length(LatLongDatum) == length(Code))
+	stopifnot(length(PositionAccuracy) == length(Code))
+
+
+	if(!is.null(isLocal)){
+		stopifnot(length(isLocal) == length(Code))
+	}
+	if(!is.null(State)){
+		stopifnot(length(State) == length(Code))
+	}
+	if(!is.null(County)){
+		stopifnot(length(County) == length(Code))
+	}
+	if(!is.null(Comment)){
+		stopifnot(length(Comment) == length(Code))
+	}
+
+	#Check for existing entries
+	theUnexisting <- rep(TRUE, length(Code))
+	if(NROW(existing <- getMetadata("Site",Name=Name))>0){
+		warning(paste("Skiping existing Site(s):", paste(existing[,3], collapse="; "), "\n"))
+		theUnexisting <- !(Name %in% existing[,3])
+
+	}
+
+	if(!any(theUnexisting)){
+		return()
+	}
+
+
 	SpatialReferenceID <- getID("SpatialReference", LatLongDatum)
 
 
@@ -22,16 +56,11 @@ addSite <- function(Code, Name, x, y, Elevation, LatLongDatum, LocalProjection=N
 		VertDatID <- rep(getID("VerticalDatum", "Unknown"), length(Code))
 	}
 
-	if(NROW(existing <- getMetadata("Site",Name=Name))>0){
-		warning(paste("Skiping existing Site:", existing[,3], "\n"))
-		print("Unimplemented. Nothing importet")
-		return()
-	}
 	#transform coordinates
 	#depending on value of isLocal
 	todo("ToDo automatic coordinate conversion")
 
-	IaddSite(getOption("odm.handler"),Code = Code, Name =Name, Latitude=x, Longitude=y, Elevation=Elevation, LatLongDatum=SpatialReferenceID, LocalProjection=SpatialReferenceID2, VerticalDatum=VertDatID,PosAccuracy=PositionAccuracy, State=State, County=County, Comments=Comment)
+	IaddSite(getOption("odm.handler"),Code = Code[theUnexisting], Name =Name[theUnexisting], Latitude=x[theUnexisting], Longitude=y[theUnexisting], Elevation=Elevation[theUnexisting], LatLongDatum=SpatialReferenceID[theUnexisting], LocalProjection=SpatialReferenceID2[theUnexisting], VerticalDatum=VertDatID[theUnexisting],PosAccuracy=PositionAccuracy[theUnexisting], State=State[theUnexisting], County=County[theUnexisting], Comments=Comment[theUnexisting])
 
 
 }

@@ -39,6 +39,8 @@ Additional columns to filter entries.
 }
 \details{
 The matching algorithm of getID first attempts to find exact matches in one of the column. If no result is obtained, partial matches and similar entries based on the Levenstein algorithm are searched.
+
+ToDo explain use of synonyms
 }
 \value{
 getID returns a vector of the IDs. getMetadata returns a dataframe representing the metadata table

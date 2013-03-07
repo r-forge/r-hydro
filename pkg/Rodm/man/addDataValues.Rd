@@ -140,7 +140,7 @@ example.data[200] <- 40
 addDataValues(example.data[1:100], Site="test", Variable="test_dist",  Source="Madeup", QualityControlLevel="ok")
 #Avoid duplicates autmatically
 addDataValues(example.data, Site="test", Variable="test_dist",  Source="Madeup", QualityControlLevel="ok")
-inDB <- getDataValues(Site=getID("Site","test"))
+inDB <- getDataValues(Site="test")
 plot(inDB)
 
 #Version management

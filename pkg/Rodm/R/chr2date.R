@@ -1,4 +1,5 @@
 chr2date <- function(string, tz){
+	string <- as.character(string)
 	if(all(nchar(string) %in% c(10,19))){
 		result <- as.POSIXct(rep(NA, length(string)))
 		if(tz!="GMT") warning("Unsupported tz handling other than GMT in chr2date") 

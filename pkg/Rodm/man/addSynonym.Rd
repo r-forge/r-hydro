@@ -32,6 +32,9 @@ nothing returned
 Dominik Reusser
 }
 
+\seealso{
+ \code{\link{getID}}, \code{\link{exportSynonyms}}
+}
 
 \examples{
 #connect to standard database
