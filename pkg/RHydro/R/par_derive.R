@@ -49,7 +49,11 @@ par_derive <- function(smodl,mparam) {
    maxfree_2b <- (1-mparam$fprimqb) * maxfree_2
 
    # fraction of roots in the lower layer (-)
-   rtfrac2 <- 1 - mparam$rtfrac1
+   if (smodl$esoil == 61) {
+     rtfrac2 <- 1 - mparam$rtfrac1
+   }else{
+     rtfrac2 <- 0
+   }
 
    # mean of the power-transformed topographic index
    temp    <- mean_tipow(mparam$tishape, mparam$loglamb, mparam$qb_powr)

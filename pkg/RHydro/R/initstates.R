@@ -28,27 +28,27 @@ initstates <- function(smodl,mparam,dparam,fracstate0) {
    # UPPER LAYER*****************************************************************   
    if (smodl$arch1 == 21) {         # single state
        watr_1  <- mparam$maxwatr_1  * fracstate0
-       free_1  <- xmin
-       tens_1  <- watr_1 - free_1
+       free_1  <- dparam$maxfree_1  * fracstate0
+       tens_1  <- dparam$maxtens_1  * fracstate0
    }else{                           # upper layer broken up into multpiple storages
        free_1  <- dparam$maxfree_1  * fracstate0
        tens_1a <- dparam$maxtens_1a * fracstate0
        tens_1b <- dparam$maxtens_1b * fracstate0
-       tens_1  <- tens_1a - tens_1b
-       watr_1  <- free_1 + tens_1
+       tens_1  <- dparam$maxtens_1 * fracstate0
+       watr_1  <- mparam$maxwatr_1  * fracstate0
    }
 
    # LOWER LAYER******************************************************************    
    if (smodl$arch2 == 32) {          # tension reservoir plus two parallel tanks
      free_2a <- dparam$maxfree_2a * fracstate0
      free_2b <- dparam$maxfree_2b * fracstate0
-     free_2  <- free_2a + free_2b
+     free_2  <- dparam$maxfree_2  * fracstate0
      watr_2  <- mparam$maxwatr_2 * fracstate0
-     tens_2  <- watr_2 - free_2
+     tens_2  <- dparam$maxtens_2  * fracstate0
    }else{                            # single state
      watr_2  <- mparam$maxwatr_2 * fracstate0
-     free_2  <- xmin
-     tens_2  <- watr_2 - free_2
+     free_2  <- dparam$maxfree_2  * fracstate0
+     tens_2  <- dparam$maxtens_2  * fracstate0
    }
   
    return(c("tens_1a" = tens_1a,
