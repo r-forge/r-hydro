@@ -10,6 +10,7 @@
 \alias{show,observations-method}
 \alias{$,observations-method}
 \alias{plot,observations,ANY-method}
+\alias{plot,observations-method}
 \title{
 Observations class - contains data from odm-database
 }

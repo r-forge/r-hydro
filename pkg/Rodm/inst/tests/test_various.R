@@ -1,5 +1,7 @@
 context("various")
 #testPostgreSQL <- testMySQL <- TRUE
+#testPostgreSQL  <- FALSE
+#testMySQL  <- FALSE
 testPostgreSQL <- testMySQL <- FALSE
 
 cleanupMySQL <- function(){
@@ -65,6 +67,7 @@ test_that("NA data does not produce an error", {
 
 
 test_that("multicolumn import works correctly with timeseries", {
+	unlink("RODM.db")
 	example(addDataValues)
 	example.data <- xts(data.frame(a=1:3, b=4:6), seq(as.POSIXct("2012-01-01", tz="UTC"), as.POSIXct("2013-01-01", tz="UTC"), length.out=3))
 	
@@ -171,7 +174,7 @@ test_that("postgreSQL works", {
 		require("RObsDat")
 		require("RPostgreSQL")
 		m <- dbDriver("PostgreSQL")
-		con <- dbConnect(m, user="reusser", password="4nsp", dbname="obsdat_test")
+		con <- dbConnect(m, user="reusser", password="4nsp", dbname="obsdat_test", port="5433", host="localhost")
 		sqhandler <-  new("odm1_1Ver", con=con)
 		options(odm.handler=sqhandler)
 
@@ -207,6 +210,21 @@ test_that("MySQL works", {
 	} else {
 	expect_that(1, equals(1))
 	}
+		})
+test_that("CV table not working correctly with wrong arguments", {
+	#Setup
+	#oldwarn <- getOption("warn")
+	#options(warn=2)
+        expect_that(
+		getMetadata(table = "VariableName", EXACT = TRUE, ID = 0),
+		throws_error("Multiple datasets")
+		)
+	#must produce an error, not a warning
+	#options(warn=oldwarn)
+
+	#Confirmations
+	#expect_that(1, equals(1))
+	#expect_that(1:10, is_equivalent_to(1:10))
 		})
 
 test_that("", {

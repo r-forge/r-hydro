@@ -12,7 +12,16 @@ such as the draft ISO 19115 or ISO 8601.
 }
 \usage{
 addISOMetadata(TopicCategory = "Unknown", Title = "Unknown", Abstract = "Unknown", ProfileVersion = "Unknown", MetadataLink = NULL)
-addSource(Organization, SourceDescription, SourceLink = NULL, ContactName = "Unknown", Phone = "Unknown", Email = "Unknown", Address = "Unknown", City = "Unknown", State = "Unknown", ZipCode = "Unknown", Citation = "Unknown", Metadata = "Unknown")
+addSource(Organization, SourceDescription, SourceLink = NULL, 
+ContactName = rep("Unknown", length(Organization)),
+                 Phone = rep("Unknown", length(Organization)), Email =
+                 rep("Unknown", length(Organization)), Address =
+                 rep("Unknown", length(Organization)), City =
+                 rep("Unknown", length(Organization)), State =
+                 rep("Unknown", length(Organization)), ZipCode =
+                 rep("Unknown", length(Organization)), Citation =
+                 rep("Unknown", length(Organization)), Metadata =
+                 rep("Unknown", length(Organization)))
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{

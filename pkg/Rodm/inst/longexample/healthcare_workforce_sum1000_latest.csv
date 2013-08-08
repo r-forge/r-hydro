@@ -1,0 +1,196 @@
+Location,Time.Period,sum_healthworkers
+Afghanistan,2009,0.77
+Albania,2009,5.769
+Algeria,2007,3.797
+Andorra,2009,10.383
+Angola,2004,1.52
+Antigua and Barbuda,1999,3.64
+Argentina,2004,5.053
+Armenia,2009,9.299
+Australia,2009,14.36
+Austria,2010,13.975
+Azerbaijan,2009,12.599
+Bahamas,1998,5.59
+Bahrain,2008,5.772
+Bangladesh,2007,1.022
+Barbados,2005,8.668
+Belarus,2009,19.151
+Belgium,2009,5.468
+Belize,2009,3.963
+Benin,2008,0.858
+Bhutan,2007,0.531
+Bolivia (Plurinational State of),2001,4.61
+Bosnia and Herzegovina,2009,6.944
+Botswana,2006,4.009
+Brazil,2008,10.862
+Brunei Darussalam,2008,6.616
+Bulgaria,2009,9.423
+Burkina Faso,2008,0.914
+Burundi,2004,0.308
+Cambodia,2008,1.185
+Cameroon,2004,1.84
+Canada,2008,14.622
+Cape Verde,2004,2.159
+Central African Republic,2004,0.525
+Chad,2004,0.3674
+Chile,2009,1.196
+China,2009,3.915
+Colombia,2010,1.68
+Comoros,2004,1
+Republic of the Congo,2007,0.934
+Cook Islands,2009,11.389
+Costa Rica,2000,3.58
+Croatia,2009,9.243
+Cuba,2010,18.063
+Cyprus,2008,8.154
+Czech Republic,2009,13.686
+C?te d'Ivoire,2008,0.734
+Democratic People's Republic of Korea,2003,8.5
+Democratic Republic of the Congo,2004,0.66
+Denmark,2009,20.801
+Djibouti,2008,1.492
+Dominica,1997,4.72
+Dominican Republic,2000,4.96
+Ecuador,2009,3.957
+Egypt,2009,8.57
+El Salvador,2008,2.972
+Equatorial Guinea,2004,1.748
+Eritrea,2004,0.67
+Estonia,2009,11.452
+Estonia,2000,0.08
+Ethiopia,2007,0.594
+Fiji,2009,3.086
+Finland,2009,28.693
+France,2010,5.625
+Gabon,2004,5.52
+Gambia,2008,0.772
+Georgia,2009,8.313
+Germany,2009,16.079
+Ghana,2008,1.405
+Greece,2009,8.605
+Grenada,1998,6.5286
+Guatemala,1999,5.13
+Guinea,2005,0.172
+Guinea-Bissau,2008,2.185
+Guyana,2000,2.81
+Haiti,1998,0.37
+Honduras,2000,2.27
+Hungary,2009,10.501
+Iceland,2010,22.746
+India,2008,2.338
+Indonesia,2007,2.555
+Iran (Islamic Republic of),2005,3.382
+Iraq,2009,2.496
+Ireland,2010,20.491
+Israel,2010,10.376
+Italy,2009,11.453
+Jamaica,2003,2.58
+Japan,2006,8.386
+Jordan,2009,8.87
+Kazakhstan,2009,13.587
+Kenya,2002,1.66
+Kiribati,2010,4.587
+Kuwait,2009,6.995
+Kyrgyzstan,2007,8.167
+Lao People's Democratic Republic,2005,1.282
+Latvia,2009,9.086
+Lebanon,2009,8.33
+Lesotho,2003,0.74
+Liberia,2008,0.371
+Libya,2009,9.66
+Lithuania,2009,12.243
+Luxembourg,2009,4.678
+Madagascar,2004,0.526
+Malawi,2008,1.09
+Malaysia,2008,3.981
+Maldives,2007,8.449
+Mali,2008,0.369
+Malta,2010,11.197
+Marshall Islands,2010,2.457
+Mauritania,2009,0.92
+Mauritius,2004,6.521
+Mexico,2004,8.116
+Micronesia (Federated States of),2009,4.6203
+Monaco,1995,23.28
+Mongolia,2008,6.898
+Montenegro,2009,7.881
+Morocco,2009,1.88
+Mozambique,2008,0.446
+Myanmar,2008,1.408
+Namibia,2007,3.474
+Nauru,2009,9.4273
+Nepal,2004,1.33
+Netherlands,2009,3.727
+New Zealand,2007,16.149
+Nicaragua,2003,1.48
+Niger,2008,0.17
+Nigeria,2008,2.334
+Niue,2008,29
+Norway,2009,37.745
+Oman,2008,7.104
+Pakistan,2009,1.543
+Palau,2010,7.395
+Panama,2000,6.21
+Papua New Guinea,2008,1.194
+Paraguay,2002,3.8
+Peru,2009,2.372
+Philippines,2004,8.327
+Poland,2009,8.904
+Portugal,2009,10.614
+Qatar,2006,11.965
+Republic of Korea,2010,2.024
+Republic of Korea,2008,6.994
+Republic of Moldova,2009,10.358
+Romania,2009,9.29
+Russian Federation,2006,13.7299
+Rwanda,2005,1.899
+Saint Kitts and Nevis,2000,8.6632
+Saint Lucia,2002,2.68
+Saint Vincent and the Grenadines,2000,4.9676
+Samoa,2008,3.101
+San Marino,1990,144.18
+Sao Tome and Principe,2004,3.6091
+Saudi Arabia,2008,3.331
+Senegal,2008,0.594
+Serbia,2009,7.1
+Seychelles,2004,12.34
+Sierra Leone,2008,0.2673
+Singapore,2009,8.42
+Slovakia,2007,4.293
+Slovenia,2009,12.074
+Solomon Islands,2009,2.481
+Somalia,2006,0.156
+South Africa,2004,5.32
+Spain,2010,10.517
+Sri Lanka,2007,2.661
+Sudan,2008,1.3654
+Suriname,2000,2.08
+Swaziland,2004,10.3434
+Sweden,2008,17.188
+Switzerland,2009,21.662
+Syrian Arab Republic,2008,4.96
+Tajikistan,2009,7.679
+Thailand,2004,2.04
+The former Yugoslav Republic of Macedonia,2008,4.415
+Timor-Leste,2004,2.4022
+Togo,2008,0.338
+Tonga,2009,5.194
+Trinidad and Tobago,2007,5.447
+Tunisia,2009,5
+Turkey,2009,3.026
+Turkmenistan,2009,7.138
+Tuvalu,2008,8.275
+Uganda,2005,1.508
+Ukraine,2009,12.757
+United Arab Emirates,2007,7.04
+United Kingdom,2010,14.316
+United Republic of Tanzania,2006,0.306
+United States of America,2000,14.752
+Uruguay,2008,10.518
+Uzbekistan,2009,13.922
+Vanuatu,2008,2.8304
+Venezuela (Bolivarian Republic of),2001,3.62
+Viet Nam,2008,2.558
+Yemen,2004,1.3526
+Zambia,2006,0.847
+Zimbabwe,2004,1.11

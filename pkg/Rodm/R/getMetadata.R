@@ -28,6 +28,8 @@ getMetadata <- function(table, EXACT=FALSE, ...){
 			    names(meta) <- names(entry)
 		    }
 		    if(NROW(entry)==0) stop(paste("No metadata found in table ", table," for ", names(extras), "==", u.entries[i]))
+		    if(NROW(entry)>1) stop(paste("Multiple datasets found in table ", table," for ", names(extras), "==", u.entries[i], "Searching for a variable not part of the table?"))
+		    #ToDo: Warning generated when accessing VariableNames and ID
 		    meta[extras[[1]]==u.entries[i],] <- entry
 		}
 		return(meta)

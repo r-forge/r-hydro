@@ -1,22 +1,23 @@
-addSource <- function(Organization, SourceDescription, SourceLink=NULL, ContactName="Unknown", Phone="Unknown", Email="Unknown", Address="Unknown", City="Unknown", State="Unknown", ZipCode="Unknown", Citation="Unknown", Metadata="Unknown"){
+addSource <- function(Organization, SourceDescription, SourceLink=NULL, ContactName=rep("Unknown", length(Organization)), Phone=rep("Unknown", length(Organization)), Email=rep("Unknown", length(Organization)), Address=rep("Unknown", length(Organization)), City=rep("Unknown", length(Organization)), State=rep("Unknown", length(Organization)), ZipCode=rep("Unknown", length(Organization)), Citation=rep("Unknown", length(Organization)), Metadata=rep("Unknown", length(Organization))){
 	#optional: SourceLink
+	stopifnot(length(Organization) == length(SourceDescription))
+	stopifnot(length(Metadata) == length(SourceDescription))
 
 	#checking for existing entries 
-	print("checking for multiple columns in getMetadata seems not to work. Debug for worldbank function to work correctly")
-	browser()
-	if(NROW(existing <- getMetadata("Source",Organization=Organization, SourceDescription=SourceDescription, SourceLink=SourceLink))>0){
-		warning(paste("Existing ISOMetadata entry:", SourceDescription, " -- Skiping all imports.!"))
-		return()
-	}
+	for(i in seq(along=Organization)){
+		if(NROW(existing <- getMetadata("Source",Organization=Organization[i], Description=SourceDescription[i], Citation=Citation[i]))>0){
+			warning(paste("Skipping existing ISOMetadata entry:", SourceDescription[i]))
+			next
+		}
 
-	#check from referencetable
-	if(!is.null(Metadata)){
-		stopifnot(length(Metadata) == length(SourceDescription))
-		MetadataID <- getID("ISOMetadata",Metadata)
-	} else {
-		MetadataID <- rep(NA, length(SourceDescription))
-	}
+		#check from referencetable
+		if(!is.null(Metadata[i])){
+			MetadataID <- getID("ISOMetadata",Metadata[i])
+		} else {
+			MetadataID <- NA 
+		}
 
-	IaddSource(getOption("odm.handler"), Organization=Organization, SourceDescription= SourceDescription, SourceLink= SourceLink, ContactName= ContactName, Phone= Phone, Email= Email, Address= Address, City= City, State= State, ZipCode= ZipCode, Citation= Citation, Metadata=MetadataID)
+		IaddSource(getOption("odm.handler"), Organization=Organization[i], SourceDescription= SourceDescription[i], SourceLink= SourceLink[i], ContactName= ContactName[i], Phone= Phone[i], Email= Email[i], Address= Address[i], City= City[i], State= State[i], ZipCode= ZipCode[i], Citation= Citation[i], Metadata=MetadataID)
+	}
 
 }

@@ -28,6 +28,7 @@ for(i in CVtables()){
 	eval(parse(text=code))
 }
 for(i in CVtables()){
+	#ToDo: does not work for VariableName
 	code <- paste('setMethod("Iget',i,'", signature(object = "odm1_1"), function(object,  Term=NULL,  Definition=NULL, exact=FALSE, ...){ return(IgetCV(object, "',i,'", Term, Definition, exact=exact)) })', sep="")
 	eval(parse(text=code))
 }
