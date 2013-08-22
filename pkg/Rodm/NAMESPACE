@@ -24,6 +24,7 @@ import(
   zoo,
   DBI,
   vwr,
-  methods
+  methods,
+  geonames
 )
 
