@@ -75,8 +75,9 @@ Use \code{\link{getMetadata}} to retrieve values.
 getDefaultDB()
 
 #add data
-addSite(Code="10109000", Name="LOGAN RIVER ABOVE STATE DAM, NEAR LOGAN,UT", x=-100.47,
-y= 45.32, LatLongDatum="WGS84", Elevation="1432", VerticalDatum="NAVD88", PositionAccuracy=100, Stat="Utah")
+addSite(Code="10109000", Name="LOGAN RIVER ABOVE STATE DAM, NEAR LOGAN,UT", 
+	x=-100.47, y= 45.32, LatLongDatum="WGS84", Elevation="1432", 
+	VerticalDatum="NAVD88", PositionAccuracy=100, Stat="Utah")
 
 getMetadata(table="Site", Name="LOGAN")
 }

@@ -40,8 +40,9 @@ Dominik Reusser
 #connect to standard database
 getDefaultDB()
 #add data
-addSite(Code="10109000", Name="LOGAN RIVER ABOVE STATE DAM, NEAR LOGAN,UT", x=-100.47,
-y= 45.32, LatLongDatum="WGS84", Elevation="1432", VerticalDatum="NAVD88", PositionAccuracy=100, Stat="Utah")
+addSite(Code="10109000", Name="LOGAN RIVER ABOVE STATE DAM, NEAR LOGAN,UT", 
+	x=-100.47, y= 45.32, LatLongDatum="WGS84", Elevation="1432", 
+	VerticalDatum="NAVD88", PositionAccuracy=100, Stat="Utah")
 theID <- getID(table="Site", "Logan")
 addSynonym(table="Site", phrase="logan dam", id=theID)
 }

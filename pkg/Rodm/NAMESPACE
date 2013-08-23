@@ -10,9 +10,9 @@ getMetadata,
 addUnits,                              
 addVariable,                                
 addQualityControlLevel,
-assembleDataWhereClause,   updateCV, 
+updateCV, 
 updateDataValues, 
-CVtables, getDefaultDB )
+CVtables, getDefaultDB)
 
 exportClasses("odm1_1", "odm1_1Ver", "observations")
 
@@ -24,7 +24,6 @@ import(
   zoo,
   DBI,
   vwr,
-  methods,
-  geonames
+  methods
 )
-
+importFrom(e1071, permutations)

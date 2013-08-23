@@ -8,7 +8,15 @@ The Variables table lists the full descriptive information about what variables 
 measured. This functions allows to add an entry.
 }
 \usage{
-addVariable(Code, Name, Speciation = rep("Unknown", NROW(Code)), Unit, SampleMedium = rep("Unknown", NROW(Code)), ValueType = rep("Unknown", NROW(Code)), IsRegular = rep("True", NROW(Code)), TimeSupport = rep(0, NROW(Code)), TimeUnits = rep("Julian year", NROW(Code)), DataType = rep("Unknown", NROW(Code)), GeneralCategory = rep("Unknown", NROW(Code)), NoDataValue = rep(-999999, NROW(Code)))
+addVariable(Code, Name, Speciation = rep("Unknown", NROW(Code)), Unit,
+	SampleMedium = rep("Unknown", NROW(Code)), 
+	ValueType = rep("Unknown", NROW(Code)), 
+	IsRegular = rep("True", NROW(Code)), 
+	TimeSupport = rep(0, NROW(Code)), 
+	TimeUnits = rep("Julian year", NROW(Code)), 
+	DataType = rep("Unknown", NROW(Code)), 
+	GeneralCategory = rep("Unknown", NROW(Code)), 
+	NoDataValue = rep(-999999, NROW(Code)))
 }
 \arguments{
   \item{Code}{
@@ -109,7 +117,10 @@ Dominik Reusser
 #connect to standard database
 getDefaultDB()
 #add data
-addVariable(Code="00060", Name="Discharge", Speciation = "Unknown", Unit="m^3/s", SampleMedium = "Not Relevant", ValueType = "Field Observation", TimeSupport = 0, DataType = "Unknown", GeneralCategory = "Hydrology")
+addVariable(Code="00060", Name="Discharge", Speciation = "Unknown", 
+	Unit="m^3/s", SampleMedium = "Not Relevant", 
+	ValueType = "Field Observation", TimeSupport = 0, 
+	DataType = "Unknown", GeneralCategory = "Hydrology")
 getMetadata("Variable", Name="Discharge")
 }
 \keyword{ utilities }

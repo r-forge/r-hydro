@@ -11,7 +11,14 @@ either corresponding to the columns, the rows or each entry (as matrix) of value
 See the CUASHI observations data model (ODM) for more information about the data model.
 }
 \usage{
-addDataValues(DataZoo = NULL, Date = NULL, Value = NULL, ValueAccuracy = rep(NA, NCOL(DataZoo)), Site, Variable, Offset = rep(NA, NCOL(DataZoo)), OffsetType = rep("No", NCOL(DataZoo)), CensorCode = rep("nc", NCOL(DataZoo)), Qualifier = rep("No", NCOL(DataZoo)), Method = rep("No", NCOL(DataZoo)), Source, Sample = rep("No", NCOL(DataZoo)), DerivedFrom = NULL, QualityControlLevel, tolerance = 0)
+addDataValues(DataZoo = NULL, Date = NULL, Value = NULL, 
+	ValueAccuracy = rep(NA, NCOL(DataZoo)), Site, Variable, 
+	Offset = rep(NA, NCOL(DataZoo)), OffsetType = rep("No", NCOL(DataZoo)), 
+	CensorCode = rep("nc", NCOL(DataZoo)), 
+	Qualifier = rep("No", NCOL(DataZoo)), 
+	Method = rep("No", NCOL(DataZoo)), Source, 
+	Sample = rep("No", NCOL(DataZoo)),
+	DerivedFrom = NULL, QualityControlLevel, tolerance = 0)
 
 deleteDataValues(ID = NULL, reason = NULL)
 
@@ -131,20 +138,26 @@ addVariable(Name="Distance", Unit="cm", ValueType="Field Observation", GeneralCa
 addQualityControlLevel(ID=6,Code="ok", Definition="The default")
 
 addISOMetadata(TopicCategory="Unknown", Title="Testdata", Abstract="This data is created to test the functions of RObsDat")
-addSource(Organization="Your Org", SourceDescription="Madeup data", SourceLink="RObsDat Documentation", ContactName="Yourself", Metadata="Testdata")
+addSource(Organization="Your Org", SourceDescription="Madeup data", 
+	SourceLink="RObsDat Documentation", ContactName="Yourself",
+	Metadata="Testdata")
 
-example.data <- xts(1:366, seq(as.POSIXct("2010-01-01", tz="UTC"), as.POSIXct("2011-01-01", tz="UTC"), length.out=366))
+example.data <- xts(1:366, seq(as.POSIXct("2010-01-01", tz="UTC"), 
+		as.POSIXct("2011-01-01", tz="UTC"), length.out=366))
 example.data[50] <- 100
 example.data[200] <- 40
 
-addDataValues(example.data[1:100], Site="test", Variable="test_dist",  Source="Madeup", QualityControlLevel="ok")
+addDataValues(example.data[1:100], Site="test", Variable="test_dist",  
+	Source="Madeup", QualityControlLevel="ok")
 #Avoid duplicates autmatically
-addDataValues(example.data, Site="test", Variable="test_dist",  Source="Madeup", QualityControlLevel="ok")
+addDataValues(example.data, Site="test", Variable="test_dist",  
+	Source="Madeup", QualityControlLevel="ok")
 inDB <- getDataValues(Site="test")
 plot(inDB)
 
 #Version management
-to.correct <- which(inDB@values < 100 & index(inDB@values) > as.POSIXct("2010-06-01"))
+to.correct <- which(inDB@values < 100 & 
+	index(inDB@values) > as.POSIXct("2010-06-01"))
 inDB@values[to.correct] <- 200
 inDB@values[50] <- 50
 

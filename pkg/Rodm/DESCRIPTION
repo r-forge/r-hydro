@@ -1,11 +1,11 @@
 Package: RObsDat
 Type: Package
 Title: R-Interface to the observations Data Model from QUASHI
-Version: 13.08-1
-Date: 2013-08-07
+Version: 13.08
+Date: 2013-08-23
 Author: Dominik Reusser
 Maintainer: Dominik Reusser <reusser@pik-potsdam.de>
-Depends: R (>= 2.11.0), xts, zoo, DBI, vwr, methods, geonames
-Suggests:RMySQL (>= 0.9-3), RSQLite, SSOAP, XMLSchema, testthat, XML, maptools, sp, RColorBrewer, RPostgreSQL (>= 0.4)
+Depends: R (>= 2.11.0), xts, zoo, DBI, vwr, methods
+Suggests:RMySQL (>= 0.9-3), RSQLite, SSOAP, XMLSchema, testthat, XML, maptools, sp, RColorBrewer, RPostgreSQL (>= 0.4), geonames
 Description: This package provides classes and functions for handling observational (time series) data
 License: GPL

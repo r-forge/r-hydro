@@ -125,7 +125,8 @@ getMetadata("Variable")$Name
 var.id <- getID("Variable", "Distance") 
 
 # Get data
-data <- getDataValues(Variable="Distance", Site="test site") # returns data object of class 'observations' with 4 slots
+data <- getDataValues(Variable="Distance", Site="test site") 
+	# returns data object of class 'observations' with 4 slots
 
 # Get data values:
 data@values #returns data object of class 'xts'

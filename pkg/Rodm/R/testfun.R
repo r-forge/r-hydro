@@ -68,7 +68,10 @@ longExample <- function() {
 	}
 	# prepare countries --> only once!
 	options(geonamesUsername="cite.all")
-	require(geonames)
+	if(!require(geonames)){
+		cat("Please install geonames with install.packages(geonames) to run this test\n")
+		return()
+	}
 	cat("Importing Geonames from web\n")
 	all.countries <- GNcountryInfo(lang="EN")
 

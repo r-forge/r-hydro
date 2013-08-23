@@ -8,7 +8,11 @@ Internal functions to generate a where clause for access to the DataValues table
 These functions is used to avoid code repetition
 }
 \usage{
-assembleDataWhereClause(ID = NULL, from = NULL, to = NULL, SiteID = NULL, VariableID = NULL, Offset = NULL, OffsetTypeID = NULL, CensorCode = NULL, QualifierID = NULL, MethodID = NULL, SourceID = NULL, SampleID = NULL, DerivedFromID = NULL, QualityControlLevelID = NULL, exact = FALSE)
+assembleDataWhereClause(ID = NULL, from = NULL, to = NULL, SiteID = NULL,
+	VariableID = NULL, Offset = NULL, OffsetTypeID = NULL, 
+	CensorCode = NULL, QualifierID = NULL, MethodID = NULL, 
+	SourceID = NULL, SampleID = NULL, DerivedFromID = NULL, 
+	QualityControlLevelID = NULL, exact = FALSE)
 
 expand.where(w.o, var, var.name, exact = TRUE, isnumeric=FALSE)
 }

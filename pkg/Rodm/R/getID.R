@@ -163,7 +163,7 @@ getID <- function(table, value,#, allowNoValue=FALSE
 					for(field in lookup[[table]]){
 						column <- match(tolower(field), tolower(names(all.table)))
 
-						lev.dist <- levenshtein.distance(source=tolower(word), targets=tolower(all.table[,column]))
+						lev.dist <- levenshtein.distance(xsource=tolower(word), targets=tolower(all.table[,column]))
 						names(lev.dist) <- all.table[[field]]
 						the.dist <- c(the.dist, lev.dist)
 					}
