@@ -31,10 +31,14 @@ function(runoff, method="start"){
       na_after  = !is.finite(runoff[nodes_after ]) #na vals after  plateau
       nodes_after[na_after]   = nodes_after [na_after]  - 1 #use last plateau value instead
       nodes_before[na_before] = nodes_before[na_before] + 1 #use firest plateau value instead
-      nodes_center = nodes_center[!(na_before | na_after) & (nodes_before != 1) & (nodes_after != length(runoff))] #do not use center node
-      adjacent_plateaus= nodes_after[-length(nodes_after)] == nodes_before[-1] +1
+      nodes_center = nodes_center[!(na_before | na_after) & (nodes_after != length(runoff))] #do not use center node
+      #adjacent_plateaus= nodes_after[-length(nodes_after)] == nodes_before[-1] +1
+      adjacent_plateaus= (nodes_after-1) %in% nodes_before
+      half_steps_x=nodes_after-0.5
+      half_steps_y=cbind(runoff[nodes_after], runoff[nodes_after-1])
       
-      nodes_all = sort(unique(c(nodes_before[-(which(adjacent_plateaus)+1)], nodes_center, nodes_after[!adjacent_plateaus])))
+      
+      nodes_all = sort(unique(c(nodes_before[!c(FALSE,adjacent_plateaus)], nodes_center, nodes_after[!c(adjacent_plateaus, FALSE)])))
             
       interp<-approx(nodes_all, runoff[nodes_all], xout=1:NROW(runoff),  method="linear")
       interp <- interp$y
