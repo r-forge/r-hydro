@@ -25,7 +25,7 @@ see details
 }
 
 \value{
-Cleansed hydrograph.
+Vector of cleansed hydrograph without plateaus.
 }
 
 \author{
@@ -37,12 +37,12 @@ Dominik Reusser, Till Francke
 \examples{
 
 runoff          <- c(rep(1,3), 2, 3, rep(4,4), 5, rep(3,4), rep(NA,2), 4, rep(2,5), rep(1,6))
-runoff_cleaned  <- remove_plateaus(runoff)
-runoff_cleaned2 <- remove_plateaus(runoff, method="center")
+runoff_cleaned_start  <- remove_plateaus(runoff)
+runoff_cleaned_center <- remove_plateaus(runoff, method="center")
 
 plot(runoff, type="l")
-lines(runoff_cleaned, col="red")
-lines(runoff_cleaned2, col="green")
+lines(runoff_cleaned_start, col="red")
+lines(runoff_cleaned_center, col="green", lty="dashed")
 
 
 }

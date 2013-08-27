@@ -36,7 +36,7 @@ function(runoff, method="start"){
       
       nodes_all = sort(unique(c(nodes_before[-(which(adjacent_plateaus)+1)], nodes_center, nodes_after[!adjacent_plateaus])))
             
-      interp<-approx(nodes_all, runoff[nodes_all], xout=(1:(NROW(runoff)-1)),  method="linear")
+      interp<-approx(nodes_all, runoff[nodes_all], xout=1:NROW(runoff),  method="linear")
       interp <- interp$y
       plateaus_i = (c(FALSE,plateaus_i) | c(plateaus_i, FALSE))
       interp[!plateaus_i] <- runoff[!plateaus_i]
