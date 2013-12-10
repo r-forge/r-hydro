@@ -1,0 +1,34 @@
+useDynLib(HydroModels)
+import(Hydro, stats) 
+#unclear what to import, removed graphics, sp
+importFrom("graphics", "plot")
+
+export(fusesma.sim,
+       fuserouting.sim,
+       perfindices,
+       NSeff,
+       get.data.types,
+       get.stations,
+       get.runCount,
+       get.names,
+       topidx,
+       topidx.classes,
+       topmodel,
+       wasim.data.types,
+       rhydro.data.types,
+       plot_rainfall.runoff,
+       wasim.read.Run,
+##       "$.HydroRun",
+	long.wave.radiation.balance,
+        sat.vap.pres,
+      hbv, abc, hbv.prerun,
+      runoff_coeff, time_of_conc, c_smooth, fdc_slope, sel, bfi,
+      hpc, q10, rising_limb_density, fft_fit, filter_ratio, baseflow_sep, remove_plateaus
+	)
+
+
+exportMethods(topmodel, validate, print, plot, merge, coerce, validity.check, subset, predict)
+# import packages that define generics for the exported methods
+# (e.g. stats for simulate)
+
+

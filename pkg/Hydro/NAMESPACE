@@ -1,0 +1,25 @@
+# import packages that define generics for the exported methods
+# (e.g. stats for simulate)
+import(methods, stats) 
+#unclear what to import, removed graphics, sp
+importFrom("graphics", "plot")
+
+exportClasses(
+##              HydroRun,
+              HM,
+              HMData)
+
+
+export(HM,
+       HMData,
+       RHydro,
+       observations,
+       parameters,
+       dots,
+       temporalData,
+       spatialData,
+       spatiotemporalData,
+       validate)
+#exportMethods(print, plot, merge, coerce, validity.check, subset, predict)
+
+

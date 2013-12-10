@@ -1,0 +1,16 @@
+Package: Hydro
+Type: Package
+Title: Classes and methods for hydrological modelling and analysis
+Version: 0.2-01
+Date: 2013-12-09
+Author: Dominik Reusser, Wouter Buytaert, Claudia Vitolo, Jon Olav Skoien
+Maintainer: Dominik Reusser <dreusser@pik-potsdam.de>, Wouter Buytaert <w.buytaert@imperial.ac.uk>, Claudia Vitolo <c.vitolo@imperial.ac.uk>, Till Francke <francke@uni-potsdam.de>
+Depends: R (>= 2.14.0), xts, sp
+Imports: methods
+Suggests: spacetime
+#Imports: graphics, stats #, lhs, deSolve, XML, qualV, 
+#Suggests: segmented
+#Suggests: ncdf
+Description: This package provides classes and functions for hydrological analysis
+License: GPL (>= 2)
+
