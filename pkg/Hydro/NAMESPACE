@@ -25,5 +25,6 @@ export(HM,
        HMspatiotemporalData,
        validate)
 #exportMethods(print, plot, merge, coerce, validity.check, subset, predict)
+exportMethods(predict)
 
 

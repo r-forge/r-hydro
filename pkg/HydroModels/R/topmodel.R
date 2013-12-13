@@ -25,17 +25,17 @@ setMethod("topmodel", signature(object = "HM"),
     observations = HMobservations(object)
     data = HMtemporalData(observations)$data
   
-    HMparameters = HMparameters(object)
-    pnames = names(HMparameters)
+    HMpar = HMparameters(object)
+    pnames = names(HMpar)
     nnames = match.arg(pnames, 
-      c("topidx", "parameters", "delay", "pm", "return.simulations", "verbose"), several.ok = TRUE)
-    names(HMparameters) = nnames
-    topidx = HMparameters$topidx
-    parameters = HMparameters$parameters
-    delay = HMparameters$delay
-    pm = HMparameters$pm
-    return.simulations = HMparameters$return.simulations
-    verbose = HMparameters$verbose
+      c("topidx", "parameters", "parlower", "parupper", "delay", "pm", "return.simulations", "verbose"), several.ok = TRUE)
+    names(HMpar) = nnames
+    topidx = HMpar$topidx
+    parameters = HMpar$parameters
+    delay = HMpar$delay
+    pm = HMpar$pm
+    return.simulations = HMpar$return.simulations
+    verbose = HMpar$verbose
 # Using the first element of retval, no good solutions for a set of simulations yet  
     retval = topmodel(parameters, data, delay, topidx, pm, return.simulations, verbose)[[1]]
     object = RHydro(object, newval = list(Pred = list(Temporal = list(predictions = retval))))

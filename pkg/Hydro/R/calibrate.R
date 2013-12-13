@@ -14,7 +14,7 @@ nashsut = function(sim, obs) {
 
 # Default objective function, can use either NSE -efficiency,
 # one of the criteria from gof (hydroGOF), or a function
-HMObjectiveFunction = function(object, parameters, gof = "NSE") {
+HMObjectiveFunction = function(parameters, object, gof = "NSE") {
   object = try(RHydro(object, newval = list(calibrationParameters = parameters)))
   object = try(predict(object))
   if (is(object, "try-error")) return(1e9)
@@ -53,19 +53,32 @@ setMethod('calibrate', signature(object = "HM"),
     function(object, method = "sce", objectiveFunction = NULL, ...){
 # Here we have to choose between using calibData and formula
 # Trying first with formula
+  objfunc = NULL
   if (is.function(objectiveFunction)) {
     objfunc = objectiveFunction
-  } else if (is.null(objectiveFunction) | is.character(objectiveFunction)) {
+  } else if (!is.null(objectiveFunction) && isGeneric(objectiveFunction)) {
     model = gsub("HM", "", class(object))
     if (existsMethod("objectiveFunction", model)) {
       objfunc = getMethod("objectiveFunction", model)
-    } else {
-      objfunc = try(get(paste0("objective.", model)), silent = TRUE)
-      if (is(objfunc, "try-error")) {
-      }
+    } 
+  } else if (is.character(objectiveFunction)) {
+    model = gsub("HM", "", class(object))
+    objfunc = try(get(paste0("objective.", model)), silent = TRUE)
+    if (is(objfunc, "try-error")) {
+      objfunc = try(getFunction(objectiveFunction))
+      if (is(objfunc, "try-error")) objfunc = NULL
     }
   }
-  if (method == "sce") sceua(objfunc, object, ...)
+  if (is.null(objfunc)) objfunc = HMObjectiveFunction
+  if (method == "sce") {
+    best = sceua(objfunc, HMparameters(object)$parameters, 
+                 HMparameters(object)$parlower,
+                 HMparameters(object)$parupper, object = object, ...)
+     
+  }
+  object = RHydro(object, newval = list(calibrationParameters = best$par, 
+                                        performance = best$value))
+  predict(object)
 }
 )
 

@@ -53,6 +53,15 @@ if (FALSE) {
   save(inputs, parameters, topidx, delay, file = "c:/users/jon/work/R-Forge/RHydro/pkg/HydroModels/data/huagrahuma2.rda")
 }
 
+if (FALSE) {
+  setwd("c:/jonWork/RForge/RHydro/pkg")
+  require(devtools)
+  install("Hydro")
+  require(devtools)
+  install("HydroModels")
+ }
+
+
 require(HydroModels)
 data(huagrahuma2)
 HMObject = RHydro("topmodel", Temporal = list(data = inputs),
@@ -62,7 +71,19 @@ res2 = predict(HMObject)
 Hydro:::nashsut(res2@Pred@Temporal$predictions, HMObject@Obs@Temporal$data$Q)
 Hydro:::nashsut(HMtemporalData(HMpredictions(res2))$predictions,
                 HMtemporalData(HMobservations(HMObject))$data$Q)
-HMObjectiveFunction(HMObject, parameters[1:9])
-parameters = parameters*1.1
-HMObjectiveFunction(HMObject, parameters[1:9])
+HMObjectiveFunction(parameters[1:9], HMObject)
+parameters = parameters[1:9]*2
+HMObjectiveFunction(parameters[1:9], HMObject)
+parlower = parameters*(ifelse(parameters < 0, 4, 0.25))
+parupper = parameters*(ifelse(parameters < 0, 0.25, 4))
+
+HMObject = RHydro("topmodel", Temporal = list(data = inputs),
+                  Parameters = list(parameters = parameters[1:9], parlower = parlower[1:9], 
+                                    parupper = parupper[1:9],  top = topidx, del = delay),
+                  control = list(dependent = "Q"))
+options(error = recover)
+predict(HMObject)
+HMCalib = calibrate(HMObject)
+
+
 

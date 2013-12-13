@@ -48,13 +48,7 @@ updateHMData = function(HMD, newdata) {
 
 #setMethod("HMData", signature = "list", 
 #  function(object) {
-#    Temp = ifelse (!is.null(object$Temporal), object$Temporal, list())
-#    SpatioTemp = ifelse (!is.null(object$SpatioTemp), object$SpatioTemp, list())
-#    Spat = ifelse (!is.null(object$Spat), object$Spat, list())
-#    Lin = ifelse (!is.null(object$Lines), object$Lines, list())
-#    Dots = ifelse (!is.null(object$Dots), object$Dots, list())
-#    HMData(Temporal = Temp, SpatioTemporal = SpatioTemp, Spatial = Spat, 
-#           Lines = Lin, Dots = Dots)
+# do.call("HMData", object)
 #  }
 #)
 
@@ -70,10 +64,11 @@ updateHMData = function(HMD, newdata) {
 setClassUnion("HMDataOrNull", c("HMData", "NULL"))
 
 HM = setClass("HM", 
-	slots = c(Obs = "HMData", CalibData = "HMDataOrNull", 
-            Pred = "HMDataOrNull", Parameters = "list", control = "list"),
-  prototype = prototype(Obs = HMData(), CalibData = NULL, 
-                        Pred = NULL, Parameters = list(), control = list()))
+	slots = c(Obs = "HMData", #CalibData = "HMDataOrNull", 
+            Pred = "HMDataOrNull", Parameters = "list", performance = "list", control = "list"),
+  prototype = prototype(Obs = HMData(), #CalibData = NULL, 
+                        Pred = NULL, Parameters = list(), 
+                        performance = list(), control = list()))
 
 
 HMobservations = function(object) object@Obs

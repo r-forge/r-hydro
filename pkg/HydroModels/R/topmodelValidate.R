@@ -14,8 +14,8 @@ setMethod("validate", signature = "topmodel",
 #        c("topidx", "delay", "pm", "return.simulations", "verbose"), several.ok = TRUE)
 #    names(HMdots) = nnames
     ## check that number of parameters is correct
-    if(count <- length(parameters) !=9)
-      return(paste("Incorrect number of parameters. Found", count, "out of 9"))
+    if(length(parameters) !=9)
+      return(paste("Incorrect number of parameters. Found", length(parameters), "out of 9"))
     ## check for negative initial subsurface flow
     if(any(parameters[1] < 0))
       return("Initial subsurface flow should not be negative")

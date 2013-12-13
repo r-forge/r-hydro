@@ -13,5 +13,5 @@ Suggests: spacetime
 #Suggests: ncdf
 Description: This package provides classes and functions for hydrological analysis
 License: GPL (>= 2)
-Collate: classHM.R RHydro.R calibrate.R predict.R sceua.R conformResolutions.R
+Collate: classHM.r RHydro.R calibrate.R predict.R sceua.R conformResolutions.R
 
