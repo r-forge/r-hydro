@@ -26,9 +26,18 @@ if (FALSE) {
     odiff = mdiff
     if (i %%100 ==0) print(i)    
   }
+  inputs$Q = res$Q2
+  save(inputs, parameters, topidx, delay, file = "c:/users/jon/work/R-Forge/RHydro/pkg/HydroModels/huagrahuma2")
 }
+
 
 inputs$Q = res$Q2
 HMObject = RHydro("topmodel", Temporal = list(data = inputs),
     Parameters = list(param = parameters[1:9], top = topidx, del = delay),
     control = list(dependent = "Q"))
+
+data(huagrahuma2)
+HMObject = RHydro("topmodel", Temporal = list(data = inputs),
+    Parameters = list(param = parameters[1:9], top = topidx, del = delay))
+res2 = predict(HMObject)
+HMobjectiveFunction(res2$Q, HMObject@Temporal@data$Q)

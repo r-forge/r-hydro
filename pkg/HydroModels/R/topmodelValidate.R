@@ -2,12 +2,12 @@
 #validate.topmodel = function(object) {
 setMethod("validate", signature = "topmodel",
    function(object) {
-    HMparameters = parameters(object)
-    pnames = names(HMparameters)
+    parameters = HMparameters(object)
+    pnames = names(parameters)
     nnames = match.arg(pnames, 
       c("topidx", "parameters", "delay", "pm", "return.simulations", "verbose"), several.ok = TRUE)
-    names(HMparameters) = nnames
-    parameters = HMparameters$parameters
+    names(parameters) = nnames
+    parameters = parameters$parameters
 # Probably not necessary to check these
 #    pnames = names(HMdots)
 #    nnames = match.arg(pnames,
@@ -24,11 +24,11 @@ setMethod("validate", signature = "topmodel",
       return("Stream flow velocity should not be smaller than 50m/h")
     ##
     ## Check that there is temporal data, and that it is a zoo-object
-    tempData = temporalData(observations(object))
+    tempData = HMtemporalData(HMobservations(object))
     if (!length(tempData) == 1) return(paste("too many temporal data elements, 1 needed, was given ", length(tempData)))
     if (!is(tempData[[1]], "zoo"))
       return(paste("wrong class of temporal data, zoo is needed, was given",
-        class(temporalData(observations(object)))))
+        class(HMtemporalData(HMobservations(object)))))
     ## Everything ok, returning TRUE
     return(TRUE)
   }

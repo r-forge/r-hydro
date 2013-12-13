@@ -22,10 +22,10 @@ if (!isGeneric("topmodel")) {
 setMethod("topmodel", signature(object = "HM"),
   function(object, ...) {
     
-    observations = observations(object)
-    data = temporalData(observations)$data
+    observations = HMobservations(object)
+    data = HMtemporalData(observations)$data
   
-    HMparameters = parameters(object)
+    HMparameters = HMparameters(object)
     pnames = names(HMparameters)
     nnames = match.arg(pnames, 
       c("topidx", "parameters", "delay", "pm", "return.simulations", "verbose"), several.ok = TRUE)
@@ -36,8 +36,10 @@ setMethod("topmodel", signature(object = "HM"),
     pm = HMparameters$pm
     return.simulations = HMparameters$return.simulations
     verbose = HMparameters$verbose
-  ## sort out the requested peformance measures
-    topmodel(parameters, data, delay, topidx, pm, return.simulations, verbose)
+# Using the first element of retval, no good solutions for a set of simulations yet  
+    retval = topmodel(parameters, data, delay, topidx, pm, return.simulations, verbose)[[1]]
+    object = RHydro(object, newval = list(Pred = list(Temporal = list(predictions = retval))))
+    object
   }
 )
 
@@ -123,7 +125,6 @@ setMethod("topmodel", signature = c(object = "numeric", data = "zoo"),
     for(i in 1:length(vars)) retval[[vars[i]]] <- zoo(results[,,i], order.by=index)
     if(perf.NS) retval <- list(simulations = retval, NS = result$perf.NS)
   } else if(perf.NS) retval <- result$perf.NS
-  
   return(retval)
 }
 )

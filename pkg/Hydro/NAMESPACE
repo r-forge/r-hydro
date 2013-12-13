@@ -13,12 +13,16 @@ exportClasses(
 export(HM,
        HMData,
        RHydro,
-       observations,
-       parameters,
-       dots,
-       temporalData,
-       spatialData,
-       spatiotemporalData,
+       calibrate,
+       HMObjectiveFunction,
+       HMobservations,
+       HMparameters,
+       HMpredictions,
+       HMdots,
+       HMcontrol,
+       HMtemporalData,
+       HMspatialData,
+       HMspatiotemporalData,
        validate)
 #exportMethods(print, plot, merge, coerce, validity.check, subset, predict)
 
