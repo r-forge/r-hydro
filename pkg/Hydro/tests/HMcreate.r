@@ -37,7 +37,7 @@ hm2
 
 Calib = HMData(Temporal = list(runoff = as.xts((1:10)/10,as.POSIXct(1:10, origin = "1970-01-01"))))
 
-hm3 = HM(Obs = hmobs2, CalibData = Calib, Parameters = par)
+hm3 = HM(Obs = hmobs2, Parameters = par)
 
 hm3
 

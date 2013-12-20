@@ -1,13 +1,23 @@
 \name{topmodel}
 \alias{topmodel}
+\alias{topmodel,HM-method}
+\alias{topmodel,parameter-method}
+
+
 \title{Implementation of the hydrological model TOPMODEL}
 \description{
   This is an implementation of the 1995 Fortran version of the hydrological model TOPMODEL, originally developed by Keith Beven.
 }
 \usage{
-topmodel(parameters, data, delay, topidx, pm= c("NS"), return.simulations=TRUE, verbose = FALSE)
+\S4method{extract}{Raster,matrix}(x, y, method='simple', buffer=NULL, small=FALSE, cellnumbers=FALSE, 
+     fun=NULL, na.rm=TRUE, layer, nl, df=FALSE, factors=FALSE, ...)
+
+\s4method{topmodel}{HM}(object, ...)
+\s4method{topmodel}{numeric}(object, data, delay, topidx, pm= c("NS"), return.simulations=TRUE, verbose = FALSE)
 }
 \arguments{
+  \item{object}{Either: An object of class \code{\link{HM}}, or an array 
+                of the parameters for the model. }
   \item{parameters}{A vector, matrix or HydroModelParameters object containing the input parameters (see below for the exact structure)}
   \item{data}{A list of vectors or zoo time series, containing at least a member called ``prec'' (precipitation) and ``PET'' (potential evapotranspiration). ``Qobs'' may also be given, in which the Nash-Sutcliffe efficiency is calculated directly}
   \item{delay}{Delay function for overland flow (see below)}
@@ -34,7 +44,8 @@ CD 	\tab capillary drive, see Morel-Seytoux and Khanji (1974)\cr
 dt 	\tab The timestep [h]\cr
 }
 
-The topidx dataframe can be derived conveniently with \code{make.classes()}. It should contain 2 columns. The first column should give the lower boundary of each topographic index class, and the second column should give the respective area fraction. The second column must sum to 1.
+The topidx dataframe can be derived conveniently with \code{link{make.classes()}}. 
+It should contain 2 columns. The first column should give the lower boundary of each topographic index class, and the second column should give the respective area fraction. The second column must sum to 1.
 
 Parameters k0 is only used in the unsaturated zone time delay funtion if td<0.
 
@@ -42,6 +53,9 @@ Overland flow is routed through a delay function which represents the time spent
 
 }
 \value{
+Either:
+\itemize
+  \item{An object of class \code{\link{HM}}, if called with an object of this class}
 An object of type HydroModelRun. Depending on the options, the following slots are filled:
 
 - If no observed discharge is given, and verbose = F, simulated discharge is stored as a simulated flux

@@ -41,7 +41,7 @@ HMData = setClass("HMData", slots = c(
 
 updateHMData = function(HMD, newdata) {
   for (slotName in names(newdata)) {
-    slot(HMD, slotName) = newdata[[slotName]]
+    slot(HMD, slotName) = modifyList(slot(HMD, slotName), newdata[[slotName]])
   }
   HMD
 }
