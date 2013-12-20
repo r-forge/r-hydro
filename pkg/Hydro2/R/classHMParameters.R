@@ -1,5 +1,5 @@
 
-setClass("HydroModelParameters",
+setClass("HMParameters",
          representation(parameters = "data.frame",
                         call = "call",  # to generate 
                         n = "numeric",
@@ -8,31 +8,31 @@ setClass("HydroModelParameters",
                                modelID = character())
          )
 
-setAs("data.frame", "HydroModelParameters",
-      function(from) new("HydroModelParameters",
+setAs("data.frame", "HMParameters",
+      function(from) new("HMParameters",
                          parameters = from,
                          n = nrow(from)))
 
-setAs("matrix", "HydroModelParameters",
-      function(from) as(as.data.frame(from), "HydroModelParameters"))
+setAs("matrix", "HMParameters",
+      function(from) as(as.data.frame(from), "HMParameters"))
 
-setAs("numeric", "HydroModelParameters",
-      function(from) new("HydroModelParameters",
+setAs("numeric", "HMParameters",
+      function(from) new("HMParameters",
                          parameters = as.data.frame(t(from))))
 
-setAs("list", "HydroModelParameters",
-      function(from) new("HydroModelParameters", call = as.call(from)))
+setAs("list", "HMParameters",
+      function(from) new("HMParameters", call = as.call(from)))
 
-setAs("HydroModelParameters", "data.frame",
+setAs("HMParameters", "data.frame",
       function(from) {
         if(nrow(from@parameters) == 0) resample(from)
         from@parameters
       })
       
-setAs("HydroModelParameters", "matrix", function(from) as.matrix(from@parameters))
+setAs("HMParameters", "matrix", function(from) as.matrix(from@parameters))
 
 setMethod("print",
-          signature(x = "HydroModelParameters"),
+          signature(x = "HMParameters"),
           function(x, ...) {
             cat("Model: ",x@modelID,"\n")
             cat("Parameters:\n")
@@ -42,7 +42,7 @@ setMethod("print",
           )
 
 setMethod("show",
-          signature(object = "HydroModelParameters"),
+          signature(object = "HMParameters"),
           function(object) {
             print(object)
           }

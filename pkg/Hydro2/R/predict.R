@@ -3,6 +3,7 @@ setMethod("predict", signature = "HM",
         probs = c(0.05, 0.95))
     {
       parameters = HMparameters(object)
+      model = object@model
       for (ip in 1:length(parameters)) {
         model = names(parameters)[ip]
         lpred <- do.call(what = model, list(object))      
