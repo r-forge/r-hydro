@@ -1,0 +1,13 @@
+useDynLib(HydroModels2)
+import(Hydro2, stats) 
+#unclear what to import, removed graphics, sp
+importFrom("graphics", "plot")
+
+export(topmodel, validate.topmodel)
+
+
+exportMethods(topmodel)
+# import packages that define generics for the exported methods
+# (e.g. stats for simulate)
+
+
