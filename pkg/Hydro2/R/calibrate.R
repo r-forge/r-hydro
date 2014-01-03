@@ -15,7 +15,9 @@ nashsut = function(sim, obs) {
 # Default objective function, can use either NSE -efficiency,
 # one of the criteria from gof (hydroGOF), or a function
 HMObjectiveFunction = function(parameters, object, gof = "NSE") {
-  object = try(RHydro(object, newval = list(calibrationParameters = parameters)))
+  object = try(RHydro(object,                         
+    model = names(HMparameters(object)), 
+          Parameters = list(parameters = data.frame(parameters = parameters))))
   object = try(predict(object))
   if (is(object, "try-error")) return(1e9)
   predictions = HMpredictions(object)
@@ -76,7 +78,9 @@ setMethod('calibrate', signature(object = "HM"),
                  HMparameters(object)$parupper, object = object, ...)
      
   }
-  object = RHydro(object, newval = list(calibrationParameters = best$par, 
+ object = RHydro(object, 
+      model = names(HMparameters(object)), 
+             Parameters = list(parameters = data.frame(parameters = best$par), 
                                         performance = best$value))
   predict(object)
 }

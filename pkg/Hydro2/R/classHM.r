@@ -38,9 +38,21 @@ HMData = setClass("HMData", slots = c(
 )                                               
 
 updateHMData = function(HMD, newdata) {
-  for (slotName in names(newdata)) {
-    slot(HMD, slotName) = modifyList(slot(HMD, slotName), newdata[[slotName]])
-  }
+  if (is(HMD, "HMData")) {
+    for (slotName in names(newdata)) {
+      slot(HMD, slotName) = modifyList(slot(HMD, slotName), newdata[[slotName]])
+    }
+  } else if (is.list(HMD) & is.list(newdata)) {
+    for (ip in 1:length(newdata)) {
+      if (names(newdata)[ip] %in% names(HMD)) {
+        jp = which(names(HMD) == names(newdata)[ip])
+        HMD[[jp]] = updateHMData(HMD[[jp]], newdata[[names(newdata)[ip]]])
+      } else {
+        HMD[[length(HMD)+1]] = newdata[[ip]] 
+        names(HMD)[length(HMD)] = names(newdata)[ip]
+      }
+    }
+  } 
   HMD
 }
 
@@ -86,10 +98,10 @@ HMpred = function(object) object@Pred
 #  - the complete set of Parameters
 #  - the parameters of one model 
 HMparameters = function(object, model) {
-  if (missing(model)) {
-    object@Parameters
+  opar = object@Parameters
+  if (missing(model) || is.null(model)) {
+    opar
   } else {
-    opar = object@Parameters
     opar[[names(opar) == model]]
   }
 }

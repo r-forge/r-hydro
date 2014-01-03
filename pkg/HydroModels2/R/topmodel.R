@@ -36,14 +36,15 @@ setMethod("topmodel", signature(object = "HM"),
     verbose = dots$verbose
 # Using the first element of retval, no good solutions for a set of simulations yet  
     retval = topmodel(parameters, data, delay, topidx, pm, return.simulations, verbose)[[1]]
-    object = RHydro(object, newval = list(Pred = list(topmodel = list(Temporal = list(predictions = retval)))))
+    object = RHydro(object, newval = list(Pred = list(topmodel = HMData(Temporal = list(predictions = retval)))))
     object
   }
 )
 
+setClassUnion("numericOrDataFrame", c("numeric", "data.frame"))
 
 # Modification necessary to set iterations different from one 
-setMethod("topmodel", signature = c(object = "numeric", data = "zoo"),
+setMethod("topmodel", signature = c(object = "numericOrDataFrame", data = "zoo"),
      function(object, 
                      data,
                      delay,
@@ -52,7 +53,11 @@ setMethod("topmodel", signature = c(object = "numeric", data = "zoo"),
                      return.simulations = TRUE,
                      verbose = FALSE) {
    parameters = object
-   iterations = 1
+   if (is.data.frame(parameters)) {
+     iterations = dim(parameters)[2]
+   } else {
+     iterations = 1
+   }
   ## sort out the requested peformance measures
   perf.NS <- 0
   if(!is.null(pm)){
@@ -70,6 +75,8 @@ setMethod("topmodel", signature = c(object = "numeric", data = "zoo"),
   ## this means that they are real time series (i.e. with a constant deltat)
   ## then convert them to regular zoo series
 
+  ## JOS This seems to change Index from POSIXt to POSIXct, which will cause a 
+  ## warning in comparisons between observations and predictions
   data <- try.xts(data, error = FALSE)
   data <- as.zooreg(data)
   index <- index(data)

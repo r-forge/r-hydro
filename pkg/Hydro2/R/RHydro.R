@@ -4,16 +4,15 @@
 
 
 
-RHydro = function(object, newval, model, Parameters, ...) {
+RHydro = function(object, newval, model,  ...) {
   dots = list(...)
   if (length(dots) > 1 & !missing(newval)) stop("you cannot provide arguments both through newval and ellipsis argument (...)")  
   if (missing(newval)) newval = dots
-  if ("Parameters" %in% names(newval) & !missing(Parameters))stop("you cannot provide arguments both through newval and Parameters")  
-  if (!missing(model) && !missing(Parameters)) {
-    opar = Parameters
-    Parameters = list()
-    Parameters[[model]] = opar 
-  } 
+#  if (!missing(model) && !missing(Parameters)) {
+#    opar = Parameters
+#    Parameters = list()
+#    Parameters[[model]] = opar 
+#  } 
   if ("Parameters" %in% names(newval)) {
     Parameters = newval$Parameters
     newval = newval[-which(names(newval) == "Parameters")]
@@ -24,8 +23,9 @@ RHydro = function(object, newval, model, Parameters, ...) {
     if (is.list(Parameters)) {
       for (ip in 1:length(Parameters)) {
         lpar = Parameters[[ip]]
+        if (!"model" %in% names(lpar)) lpar$model = names(Parameters)[ip]
         pnames = slotNames("HMPar")
-        names(lpar) = match.arg(names(lpar), pnames)
+        names(lpar) = match.arg(names(lpar), pnames, several.ok = TRUE)
         Parameters[[ip]] = do.call("HMPar", lpar)
       }
     } else stop(paste("Expecting Parameters as list, got", class(Parameters)))
@@ -41,8 +41,11 @@ RHydro = function(object, newval, model, Parameters, ...) {
   if ("Obs" %in% names(newval) || "Pred" %in% names(newval)) {
     if ("Obs" %in% names(newval)) Obs = do.call("HMData", newval$Obs) else Obs = NULL
     if ("Pred" %in% names(newval)) {
-      Pred = list(do.call("HMData", newval$Pred[[1]]))
-      names(Pred)[1] = names(newval$Pred)[1]
+      for (ip in 1:length(newval$Pred)) {
+        lpred = do.call("HMData", newval$Pred[[ip]])
+        if (ip == 1) Pred = list(p1 = lpred) else Pred = c(Pred, lpred)
+      }
+      names(Pred) = names(newval$Pred)
     } else Pred = list()
   } else {    # The elements of Obs are given separately, no Pred
     Obs = do.call("HMData", newval)
@@ -54,7 +57,7 @@ RHydro = function(object, newval, model, Parameters, ...) {
   } else {
     if (length(Parameters) > 0) object@Parameters = updateParameters(object@Parameters, Parameters)
     if (!is.null(Obs)) object@Obs = updateHMData(HMobs(object), Obs)
-    if (!is.null(Pred)) object@Pred[[names(Pred)]] = updateHMData(HMobs(object), Pred[[1]])
+    if (!is.null(Pred)) object@Pred = updateHMData(HMpred(object), Pred)
     if (length(control) > 0) object@control = modifyList(object@control, control)   
     if (length(Dots) > 0) object@Dots = modifyList(object@Dots, Dots)   
   }

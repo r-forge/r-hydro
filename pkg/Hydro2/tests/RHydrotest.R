@@ -17,12 +17,13 @@ HMObject2 = RHydro(model = "topmodel", Obs = list(Temporal = list(data = inputs)
 
 # Parameters lost
 HMObject3 = RHydro(model = "topmodel", Temporal = list(data = inputs),
-    Parameters = list(param = data.frame(parameters[1:9])), Dots = list(top = topidx, del = delay))
+    Parameters = list(param = data.frame(parameters = parameters[1:9])), Dots = list(top = topidx, del = delay))
 
 
 
 all.equal(HMObject, HMObject1)
-all.equal(HMObject2, HMObject3)
+all.equal(HMObject, HMObject2)
+all.equal(HMObject, HMObject3)
 
 res = topmodel(HMObject)
 res2 = predict(HMObject)
@@ -31,7 +32,7 @@ all.equal(res, res2)
 
 # Modification/slot replacement
 HMObject = RHydro(HMObject, newval = list(Obs = list(Temporal = list(data = inputs[1:9999,])),
-                  Pred = list(newmodel = list(Temporal = 
+                  Pred = list(topmodel = list(Temporal = 
                                                 list(predictions = res@Pred[[1]]@Temporal[[1]][1:9999,])))))
 str(HMObject)
 
@@ -70,7 +71,7 @@ HMObject = RHydro(model = "topmodel", Temporal = list(data = inputs),
     Parameters = list(param = data.frame(parameters = parameters[1:9])), Dots = list(top = topidx, del = delay),
     control = list(dependent = "Q"))
 res2 = predict(HMObject)
-Hydro:::nashsut(res2@Pred@Temporal$predictions, HMObject@Obs@Temporal$data$Q)
+Hydro:::nashsut(res2@Pred$topmodel@Temporal$predictions, HMObject@Obs@Temporal$data$Q)
 Hydro:::nashsut(HMtemporalData(HMpredictions(res2))$predictions,
                 HMtemporalData(HMobservations(HMObject))$data$Q)
 HMObjectiveFunction(parameters[1:9], HMObject)
