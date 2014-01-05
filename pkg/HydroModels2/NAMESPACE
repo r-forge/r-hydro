@@ -1,5 +1,5 @@
 useDynLib(HydroModels2)
-import(Hydro2, stats) 
+import(Hydro2) #EP:, stats) 
 #unclear what to import, removed graphics, sp
 importFrom("graphics", "plot")
 
