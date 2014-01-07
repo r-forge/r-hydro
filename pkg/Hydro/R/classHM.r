@@ -1,7 +1,7 @@
 
 
 # Definition of the class HMData
-# Lines has a different slot, although not sure if this makes sense, it is a 
+# Network has a separate slot, although not sure if this makes sense, it is mostly a 
 # spatial feature. A reason for separation is that points, grids and pixels
 # have more similarities, and can also be exchanged with rasters, wheras
 # Lines (and polygons) are of a different type.
@@ -13,12 +13,12 @@ HMData = setClass("HMData", slots = c(
 	Spatial = "list",
 	Temporal = "list",
 	SpatioTemporal = "list",
-  Lines = "list",
+  Network = "list",
   Dots = "list"),
   prototype = prototype(Spatial = list(),
                           Temporal = list(),
                           SpatioTemporal = list(),
-                          Lines = list(),
+                          Network = list(),
                           Dots = list()),
   validity = function(object) {
      listIsNamed = function(x) {
@@ -28,13 +28,13 @@ HMData = setClass("HMData", slots = c(
 	 	stopifnot(listIsNamed(object@Spatial))
 	 	stopifnot(listIsNamed(object@Temporal))
 	 	stopifnot(listIsNamed(object@SpatioTemporal))
-  	stopifnot(listIsNamed(object@Lines))
+  	stopifnot(listIsNamed(object@Network))
   	stopifnot(listIsNamed(object@Dots))
   	# check classes:
   	stopifnot(all(sapply(object@Spatial, FUN = function(x) is(x, "Spatial") | is(x, "Raster"))))
   	stopifnot(all(sapply(object@Temporal, FUN = function(x) is(x, "xts") | is(x, "zoo"))))
   	stopifnot(all(sapply(object@SpatioTemporal, FUN = function(x) is(x, "ST") | is(x, "RasterStack"))))
-  	stopifnot(all(sapply(object@Lines, FUN = function(x) is(x, "SpatialLines") | is(x, "igraph"))))
+  	stopifnot(all(sapply(object@Network, FUN = function(x) is(x, "SpatialLines") | is(x, "igraph"))))
  	  return(TRUE)
   }
 )                                               
