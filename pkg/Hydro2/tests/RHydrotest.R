@@ -66,26 +66,28 @@ if (FALSE) {
 
 
 require(HydroModels2)
+options(error = recover)
 data(huagrahuma2)
 HMObject = RHydro(model = "topmodel", Temporal = list(data = inputs),
     Parameters = list(param = data.frame(parameters = parameters[1:9])), Dots = list(top = topidx, del = delay),
     control = list(dependent = "Q"))
 res2 = predict(HMObject)
 Hydro:::nashsut(res2@Pred$topmodel@Temporal$predictions, HMObject@Obs@Temporal$data$Q)
-Hydro:::nashsut(HMtemporalData(HMpredictions(res2))$predictions,
-                HMtemporalData(HMobservations(HMObject))$data$Q)
+Hydro:::nashsut(HMtemporalData(HMpred(res2)$topmodel)$predictions,
+                HMtemporalData(HMobs(HMObject))$data$Q)
 HMObjectiveFunction(parameters[1:9], HMObject)
 parameters = parameters[1:9]*2
 HMObjectiveFunction(parameters[1:9], HMObject)
 parlower = parameters*(ifelse(parameters < 0, 4, 0.25))
 parupper = parameters*(ifelse(parameters < 0, 0.25, 4))
 
-HMObject = RHydro("topmodel", Temporal = list(data = inputs),
-                  Parameters = list(parameters = parameters[1:9], parlower = parlower[1:9], 
-                                    parupper = parupper[1:9],  top = topidx, del = delay),
+HMObject = RHydro(model = "topmodel", Temporal = list(data = inputs),
+                  Parameters = list(parameters = data.frame(parameters = parameters[1:9]), 
+                                    parlims = list(parlower = parlower[1:9], 
+                                    parupper = parupper[1:9])),  
+                  Dots = list(top = topidx, del = delay),
                   control = list(dependent = "Q"))
-options(error = recover)
-predict(HMObject)
+pp = predict(HMObject)
 HMCalib = calibrate(HMObject)
 
 

@@ -1,7 +1,7 @@
 
 
 # Definition of the class HMData
-# Lines has a different slot, although not sure if this makes sense, it is a 
+# Network has a different slot, although not sure if this makes sense, it is mostly a 
 # spatial feature. A reason for separation is that points, grids and pixels
 # have more similarities, and can also be exchanged with rasters, wheras
 # Lines (and polygons) are of a different type.
@@ -13,11 +13,11 @@ HMData = setClass("HMData", slots = c(
 	Spatial = "list",
 	Temporal = "list",
 	SpatioTemporal = "list",
-  Lines = "list"),
+  Network = "list"),
   prototype = prototype(Spatial = list(),
                           Temporal = list(),
                           SpatioTemporal = list(),
-                          Lines = list()),
+                          Network = list()),
   validity = function(object) {
      listIsNamed = function(x) {
 	 	  n = names(x)
@@ -26,13 +26,13 @@ HMData = setClass("HMData", slots = c(
 	 	stopifnot(listIsNamed(object@Spatial))
 	 	stopifnot(listIsNamed(object@Temporal))
 	 	stopifnot(listIsNamed(object@SpatioTemporal))
-  	stopifnot(listIsNamed(object@Lines))
+  	stopifnot(listIsNamed(object@Network))
   #	stopifnot(listIsNamed(object@Dots))
   	# check classes:
   	stopifnot(all(sapply(object@Spatial, FUN = function(x) is(x, "Spatial") | is(x, "Raster"))))
   	stopifnot(all(sapply(object@Temporal, FUN = function(x) is(x, "xts") | is(x, "zoo"))))
   	stopifnot(all(sapply(object@SpatioTemporal, FUN = function(x) is(x, "ST") | is(x, "RasterStack"))))
-  	stopifnot(all(sapply(object@Lines, FUN = function(x) is(x, "SpatialLines") | is(x, "igraph"))))
+  	stopifnot(all(sapply(object@Network, FUN = function(x) is(x, "SpatialLines") | is(x, "igraph"))))
  	  return(TRUE)
   }
 )                                               
@@ -86,14 +86,20 @@ HM = setClass("HM",
   })
 
 
-HMPar = setClass("HMPar", slots = c(parameters = "data.frame",  model = "character", parlims = "list"),
+HMPar = setClass("HMPar", slots = c(parameters = "data.frame",  
+                                    model = "character", parlims = "list"),
                  prototype = prototype(parlims = list()))
 
 setAs("HMPar", "list", function(from) sapply(slotNames(from), function(x) slot(from, x)))
 
 HMobs = function(object) object@Obs
-HMpred = function(object) object@Pred
-
+HMpred = function(object, model) {
+  if (missing(model) || is.null(model)) {
+    object@Pred
+  } else {
+    object@Pred[[model]]
+  }
+}
 # HMparameters returns either:
 #  - the complete set of Parameters
 #  - the parameters of one model 
@@ -115,7 +121,11 @@ HMspatiotemporalData = function(object) object@SpatioTemporal
 updateParameters = function(obPars, Parameters){
   for (ip in 1:length(Parameters)) {
     pname = names(Parameters)[ip]
-    obPars[[pname]] = modifyList(obPars[[pname]], Parameters[[ip]])
+    if (pname %in% names(obPars)) {
+      obPars[[pname]] = do.call("HMPar", modifyList(as(obPars[[pname]], "list"), as(Parameters[[ip]], "list")))
+    } else {
+      obPars[[pname]] = Parameters[[ip]]
+    }
   }
   obPars  
 }

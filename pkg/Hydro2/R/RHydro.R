@@ -38,6 +38,14 @@ RHydro = function(object, newval, model,  ...) {
     control = newval$control
     newval = newval[-which(names(newval) == "control")]
   } else control = list()
+  if ("performance" %in% names(newval)) {
+    performance = newval$performance
+    if (!is.list(performance)) {
+      performance = list(performance)
+      names(performance) = model
+    }
+    newval = newval[-which(names(newval) == "performance")]
+  } else performance = list()
   if ("Obs" %in% names(newval) || "Pred" %in% names(newval)) {
     if ("Obs" %in% names(newval)) Obs = do.call("HMData", newval$Obs) else Obs = NULL
     if ("Pred" %in% names(newval)) {
@@ -57,8 +65,9 @@ RHydro = function(object, newval, model,  ...) {
   } else {
     if (length(Parameters) > 0) object@Parameters = updateParameters(object@Parameters, Parameters)
     if (!is.null(Obs)) object@Obs = updateHMData(HMobs(object), Obs)
-    if (!is.null(Pred)) object@Pred = updateHMData(HMpred(object), Pred)
+    if (length(Pred) > 0) object@Pred = updateHMData(HMpred(object), Pred)
     if (length(control) > 0) object@control = modifyList(object@control, control)   
+    if (length(performance) > 0) object@performance = modifyList(object@control, performance)   
     if (length(Dots) > 0) object@Dots = modifyList(object@Dots, Dots)   
   }
   if (length(Parameters) > 0) {

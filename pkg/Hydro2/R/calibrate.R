@@ -15,13 +15,13 @@ nashsut = function(sim, obs) {
 # Default objective function, can use either NSE -efficiency,
 # one of the criteria from gof (hydroGOF), or a function
 HMObjectiveFunction = function(parameters, object, gof = "NSE") {
-  object = try(RHydro(object,                         
-    model = names(HMparameters(object)), 
+  model = names(HMparameters(object))
+  object = try(RHydro(object, model = model, 
           Parameters = list(parameters = data.frame(parameters = parameters))))
   object = try(predict(object))
   if (is(object, "try-error")) return(1e9)
-  predictions = HMpredictions(object)
-  observations = HMobservations(object)
+  predictions = HMpred(object, model)
+  observations = HMobs(object)
   temporal = HMtemporalData(observations)
 
 # This covers the cases where
@@ -52,38 +52,44 @@ HMObjectiveFunction = function(parameters, object, gof = "NSE") {
 
 
 setMethod('calibrate', signature(object = "HM"),
-    function(object, method = "sce", objectiveFunction = NULL, ...){
+    function(object, models, method = "sce", objectiveFunction = NULL, ...){
 # Here we have to choose between using calibData and formula
 # Trying first with formula
-  objfunc = NULL
-  if (is.function(objectiveFunction)) {
-    objfunc = objectiveFunction
-  } else if (!is.null(objectiveFunction) && isGeneric(objectiveFunction)) {
-    model = gsub("HM", "", class(object))
-    if (existsMethod("objectiveFunction", model)) {
-      objfunc = getMethod("objectiveFunction", model)
-    } 
-  } else if (is.character(objectiveFunction)) {
-    model = gsub("HM", "", class(object))
-    objfunc = try(get(paste0("objective.", model)), silent = TRUE)
-    if (is(objfunc, "try-error")) {
-      objfunc = try(getFunction(objectiveFunction))
-      if (is(objfunc, "try-error")) objfunc = NULL
+  if (missing(models) || is.null(model)) {
+    pars = HMparameters(object)
+    models = names(pars)
+  } 
+
+  for (model in models) {  
+    objfunc = NULL
+    if (is.function(objectiveFunction)) {
+      objfunc = objectiveFunction
+    } else if (!is.null(objectiveFunction) && isGeneric(objectiveFunction)) {
+      if (existsMethod("objectiveFunction", model)) {
+        objfunc = getMethod("objectiveFunction", model)
+      } 
+    } else if (is.character(objectiveFunction)) {
+      objfunc = try(get(paste0("objective.", model)), silent = TRUE)
+      if (is(objfunc, "try-error")) {
+        objfunc = try(getFunction(objectiveFunction))
+        if (is(objfunc, "try-error")) objfunc = NULL
+      }
     }
-  }
-  if (is.null(objfunc)) objfunc = HMObjectiveFunction
-  if (method == "sce") {
-    best = sceua(objfunc, HMparameters(object)$parameters, 
-                 HMparameters(object)$parlower,
-                 HMparameters(object)$parupper, object = object, ...)
+    if (is.null(objfunc)) objfunc = HMObjectiveFunction
+    if (method == "sce") {
+      best = sceua(objfunc, HMparameters(object, model)@parameters[,1], 
+                 as.numeric(HMparameters(object, model)@parlims$parlower),
+                 as.numeric(HMparameters(object, model)@parlims$parupper), object = object, ...)
      
+    }
+    object = RHydro(object, 
+             model = model, 
+             Parameters = list(parameters = data.frame(parameters = best$par)), 
+             performance = best$value)
+    object = predict(object, model = model)
   }
- object = RHydro(object, 
-      model = names(HMparameters(object)), 
-             Parameters = list(parameters = data.frame(parameters = best$par), 
-                                        performance = best$value))
-  predict(object)
-}
+  object
+} 
 )
 
 
