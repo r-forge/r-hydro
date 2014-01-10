@@ -15,8 +15,10 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> library(HydroModels)
-Loading required package: Hydro
+> 
+> 
+> library(HydroModels2)
+Loading required package: Hydro2
 Loading required package: xts
 Loading required package: zoo
 
@@ -27,42 +29,43 @@ The following object is masked from 'package:base':
     as.Date, as.Date.numeric
 
 Loading required package: sp
-Warning message:
-package 'sp' was built under R version 3.0.2 
-> 
-> 
-> 
-> library(HydroModels)
+Warning messages:
+1: package 'sp' was built under R version 3.0.2 
+2: replacing previous import 'predict' when loading 'stats' 
 > data(huagrahuma)
 > attach(huagrahuma)
-The following object is masked from package:HydroModels:
+The following object is masked from package:HydroModels2:
 
     delay, inputs, parameters, topidx
 > options(error = recover)
 > #HMObject = RHydro("topmodel", Temporal = list(data = inputs),
 > #    Parameters = as.list(parameters[1:9]), Dots = list(top = topidx, del = delay))
-> HMObject = RHydro("topmodel", newval = list(Obs = list(Temporal = list(data = inputs)),
-+     Parameters = list(param = parameters[1:9], top = topidx, del = delay)))
+> HMObject = RHydro(model = "topmodel", newval = list(Obs = list(Temporal = list(data = inputs)),
++     Parameters = list(param = data.frame(parameters = parameters[1:9])), Dots = list(top = topidx, del = delay)))
 > 
-> HMObject1 = RHydro("topmodel", list(Obs = list(Temporal = list(data = inputs)),
-+     Parameters = list(param = parameters[1:9], top = topidx, del = delay)))
+> HMObject1 = RHydro(model = "topmodel", newval = list(Obs = list(Temporal = list(data = inputs)),
++     Parameters = list(param = data.frame(parameters = parameters[1:9])), Dots = list(top = topidx, del = delay)))
 > 
-> HMObject2 = RHydro("topmodel", Obs = list(Temporal = list(data = inputs)),
-+     Parameters = list(param = parameters[1:9], top = topidx, del = delay))
+> HMObject2 = RHydro(model = "topmodel", Obs = list(Temporal = list(data = inputs)),
++     Parameters = list(param = data.frame(parameters = parameters[1:9])), Dots = list( top = topidx, del = delay))
 > 
-> HMObject3 = RHydro("topmodel", Temporal = list(data = inputs),
-+     Parameters = list(param = parameters[1:9], top = topidx, del = delay))
+> HMObject3 = RHydro(model = "topmodel", Temporal = list(data = inputs),
++     Parameters = list(param = data.frame(parameters = parameters[1:9])), Dots = list(top = topidx, del = delay))
+> 
+> 
 > 
 > all.equal(HMObject, HMObject1)
 [1] TRUE
-> all.equal(HMObject2, HMObject3)
+> all.equal(HMObject, HMObject2)
+[1] TRUE
+> all.equal(HMObject, HMObject3)
 [1] TRUE
 > 
 > res = topmodel(HMObject)
 > res2 = predict(HMObject)
 > str(res)
-Formal class 'HMtopmodel' [package ".GlobalEnv"] with 5 slots
-  ..@ Obs       :Formal class 'HMData' [package "Hydro"] with 5 slots
+Formal class 'HM' [package "Hydro2"] with 6 slots
+  ..@ Obs        :Formal class 'HMData' [package "Hydro2"] with 4 slots
   .. .. ..@ Spatial       : list()
   .. .. ..@ Temporal      :List of 1
   .. .. .. ..$ data:'zoo' series from 2004-03-30 05:30:00 to 2004-07-12 09:15:00
@@ -72,68 +75,75 @@ Formal class 'HMtopmodel' [package ".GlobalEnv"] with 5 slots
   .. .. .. .. .. ..$ : chr [1:3] "P" "Q" "ETp"
   Index:  POSIXt[1:10000], format: "2004-03-30 05:30:00" ...
   .. .. ..@ SpatioTemporal: list()
-  .. .. ..@ Lines         : list()
-  .. .. ..@ Dots          : list()
-  ..@ CalibData : NULL
-  ..@ Pred      :Formal class 'HMData' [package "Hydro"] with 5 slots
-  .. .. ..@ Spatial       : list()
-  .. .. ..@ Temporal      :List of 1
-  .. .. .. ..$ predictions:'zoo' series from 2004-03-30 05:30:00 to 2004-07-12 09:15:00
+  .. .. ..@ Network       : list()
+  ..@ Pred       :List of 1
+  .. ..$ topmodel:Formal class 'HMData' [package "Hydro2"] with 4 slots
+  .. .. .. ..@ Spatial       : list()
+  .. .. .. ..@ Temporal      :List of 1
+  .. .. .. .. ..$ predictions:'zoo' series from 2004-03-30 05:30:00 to 2004-07-12 09:15:00
   Data: num [1:10000] 7.92e-06 7.92e-06 7.92e-06 7.92e-06 7.92e-06 ...
   Index:  POSIXct[1:10000], format: "2004-03-30 05:30:00" ...
-  .. .. ..@ SpatioTemporal: list()
-  .. .. ..@ Lines         : list()
-  .. .. ..@ Dots          : list()
-  ..@ Parameters:List of 3
-  .. ..$ param: Named num [1:9] 3.17e-05 -5.99e-01 2.13e-02 2.63e-03 8.68e-01 ...
-  .. .. ..- attr(*, "names")= chr [1:9] "qs0" "lnTe" "m" "Sr0" ...
-  .. ..$ top  :'data.frame':	16 obs. of  2 variables:
+  .. .. .. ..@ SpatioTemporal: list()
+  .. .. .. ..@ Network       : list()
+  ..@ Dots       :List of 2
+  .. ..$ top:'data.frame':	16 obs. of  2 variables:
   .. .. ..$ breaks: num [1:16] 16.2 15.3 14.3 13.4 12.4 ...
   .. .. ..$ area  : num [1:16] 0.000619 0.000464 0.001857 0.004488 0.003869 ...
-  .. ..$ del  :'data.frame':	4 obs. of  2 variables:
+  .. ..$ del:'data.frame':	4 obs. of  2 variables:
   .. .. ..$ delay1: num [1:4] 0 1000 3000 5000
   .. .. ..$ delay2: num [1:4] 0 0.1 0.5 1
-  ..@ control   : list()
+  ..@ Parameters :List of 1
+  .. ..$ topmodel:Formal class 'HMPar' [package "Hydro2"] with 3 slots
+  .. .. .. ..@ parameters:'data.frame':	9 obs. of  1 variable:
+  .. .. .. .. ..$ parameters: num [1:9] 3.17e-05 -5.99e-01 2.13e-02 2.63e-03 8.68e-01 ...
+  .. .. .. ..@ model     : chr "topmodel"
+  .. .. .. ..@ parlims   : list()
+  ..@ performance: list()
+  ..@ control    : list()
 > all.equal(res, res2)
 [1] TRUE
 > 
 > # Modification/slot replacement
-> HMObject = RHydro(HMObject, list(Obs = list(Temporal = list(data = inputs[1:9999,])),
-+                   Pred = list(Temporal = list(predictions = res@Pred@Temporal$predictions[1:9999,]))))
+> HMObject = RHydro(HMObject, newval = list(Obs = list(Temporal = list(data = inputs[1:9999,])),
++                   Pred = list(topmodel = list(Temporal = 
++                                                 list(predictions = res@Pred[[1]]@Temporal[[1]][1:9999,])))))
 > str(HMObject)
-Formal class 'HMtopmodel' [package ".GlobalEnv"] with 5 slots
-  ..@ Obs       :Formal class 'HMData' [package "Hydro"] with 5 slots
+Formal class 'HM' [package "Hydro2"] with 6 slots
+  ..@ Obs        :Formal class 'HMData' [package "Hydro2"] with 4 slots
   .. .. ..@ Spatial       : list()
   .. .. ..@ Temporal      :List of 1
-  .. .. .. ..$ data:'zoo' series from 2004-03-30 05:30:00 to 2004-07-12 09:00:00
-  Data: num [1:9999, 1:3] 0 0 0 0 0 0 0 0 0 0 ...
+  .. .. .. ..$ data:'zoo' series from 2004-03-30 05:30:00 to 2004-07-12 09:15:00
+  Data: num [1:10000, 1:3] 0 0 0 0 0 0 0 0 0 0 ...
   .. .. .. .. ..- attr(*, "dimnames")=List of 2
   .. .. .. .. .. ..$ : NULL
   .. .. .. .. .. ..$ : chr [1:3] "P" "Q" "ETp"
-  Index:  POSIXt[1:9999], format: "2004-03-30 05:30:00" ...
+  Index:  POSIXt[1:10000], format: "2004-03-30 05:30:00" ...
   .. .. ..@ SpatioTemporal: list()
-  .. .. ..@ Lines         : list()
-  .. .. ..@ Dots          : list()
-  ..@ CalibData : NULL
-  ..@ Pred      :Formal class 'HMData' [package "Hydro"] with 5 slots
-  .. .. ..@ Spatial       : list()
-  .. .. ..@ Temporal      :List of 1
-  .. .. .. ..$ predictions:'zoo' series from 2004-03-30 05:30:00 to 2004-07-12 09:00:00
+  .. .. ..@ Network       : list()
+  ..@ Pred       :List of 1
+  .. ..$ topmodel:Formal class 'HMData' [package "Hydro2"] with 4 slots
+  .. .. .. ..@ Spatial       : list()
+  .. .. .. ..@ Temporal      :List of 1
+  .. .. .. .. ..$ predictions:'zoo' series from 2004-03-30 05:30:00 to 2004-07-12 09:00:00
   Data: num [1:9999] 7.92e-06 7.92e-06 7.92e-06 7.92e-06 7.92e-06 ...
   Index:  POSIXct[1:9999], format: "2004-03-30 05:30:00" ...
-  .. .. ..@ SpatioTemporal: list()
-  .. .. ..@ Lines         : list()
-  .. .. ..@ Dots          : list()
-  ..@ Parameters:List of 3
-  .. ..$ param: Named num [1:9] 3.17e-05 -5.99e-01 2.13e-02 2.63e-03 8.68e-01 ...
-  .. .. ..- attr(*, "names")= chr [1:9] "qs0" "lnTe" "m" "Sr0" ...
-  .. ..$ top  :'data.frame':	16 obs. of  2 variables:
+  .. .. .. ..@ SpatioTemporal: list()
+  .. .. .. ..@ Network       : list()
+  ..@ Dots       :List of 2
+  .. ..$ top:'data.frame':	16 obs. of  2 variables:
   .. .. ..$ breaks: num [1:16] 16.2 15.3 14.3 13.4 12.4 ...
   .. .. ..$ area  : num [1:16] 0.000619 0.000464 0.001857 0.004488 0.003869 ...
-  .. ..$ del  :'data.frame':	4 obs. of  2 variables:
+  .. ..$ del:'data.frame':	4 obs. of  2 variables:
   .. .. ..$ delay1: num [1:4] 0 1000 3000 5000
   .. .. ..$ delay2: num [1:4] 0 0.1 0.5 1
-  ..@ control   : list()
+  ..@ Parameters :List of 1
+  .. ..$ topmodel:Formal class 'HMPar' [package "Hydro2"] with 3 slots
+  .. .. .. ..@ parameters:'data.frame':	9 obs. of  1 variable:
+  .. .. .. .. ..$ parameters: num [1:9] 3.17e-05 -5.99e-01 2.13e-02 2.63e-03 8.68e-01 ...
+  .. .. .. ..@ model     : chr "topmodel"
+  .. .. .. ..@ parlims   : list()
+  ..@ performance: list()
+  ..@ control    : list()
 > 
 > #################
 > if (FALSE) {
@@ -156,12 +166,54 @@ Formal class 'HMtopmodel' [package ".GlobalEnv"] with 5 slots
 + }
 > 
 > 
+> require(HydroModels2)
+> options(error = recover)
 > data(huagrahuma2)
-> HMObject = RHydro("topmodel", Temporal = list(data = inputs),
-+     Parameters = list(param = parameters[1:9], top = topidx, del = delay))
+> HMObject = RHydro(model = "topmodel", Temporal = list(data = inputs),
++     Parameters = list(param = data.frame(parameters = parameters[1:9])), Dots = list(top = topidx, del = delay),
++     control = list(dependent = "Q"))
 > res2 = predict(HMObject)
-> Hydro:::nashsut(res2@Pred@Temporal$predictions, HMObject@Obs@Temporal$data$Q)
+> Hydro:::nashsut(res2@Pred$topmodel@Temporal$predictions, HMObject@Obs@Temporal$data$Q)
 [1] 0.9312002
 Warning message:
 In merge.zoo(e1, e2, all = FALSE, retclass = NULL) :
   Index vectors are of different classes: POSIXct POSIXt
+> Hydro:::nashsut(HMtemporalData(HMpred(res2)$topmodel)$predictions,
++                 HMtemporalData(HMobs(HMObject))$data$Q)
+[1] 0.9312002
+Warning message:
+In merge.zoo(e1, e2, all = FALSE, retclass = NULL) :
+  Index vectors are of different classes: POSIXct POSIXt
+> HMObjectiveFunction(parameters[1:9], HMObject)
+[1] 0.06879981
+Warning message:
+In merge.zoo(e1, e2, all = FALSE, retclass = NULL) :
+  Index vectors are of different classes: POSIXct POSIXt
+> parameters = parameters[1:9]*2
+> HMObjectiveFunction(parameters[1:9], HMObject)
+[1] 0.290311
+Warning message:
+In merge.zoo(e1, e2, all = FALSE, retclass = NULL) :
+  Index vectors are of different classes: POSIXct POSIXt
+> parlower = parameters*(ifelse(parameters < 0, 4, 0.25))
+> parupper = parameters*(ifelse(parameters < 0, 0.25, 4))
+> 
+> HMObject = RHydro(model = "topmodel", Temporal = list(data = inputs),
++                   Parameters = list(parameters = data.frame(parameters = parameters[1:9]), 
++                                     parlims = list(parlower = parlower[1:9], 
++                                     parupper = parupper[1:9])),  
++                   Dots = list(top = topidx, del = delay),
++                   control = list(dependent = "Q"))
+> pp = predict(HMObject)
+> HMCalib = calibrate(HMObject, maxn = 100)
+52 best 0.219 function convergence 200 parameter convergence 8319.446 
+89 best 0.127 function convergence 200 parameter convergence 5997.907 
+123 best 0.0917 function convergence 200 parameter convergence 4805.575 
+There were 50 or more warnings (use warnings() to see the first 50)
+> 
+> 
+> 
+> 
+> proc.time()
+   user  system elapsed 
+  25.36    0.37   27.61 

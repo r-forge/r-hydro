@@ -63,21 +63,21 @@ list()
 Slot "SpatioTemporal":
 list()
 
-Slot "Lines":
+Slot "Network":
 list()
 
 Slot "Dots":
 list()
 
 
-Slot "CalibData":
-NULL
-
 Slot "Pred":
 NULL
 
 Slot "Parameters":
 list()
+
+Slot "performance":
+[1] NaN
 
 Slot "control":
 list()
@@ -135,15 +135,12 @@ Slot "endTime":
 
 
 
-Slot "Lines":
+Slot "Network":
 list()
 
 Slot "Dots":
 list()
 
-
-Slot "CalibData":
-NULL
 
 Slot "Pred":
 NULL
@@ -151,13 +148,16 @@ NULL
 Slot "Parameters":
 list()
 
+Slot "performance":
+[1] NaN
+
 Slot "control":
 list()
 
 > 
 > Calib = HMData(Temporal = list(runoff = as.xts((1:10)/10,as.POSIXct(1:10, origin = "1970-01-01"))))
 > 
-> hm3 = HM(Obs = hmobs2, CalibData = Calib, Parameters = par)
+> hm3 = HM(Obs = hmobs2,  Parameters = par)
 > 
 > hm3
 An object of class "HM"
@@ -199,37 +199,7 @@ Slot "endTime":
 
 
 
-Slot "Lines":
-list()
-
-Slot "Dots":
-list()
-
-
-Slot "CalibData":
-An object of class "HMData"
-Slot "Spatial":
-list()
-
-Slot "Temporal":
-$runoff
-                    [,1]
-1970-01-01 00:00:01  0.1
-1970-01-01 00:00:02  0.2
-1970-01-01 00:00:03  0.3
-1970-01-01 00:00:04  0.4
-1970-01-01 00:00:05  0.5
-1970-01-01 00:00:06  0.6
-1970-01-01 00:00:07  0.7
-1970-01-01 00:00:08  0.8
-1970-01-01 00:00:09  0.9
-1970-01-01 00:00:10  1.0
-
-
-Slot "SpatioTemporal":
-list()
-
-Slot "Lines":
+Slot "Network":
 list()
 
 Slot "Dots":
@@ -250,6 +220,9 @@ $cc
 [1] -5 -1
 
 
+Slot "performance":
+[1] NaN
+
 Slot "control":
 list()
 
@@ -257,4 +230,4 @@ list()
 > 
 > proc.time()
    user  system elapsed 
-   1.77    0.06    2.21 
+   2.01    0.10    2.30 

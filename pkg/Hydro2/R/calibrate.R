@@ -14,7 +14,7 @@ nashsut = function(sim, obs) {
 
 # Default objective function, can use either NSE -efficiency,
 # one of the criteria from gof (hydroGOF), or a function
-HMObjectiveFunction = function(parameters, object, gof = "NSE") {
+HMObjectiveFunction = function(parameters, object, gof = "NSE", ...) {
   model = names(HMparameters(object))
   object = try(RHydro(object, model = model, 
           Parameters = list(parameters = data.frame(parameters = parameters))))
@@ -44,7 +44,7 @@ HMObjectiveFunction = function(parameters, object, gof = "NSE") {
   } else if (is.character(gof)) {
     if (!require(hydroGOF)) 
       stop("cannot use criteria from hydroGOF:::gof, package is not installed")
-    return(1-gof(temporalData(prediction)[[1]], temporal[,dependent])[gof])      
+    return(1-gof(HMtemporalData(predictions)[[1]], temporal[,dependent])[gof])      
   } 
 }
 

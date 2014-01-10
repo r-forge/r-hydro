@@ -7,11 +7,8 @@ Author: Dominik Reusser, Wouter Buytaert, Claudia Vitolo, Jon Olav Skoien
 Maintainer: Dominik Reusser <dreusser@pik-potsdam.de>, Wouter Buytaert <w.buytaert@imperial.ac.uk>, Claudia Vitolo <c.vitolo@imperial.ac.uk>, Till Francke <francke@uni-potsdam.de>
 Depends: R (>= 2.14.0), xts, sp
 Imports: methods
-Suggests: spacetime
-#Imports: graphics, stats #, lhs, deSolve, XML, qualV, 
-#Suggests: segmented
-#Suggests: ncdf
+Suggests: spacetime, hydroGOF, HydroModels2
 Description: This package provides classes and functions for hydrological analysis
 License: GPL (>= 2)
-Collate: classHMParameters.R classHM.r RHydro.R calibrate.R predict.R sceua.R conformResolutions.R
+Collate: classHM.R RHydro.R calibrate.R predict.R sceua.R conformResolutions.R
 

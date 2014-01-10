@@ -15,7 +15,6 @@ HMObject1 = RHydro(model = "topmodel", newval = list(Obs = list(Temporal = list(
 HMObject2 = RHydro(model = "topmodel", Obs = list(Temporal = list(data = inputs)),
     Parameters = list(param = data.frame(parameters = parameters[1:9])), Dots = list( top = topidx, del = delay))
 
-# Parameters lost
 HMObject3 = RHydro(model = "topmodel", Temporal = list(data = inputs),
     Parameters = list(param = data.frame(parameters = parameters[1:9])), Dots = list(top = topidx, del = delay))
 
@@ -56,14 +55,6 @@ if (FALSE) {
   save(inputs, parameters, topidx, delay, file = "c:/users/jon/work/R-Forge/RHydro/pkg/HydroModels/data/huagrahuma2.rda")
 }
 
-if (FALSE) {
-  setwd("c:/jonWork/RForge/RHydro/pkg")
-  require(devtools)
-  install("Hydro")
-  require(devtools)
-  install("HydroModels")
- }
-
 
 require(HydroModels2)
 options(error = recover)
@@ -88,7 +79,7 @@ HMObject = RHydro(model = "topmodel", Temporal = list(data = inputs),
                   Dots = list(top = topidx, del = delay),
                   control = list(dependent = "Q"))
 pp = predict(HMObject)
-HMCalib = calibrate(HMObject)
+HMCalib = calibrate(HMObject, maxn = 100)
 
 
 

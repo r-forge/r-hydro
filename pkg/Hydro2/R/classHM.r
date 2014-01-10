@@ -71,26 +71,28 @@ updateHMData = function(HMD, newdata) {
 # but is there any reason that is necessary?
 
 
-setClassUnion("HMDataOrNull", c("HMData", "NULL"))
-setClassUnion("listOrNull", c("list", "NULL"))
 
 HM = setClass("HM", 
 	slots = c(Obs = "HMData", #CalibData = "HMDataOrNull",
-            Pred = "list", Dots = "list", Parameters = "list", performance = "list", control = "list"),
+            Pred = "list", Dots = "list", Parameters = "list", 
+            performance = "list", control = "list"),
   prototype = prototype(Obs = HMData(), #CalibData = NULL, 
                         Pred = list(),  Dots = list(), Parameters = list(), 
                         performance = list(), control = list()),
   validity = function(object) {
-    stopifnot(is.null(object@Pred) || length(object@Pred) == 0 || all(sapply(object@Pred, FUN = function(x) is(x, "HMData"))))
+    stopifnot(is.null(object@Pred) || length(object@Pred) == 0 || 
+              all(sapply(object@Pred, FUN = function(x) is(x, "HMData"))))
     return(TRUE)
   })
 
 
-HMPar = setClass("HMPar", slots = c(parameters = "data.frame",  
+setClassUnion("numericOrDataFrame", c("numeric", "data.frame"))
+HMPar = setClass("HMPar", slots = c(parameters = "numericOrDataFrame",  
                                     model = "character", parlims = "list"),
                  prototype = prototype(parlims = list()))
 
-setAs("HMPar", "list", function(from) sapply(slotNames(from), function(x) slot(from, x)))
+setAs("HMPar", "list", function(from) sapply(slotNames(from), 
+                       function(x) slot(from, x)))
 
 HMobs = function(object) object@Obs
 HMpred = function(object, model) {
@@ -114,6 +116,7 @@ HMparameters = function(object, model) {
 
 HMdots = function(object) object@Dots
 HMcontrol = function(object) object@control
+HMnetwork = function(object) object@network
 HMtemporalData = function(object) object@Temporal
 HMspatialData = function(object) object@Spatial
 HMspatiotemporalData = function(object) object@SpatioTemporal

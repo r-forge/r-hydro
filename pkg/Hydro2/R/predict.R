@@ -1,6 +1,5 @@
 setMethod("predict", signature = "HM",
-    .local <- function (object, model = NULL, newdata = NULL, all = FALSE,
-        probs = c(0.05, 0.95))
+    .local <- function (object, model = NULL)
     {
       parameters = HMparameters(object, model)
       if (!is.list(parameters)) parameters = list(parameters = parameters)

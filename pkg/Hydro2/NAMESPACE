@@ -13,6 +13,7 @@ exportClasses(
 
 export(HM,
        HMData,
+       HMPar,
        RHydro,
        calibrate,
        HMObjectiveFunction,
@@ -21,10 +22,13 @@ export(HM,
        HMpred,
        HMdots,
        HMcontrol,
+       HMnetwork,
        HMtemporalData,
        HMspatialData,
        HMspatiotemporalData,
-       updateHMData)
+       sceua,
+       updateHMData,
+       updateParameters)
 #exportMethods(print, plot, merge, coerce, validity.check, subset, predict)
 exportMethods(predict)
 
