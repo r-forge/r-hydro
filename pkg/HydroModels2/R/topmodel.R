@@ -5,7 +5,7 @@
 #HMObject = RHydro("hydModel", validationFunction, ...)
 
 if (!isGeneric("topmodel")) {
-  setGeneric("topmodel", function(object, data, ...)
+  setGeneric("topmodel", function(object, ...)
     standardGeneric("topmodel"))
 }
 
@@ -44,7 +44,7 @@ setMethod("topmodel", signature(object = "HM"),
 setClassUnion("numericOrDataFrame", c("numeric", "data.frame"))
 
 # Modification necessary to set iterations different from one 
-setMethod("topmodel", signature = c(object = "numericOrDataFrame", data = "zoo"),
+setMethod("topmodel", signature = c(object = "numericOrDataFrame"),
      function(object, 
                      data,
                      delay,

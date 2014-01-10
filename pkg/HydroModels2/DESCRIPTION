@@ -5,7 +5,8 @@ Version: 2013-08.1
 Date: 2013-08-27
 Author: Dominik Reusser, Wouter Buytaert, Claudia Vitolo
 Maintainer: Dominik Reusser <dreusser@pik-potsdam.de>, Wouter Buytaert <w.buytaert@imperial.ac.uk>, Claudia Vitolo <c.vitolo@imperial.ac.uk>, Till Francke <francke@uni-potsdam.de>
-Depends: R (>= 2.14.0), Hydro2
+Depends: R (>= 2.14.0), Hydro2, methods
+Imports: graphics, stats
 Suggests: segmented
 #Suggests: ncdf
 Description: This package provides classes and functions for hydrological analysis
