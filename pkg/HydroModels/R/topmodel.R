@@ -11,7 +11,7 @@
 
 
 if (!isGeneric("topmodel")) {
-	setGeneric("topmodel", function(object, data, ...)
+	setGeneric("topmodel", function(object, ...)
 		standardGeneric("topmodel"))
 }
 
@@ -21,7 +21,6 @@ if (!isGeneric("topmodel")) {
 
 setMethod("topmodel", signature(object = "HM"),
   function(object, ...) {
-    
     observations = HMobservations(object)
     data = HMtemporalData(observations)$data
   
@@ -45,7 +44,7 @@ setMethod("topmodel", signature(object = "HM"),
 
 
 # Modification necessary to set iterations different from one 
-setMethod("topmodel", signature = c(object = "numeric", data = "zoo"),
+setMethod("topmodel", signature(object = "numeric"),
      function(object, 
                      data,
                      delay,
@@ -53,6 +52,7 @@ setMethod("topmodel", signature = c(object = "numeric", data = "zoo"),
                      pm = c("NS"),
                      return.simulations = TRUE,
                      verbose = FALSE) {
+   
    parameters = object
    iterations = 1
   ## sort out the requested peformance measures

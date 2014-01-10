@@ -1,30 +1,29 @@
 \name{topmodel}
+\docType{methods}
 \alias{topmodel}
 \alias{topmodel,HM-method}
-\alias{topmodel,parameter-method}
+\alias{topmodel,numeric-method}
+
 
 
 \title{Implementation of the hydrological model TOPMODEL}
 \description{
-  This is an implementation of the 1995 Fortran version of the hydrological model TOPMODEL, originally developed by Keith Beven.
+This is an implementation of the 1995 Fortran version of the hydrological model TOPMODEL, originally developed by Keith Beven.
 }
 \usage{
-\S4method{extract}{Raster,matrix}(x, y, method='simple', buffer=NULL, small=FALSE, cellnumbers=FALSE, 
-     fun=NULL, na.rm=TRUE, layer, nl, df=FALSE, factors=FALSE, ...)
-
-\s4method{topmodel}{HM}(object, ...)
-\s4method{topmodel}{numeric}(object, data, delay, topidx, pm= c("NS"), return.simulations=TRUE, verbose = FALSE)
+\S4method{topmodel}{HM}(object,...)
+\S4method{topmodel}{numeric}(object,data,delay,topidx,pm= c("NS"),return.simulations=TRUE,verbose=FALSE)
 }
 \arguments{
-  \item{object}{Either: An object of class \code{\link{HM}}, or an array 
-                of the parameters for the model. }
-  \item{parameters}{A vector, matrix or HydroModelParameters object containing the input parameters (see below for the exact structure)}
+  \item{object}{Either: An object of class \code{\link[Hydro]{HM}}, or an array/data.frame 
+                with the parameters for the model. }
   \item{data}{A list of vectors or zoo time series, containing at least a member called ``prec'' (precipitation) and ``PET'' (potential evapotranspiration). ``Qobs'' may also be given, in which the Nash-Sutcliffe efficiency is calculated directly}
   \item{delay}{Delay function for overland flow (see below)}
   \item{topidx}{An object returned from the \code{\link{topidx}} method}
   \item{pm}{Return a performance measure rather than the simulated discharge. Currently only "NS" is implemented.}
   \item{return.simulations}{If set to TRUE, returns predicted discharge time series}
   \item{verbose}{If set to TRUE, returns besides predicted discharge also overland flow, base flow and storage}
+  \item{...}{Additional arguments (currently none implemented)}
 }
 \details{
 topmodel() automatically implements a Monte Carlo simulation. If the parameter argument is a single vector, the model is run once. If the parameter argument is a matrix, each row should represent a parameter set. In that case, the model is run with each parameter set (see the examples below).
@@ -54,9 +53,9 @@ Overland flow is routed through a delay function which represents the time spent
 }
 \value{
 Either:
-\itemize
+\itemize{
   \item{An object of class \code{\link{HM}}, if called with an object of this class}
-An object of type HydroModelRun. Depending on the options, the following slots are filled:
+  \item{An object of type HydroModelRun. Depending on the options, the following slots are filled:
 
 - If no observed discharge is given, and verbose = F, simulated discharge is stored as a simulated flux
 
@@ -64,6 +63,9 @@ An object of type HydroModelRun. Depending on the options, the following slots a
 
 - If observed discharge is given, the Nash-Sutcliffe efficiency is stored as a performance measure, and no simulated discharge is returned. This is useful for long model runs to minimise memory usage. Beware that invoking \code{topmodel()} without Q for a large number of run may require a large amount of memory, since the entire time series of simulated discharges is stored for each parameter set.
 }
+}
+}
+
 \references{Beven, K. J., Kirkby, M. J., 1979. A physically based variable contributing area model of basin hydrology. Hydrol. Sci. Bull. 24, 43-69.
 
 Beven K, Lamb R, Quinn P, Romanowicz R, Freer J, 1995. TOPMODEL. In: Sing VP (Ed), Computer Models of Watershed Hydrology. Water Resources Publications, Colorado. pp. 627-668.
@@ -83,11 +85,13 @@ attach(huagrahuma)
 
 output <- topmodel(parameters[1:9], inputs, topidx, delay)
 
-#Use HydroModel structure:
-mymodel <- HydroModel("topmodel", huagrahuma$parameters[1:9], 
- 	huagrahuma$inputs, delay = huagrahuma$delay,
-        topidx = huagrahuma$topidx)
-predictions <- predict(mymodel, probs=c(0.05, 0.95))
+#Use HM structure:
+HMObject = RHydro("topmodel", newval = list(Obs = list(Temporal = list(data = inputs)),
+    Parameters = list(param = parameters[1:9], top = topidx, del = delay)))
+res = topmodel(HMObject)
+res2 = predict(HMObject)
+str(res)
+all.equal(res, res2)
 
 
 }

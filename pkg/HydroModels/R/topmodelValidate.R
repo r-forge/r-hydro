@@ -5,7 +5,8 @@ setMethod("validate", signature = "topmodel",
             parameters = HMparameters(object)
             pnames = names(parameters)
             nnames = match.arg(pnames, 
-                               c("topidx", "parameters", "delay", "pm", "return.simulations", "verbose"), several.ok = TRUE)
+                               c("topidx", "parameters", "delay", "pm", "return.simulations", "verbose"), 
+                               several.ok = TRUE)
             names(parameters) = nnames
             parameters = parameters$parameters
             # Probably not necessary to check these
