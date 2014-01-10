@@ -37,7 +37,7 @@ updateParameters(obPars, Parameters)
     	         \item{Parameters}{list with parameters, the elements can be an array or data.frame
   	                  with parameters, parlims with parameter limits for calibration, or other
    	                  parameters useful for the model.}
-               \item{performance}{a list with the performance results for calibration/validation run, 
+               \item{performance}{the performance results for a calibration/validation run, 
                        e.g., a Nash-Suitcliffe efficiency}
                \item{control}{list of other elements necessary for simulation or calibration of the model.
                      Of particular use is the element "dependent", a character with the name
