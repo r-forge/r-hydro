@@ -20,9 +20,13 @@ export(HM,
        HMpredictions,
        HMdots,
        HMcontrol,
+       HMnetwork,
        HMtemporalData,
        HMspatialData,
-       HMspatiotemporalData,
+       HMspatioTemporalData,
+       sceua,
+       updateHMData,
+       updateParameters,
        validate)
 #exportMethods(print, plot, merge, coerce, validity.check, subset, predict)
 exportMethods(predict)

@@ -65,21 +65,22 @@ setClassUnion("HMDataOrNull", c("HMData", "NULL"))
 
 HM = setClass("HM", 
 	slots = c(Obs = "HMData", #CalibData = "HMDataOrNull", 
-            Pred = "HMDataOrNull", Parameters = "list", performance = "list", control = "list"),
+            Pred = "HMDataOrNull", Parameters = "list", performance = "numeric", control = "list"),
   prototype = prototype(Obs = HMData(), #CalibData = NULL, 
                         Pred = NULL, Parameters = list(), 
-                        performance = list(), control = list()))
+                        performance = NaN, control = list()))
 
 
 HMobservations = function(object) object@Obs
 HMpredictions = function(object) object@Pred
 HMparameters = function(object) object@Parameters
-HMdots = function(object) object@Dots
 HMcontrol = function(object) object@control
 HMtemporalData = function(object) object@Temporal
 HMspatialData = function(object) object@Spatial
-HMspatiotemporalData = function(object) object@SpatioTemporal
+HMspatioTemporalData = function(object) object@SpatioTemporal
+HMnetwork = function(object) object@network
+HMdots = function(object) object@Dots
 
 
-
+updateParameters = function(obPars, Parameters) modifyList(obPars, Parameters)  
 

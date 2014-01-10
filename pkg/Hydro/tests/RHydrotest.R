@@ -2,7 +2,6 @@ library(HydroModels)
 
 
 
-library(HydroModels)
 data(huagrahuma)
 attach(huagrahuma)
 options(error = recover)
@@ -53,13 +52,6 @@ if (FALSE) {
   save(inputs, parameters, topidx, delay, file = "c:/users/jon/work/R-Forge/RHydro/pkg/HydroModels/data/huagrahuma2.rda")
 }
 
-if (FALSE) {
-  setwd("c:/jonWork/RForge/RHydro/pkg")
-  require(devtools)
-  install("Hydro")
-  require(devtools)
-  install("HydroModels")
- }
 
 
 require(HydroModels)
@@ -83,7 +75,8 @@ HMObject = RHydro("topmodel", Temporal = list(data = inputs),
                   control = list(dependent = "Q"))
 options(error = recover)
 predict(HMObject)
-HMCalib = calibrate(HMObject)
+
+HMCalib = calibrate(HMObject, maxn = 20)
 
 
 
