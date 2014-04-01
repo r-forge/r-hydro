@@ -1,4 +1,4 @@
-ï»¿\name{baseflow_sep}
+\name{baseflow_sep}
 \alias{baseflow_sep}
 
 \title{
@@ -30,7 +30,7 @@ method-specific paramters, see details.
 \details{
 \code{method="DFM"} (default) selects baseflow separation using a single-pass digital filter method (e.g. Sawicz et al, 2011). It uses the parameter \code{c}.
 
-\code{method="constant_slope"} separates base flow by drawing a line with constant slope from the minima of the hydrograph to the next intersection with it. Dingman (2002) recommends for the parameter \code{c_slope} a value depending on catchment area A (A < 20 miÂ²): c_slope = 0.05 ftÂ³/s * A. You do the math, imperial units suck.
+\code{method="constant_slope"} separates base flow by drawing a line with constant slope from the minima of the hydrograph to the next intersection with it. Dingman (2002) recommends for the parameter \code{c_slope} a value depending on catchment area A (A < 20 mi²): c_slope = 0.05 ft³/s * A /h. You do the math, imperial units suck.
 
 \code{method="RLSWM"} re-scaled LOWESS-smoothed window minima. Determines the minima in a moving window of \code{window_size} timesteps and smoothes them using \code{\link{lowess}} with parameter \code{f_lowess}. If at any timestep baseflow is larger than the runoff, the entire baseflow-series is shrunk linearly.
 }
@@ -47,7 +47,7 @@ vector holding base flow time series
 
 
 \references{
-Sawicz, K., Wagener, T., Sivapalan, M., Troch, P. A., & Carrillo, G. (2011). Catchment classification: empirical analysis of hydrologic similarity based on catchment function in the eastern USA. \emph{Hydrology and Earth System Sciences}, 15(9), 2895â€“2911. http://dx.doi.org/10.5194/hess-15-2895-2011  
+Sawicz, K., Wagener, T., Sivapalan, M., Troch, P. A., & Carrillo, G. (2011). Catchment classification: empirical analysis of hydrologic similarity based on catchment function in the eastern USA. \emph{Hydrology and Earth System Sciences}, 15(9), 2895–2911. http://dx.doi.org/10.5194/hess-15-2895-2011  
   
 Dingman, S. L. (2002). Physical hydrology. Upper Saddle River, NJ: Prentice Hall.  
 }
@@ -62,7 +62,6 @@ Till Francke
 }
 
 \examples{
-rainfall = fuse.DATA[,"P"]
 runoff = fuse.DATA[,"Q"]
 
 bf = baseflow_sep(runoff, method="RLSWM", parms=c(window_size=50, f_lowess=0.2))

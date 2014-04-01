@@ -1,4 +1,4 @@
-﻿\name{remove_plateaus}
+\name{remove_plateaus}
 \alias{remove_plateaus}
 
 \title{
