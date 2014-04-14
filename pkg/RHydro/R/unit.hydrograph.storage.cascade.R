@@ -1,5 +1,5 @@
 #generate unit hydrograph according to linear storage cascade
-unit.hydrograph.storage.cascade = function(n,k,delta_t)
+unit.hydrograph.storage.cascade = function(n, k, delta_t)
 {
   #determine required length of unit hydrograph to capture at least 99% of response
   h=array(0,100) #initial estimate on length of h
@@ -27,7 +27,7 @@ unit.hydrograph.storage.cascade = function(n,k,delta_t)
 }
 
 #apply (multiple) unit hydrographs to rainfall series
-apply_uhg=function(rainfall, uhg_params, delta_t)
+apply_uhg = function(rainfall, uhg_params, delta_t)
 {
   if (length(uhg_params) == 2) uhg_params = matrix(c(uhg_params, a=1), ncol=3, dimnames=list(NULL,c("n","k","a")))
   
