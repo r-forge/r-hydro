@@ -1,4 +1,4 @@
-getDataValues <- function(ID=NULL, from=NULL, to=NULL, Site=NULL, Variable=NULL, Offset=NULL, OffsetType=NULL, CensorCode=NULL, Qualifier=NULL, Method=NULL, Source=NULL, Sample=NULL, DerivedFromID=NULL, QualityControlLevel=NULL, VersionID=NULL, VersionDate=NULL,show.deleted=FALSE, all.ID=FALSE ){
+getDataValues <- function(ID=NULL, from=NULL, to=NULL,  tz=c("global", "UTC", "GMT", "0", "local"), Site=NULL, Variable=NULL, Offset=NULL, OffsetType=NULL, CensorCode=NULL, Qualifier=NULL, Method=NULL, Source=NULL, Sample=NULL, DerivedFromID=NULL, QualityControlLevel=NULL, VersionID=NULL, VersionDate=NULL,show.deleted=FALSE, all.ID=FALSE ){
 
 	if(all.ID){
 		SiteID <-  Site
@@ -57,10 +57,10 @@ getDataValues <- function(ID=NULL, from=NULL, to=NULL, Site=NULL, Variable=NULL,
 		
 	}
 	if(!is.null(VersionID)){
-		old.entry <- restructureDataResult(IgetOldDataValues(options("odm.handler")[[1]], ID=as.numeric(ID), from=from, to=to, SiteID=SiteID, VariableID=VariableID, Offset=Offset, OffsetTypeID=OffsetTypeID, CensorCode=CensorCode, QualifierID=QualifierID, MethodID=MethodID, SourceID=SourceID, SampleID=SampleID, DerivedFromID=DerivedFromID, QualityControlLevelID=QualityControlLevelID, VersionID))
+		old.entry <- restructureDataResult(IgetOldDataValues(options("odm.handler")[[1]], ID=as.numeric(ID), from=from, to=to, tz=tz, SiteID=SiteID, VariableID=VariableID, Offset=Offset, OffsetTypeID=OffsetTypeID, CensorCode=CensorCode, QualifierID=QualifierID, MethodID=MethodID, SourceID=SourceID, SampleID=SampleID, DerivedFromID=DerivedFromID, QualityControlLevelID=QualityControlLevelID, VersionID), tz=tz)
 	}
 	if(show.deleted){
-		deleted.entry <- restructureDataResult(IgetDeletedDataValues(options("odm.handler")[[1]], ID=as.numeric(ID), from=from, to=to, SiteID=SiteID, VariableID=VariableID, Offset=Offset, OffsetTypeID=OffsetTypeID, CensorCode=CensorCode, QualifierID=QualifierID, MethodID=MethodID, SourceID=SourceID, SampleID=SampleID, DerivedFromID=DerivedFromID, QualityControlLevelID=QualityControlLevelID))
+		deleted.entry <- restructureDataResult(IgetDeletedDataValues(options("odm.handler")[[1]], ID=as.numeric(ID), from=from, to=to, tz=tz, SiteID=SiteID, VariableID=VariableID, Offset=Offset, OffsetTypeID=OffsetTypeID, CensorCode=CensorCode, QualifierID=QualifierID, MethodID=MethodID, SourceID=SourceID, SampleID=SampleID, DerivedFromID=DerivedFromID, QualityControlLevelID=QualityControlLevelID), tz=tz)
 		#merge with old
 		if(!is.null(deleted.entry)){
 			if(!is.null(old.entry)){
@@ -72,7 +72,7 @@ getDataValues <- function(ID=NULL, from=NULL, to=NULL, Site=NULL, Variable=NULL,
 	}
 
 	# Datensätze aus aktueller Tabelle abholen
-	entry <- restructureDataResult(IgetDataValues(options("odm.handler")[[1]], ID=as.numeric(ID), from=from, to=to, SiteID=SiteID, VariableID=VariableID, Offset=Offset, OffsetTypeID=OffsetTypeID, CensorCode=CensorCode, QualifierID=QualifierID, MethodID=MethodID, SourceID=SourceID, SampleID=SampleID, DerivedFromID=DerivedFromID, QualityControlLevelID=QualityControlLevelID))
+	entry <- restructureDataResult(IgetDataValues(options("odm.handler")[[1]], ID=as.numeric(ID), from=from, to=to, tz=tz, SiteID=SiteID, VariableID=VariableID, Offset=Offset, OffsetTypeID=OffsetTypeID, CensorCode=CensorCode, QualifierID=QualifierID, MethodID=MethodID, SourceID=SourceID, SampleID=SampleID, DerivedFromID=DerivedFromID, QualityControlLevelID=QualityControlLevelID), tz=tz)
 
 	# neuere Datensätze durch alte Versionen ersetzen, zusätzliche Datensätze anhängen
 	if(!is.null(old.entry)){

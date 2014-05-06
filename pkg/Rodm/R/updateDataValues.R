@@ -23,7 +23,9 @@ updateDataValues <- function(getDataResult, reason=NULL){
 	for(rec.id in to.update){
 		the.row <- which(getDataResult@ids==rec.id)
 		#make sure that ID is processed correctly in Iupdate if it is NA
-		the.tz <- guess.tz(getDataResult[the.row]@attributes$utcoffset)
+		#the.tz <- guess.tz(getDataResult[the.row]@attributes$utcoffset)
+		todo("Correct handling of tz in updateDataValues")
+		the.tz <- "GMT"
 		obj <- getOption("odm.handler")
 		IupdateDataValues(obj,ValueID=rec.id, 
 				#localDateTime=chr2date(index(getDataResult[the.row]@values), tz=the.tz),

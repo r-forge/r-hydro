@@ -54,6 +54,10 @@ setMethod("show", signature=(object="observations"),
 
 	  }
 )
+setMethod("NROW", signature=signature(x="observations"),
+		function(x){
+			return(NROW(x@values))
+})
 setMethod("$", signature=signature(x="observations"),
 		function(x, name){
 		att <- x@attributes

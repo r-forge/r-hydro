@@ -1,5 +1,6 @@
-assembleDataWhereClause <- function(ID=NULL, from=NULL, to=NULL, SiteID=NULL, VariableID=NULL, Offset=NULL, OffsetTypeID=NULL, CensorCode=NULL, QualifierID=NULL, MethodID=NULL, SourceID=NULL, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID=NULL, exact=FALSE){
+assembleDataWhereClause <- function(ID=NULL, from=NULL, to=NULL,  tz=c("global", "UTC", "GMT", "0", "local"), SiteID=NULL, VariableID=NULL, Offset=NULL, OffsetTypeID=NULL, CensorCode=NULL, QualifierID=NULL, MethodID=NULL, SourceID=NULL, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID=NULL, exact=FALSE){
 
+			tz <- match.arg(tz)
 			#the where.object is used to assemble the where clause
 		  	w.o <- list(where.clause = "", the.and  = "")
 
@@ -17,13 +18,19 @@ assembleDataWhereClause <- function(ID=NULL, from=NULL, to=NULL, SiteID=NULL, Va
 			w.o <- expand.where(w.o, DerivedFromID, "DerivedFromID", exact=TRUE)
 			w.o <- expand.where(w.o, QualityControlLevelID, "QualityControlLevelID", exact=TRUE)
 
+			
+			if(tz=="local"){
+				datefield <- "LocalDateTime"
+			} else {
+				datefield <- "DateTimeUTC"
+			}
 
 			if(!is.null(from)){
-				w.o$where.clause <- paste(w.o$where.clause, w.o$the.and, "DateTimeUTC >= '", strftime(from, tz="GMT"), "'", sep="")
+				w.o$where.clause <- paste(w.o$where.clause, w.o$the.and, datefield, " >= '", strftime(from, tz="GMT"), "'", sep="")
 				w.o$the.and <- " AND "
 			}
 			if(!is.null(to)){
-				w.o$where.clause <- paste(w.o$where.clause, w.o$the.and, "DateTimeUTC <= '", strftime(to,tz="GMT"), "'", sep="")
+				w.o$where.clause <- paste(w.o$where.clause, w.o$the.and, datefield, " <= '", strftime(to,tz="GMT"), "'", sep="")
 				w.o$the.and <- " AND "
 			}
 

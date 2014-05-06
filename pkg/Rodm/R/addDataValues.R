@@ -96,10 +96,22 @@ addDataValues <- function(DataZoo=NULL, Date=NULL, Value=NULL, ValueAccuracy=rep
 				time.range <- range(Date)
 				order.date <- Date[row.sel]
 			}
-			database.entries <- getDataValues(from=time.range[1], to=time.range[2], Site=c.m$Site[ca], Variable=c.m$Variable[ca], Offset=c.m$Offset[ca], OffsetType=c.m$OffsetType[ca], CensorCode=c.m$CensorCodeNum[ca], Qualifier=c.m$Qualifier[ca], Method=c.m$Method[ca], Source=c.m$Source[ca], Sample=c.m$Sample[ca],QualityControlLevel=c.m$QualityControlLevel[ca], show.deleted=TRUE, all.ID=TRUE)
+			database.entries <- getDataValues(from=time.range[1], to=time.range[2], tz="global", Site=c.m$Site[ca], Variable=c.m$Variable[ca], Offset=c.m$Offset[ca], OffsetType=c.m$OffsetType[ca], CensorCode=c.m$CensorCodeNum[ca], Qualifier=c.m$Qualifier[ca], Method=c.m$Method[ca], Source=c.m$Source[ca], Sample=c.m$Sample[ca],QualityControlLevel=c.m$QualityControlLevel[ca], show.deleted=TRUE, all.ID=TRUE)
 			if(NROW(database.entries)>0){
 				to.test <- merge(database.entries@values, xts(Value[row.sel,column], order.by=order.date), join="right")
 				stopifnot(NROW(to.test) == NROW(row.sel))
+				if(NCOL(to.test)!=2){
+					cat("Error while checking for duplicates. Contact the maintainer\n")
+
+					cat("database.entries:\n")
+					cat("NROW(database.entries):", NROW(database.entries), "\n")
+
+					print(database.entries)
+					str(database.entries)
+					cat("\n\nValue[row.sel,column]:\n")
+					print(Value[row.sel,column])
+					stop("Error while checking for duplicates. Contact the maintainer\n")
+				}
 				names(to.test) <- c("inDatabase", "toImport")
 				if(any(different <- (abs(to.test$inDatabase - to.test$toImport) > tolerance), na.rm=TRUE)){
 					if(interactive()){

@@ -13,7 +13,8 @@ getDataMatrix obtaines data for a certain variable for all sites.
 getDataVersions displays all the versions available in the database.
 }
 \usage{
-getDataValues(ID = NULL, from = NULL, to = NULL, Site = NULL,
+getDataValues(ID = NULL, from = NULL, to = NULL,
+		 tz=c("global", "UTC", "GMT", "0", "local"), Site = NULL,
                  Variable = NULL, Offset = NULL, OffsetType = NULL,
                  CensorCode = NULL, Qualifier = NULL, Method = NULL,
                  Source = NULL, Sample = NULL, DerivedFromID = NULL,
@@ -34,6 +35,9 @@ Starting date of the period for which to retrieve the information
 }
   \item{to}{
 End date of the period for which to retrieve the information
+}
+  \item{tz}{
+ String indicating whether the data should be obtained in the local or global time zone.
 }
   \item{Site}{
  Information about the Site at which the data was observed. 

@@ -8,7 +8,8 @@ Internal functions to generate a where clause for access to the DataValues table
 These functions is used to avoid code repetition
 }
 \usage{
-assembleDataWhereClause(ID = NULL, from = NULL, to = NULL, SiteID = NULL,
+assembleDataWhereClause(ID = NULL, from = NULL, to = NULL, 
+	tz=c("global", "UTC", "GMT", "0", "local"), SiteID = NULL,
 	VariableID = NULL, Offset = NULL, OffsetTypeID = NULL, 
 	CensorCode = NULL, QualifierID = NULL, MethodID = NULL, 
 	SourceID = NULL, SampleID = NULL, DerivedFromID = NULL, 
@@ -26,6 +27,9 @@ expand.where(w.o, var, var.name, exact = TRUE, isnumeric=FALSE)
 }
   \item{to}{
  End date
+}
+  \item{tz}{
+ String indicating whether the data should be obtained in the local or global time zone.
 }
   \item{SiteID}{
  Information about the Site at which the data was observed. 

@@ -38,10 +38,10 @@ for(i in CVtables()){
 }
 
  
-setGeneric("IgetDataValues", function(object,ID=NULL, from=NULL, to=NULL, SiteID=NULL, VariableID=NULL, Offset=NULL, OffsetTypeID=NULL, CensorCode=NULL, QualifierID=NULL, MethodID=NULL, SourceID=NULL, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID=NULL, ...  ) { standardGeneric("IgetDataValues")}) 
+setGeneric("IgetDataValues", function(object,ID=NULL, from=NULL, to=NULL, tz=c("global", "UTC", "GMT", "0", "local"), SiteID=NULL, VariableID=NULL, Offset=NULL, OffsetTypeID=NULL, CensorCode=NULL, QualifierID=NULL, MethodID=NULL, SourceID=NULL, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID=NULL, ...  ) { standardGeneric("IgetDataValues")}) 
 setGeneric("IgetSpatialReference", function(object,ID=NULL, SRSID=NULL, SRSName=NULL, IsGeographic=NULL, Notes=NULL, exact=FALSE) { standardGeneric("IgetSpatialReference")}) 
-setGeneric("IgetOldDataValues", function(object,ID=NULL, from=NULL, to=NULL, SiteID=NULL, VariableID=NULL, Offset=NULL, OffsetTypeID=NULL, CensorCode=NULL, QualifierID=NULL, MethodID=NULL, SourceID=NULL, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID=NULL, VersionID, exact,...  ) { standardGeneric("IgetOldDataValues")}) 
-setGeneric("IgetDeletedDataValues", function(object,ID=NULL, from=NULL, to=NULL, SiteID=NULL, VariableID=NULL, Offset=NULL, OffsetTypeID=NULL, CensorCode=NULL, QualifierID=NULL, MethodID=NULL, SourceID=NULL, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID=NULL, VersionID, exact,...  ) { standardGeneric("IgetDeletedDataValues")}) 
+setGeneric("IgetOldDataValues", function(object,ID=NULL, from=NULL, to=NULL,  tz=c("global", "UTC", "GMT", "0", "local"), SiteID=NULL, VariableID=NULL, Offset=NULL, OffsetTypeID=NULL, CensorCode=NULL, QualifierID=NULL, MethodID=NULL, SourceID=NULL, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID=NULL, VersionID, exact,...  ) { standardGeneric("IgetOldDataValues")}) 
+setGeneric("IgetDeletedDataValues", function(object,ID=NULL, from=NULL, to=NULL,  tz=c("global", "UTC", "GMT", "0", "local"), SiteID=NULL, VariableID=NULL, Offset=NULL, OffsetTypeID=NULL, CensorCode=NULL, QualifierID=NULL, MethodID=NULL, SourceID=NULL, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID=NULL, VersionID, exact,...  ) { standardGeneric("IgetDeletedDataValues")}) 
 setGeneric("IaddDataValues", function(object, localDateTime, values, TZ, SiteID, VariableID, Offset=NULL, OffsetTypeID=NULL, CensorCode, QualifierID=NULL, MethodID, SourceID, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID, exact, ...  ) { standardGeneric("IaddDataValues")}) 
 setGeneric("IaddSite", function(object, Code, Name, Latitude, Longitude, LatLongDatum, Elevation=NULL, VerticalDatum=NULL, LocalX=NULL,LocalY=NULL, LocalProjection=NULL, PosAccuracy=NULL, State=NULL, County=NULL, Comments=NULL) {standardGeneric("IaddSite")})
 setGeneric("IaddVariable", function(object, Code, Name, Speciation, Unit, SampleMedium,ValueType, IsRegular, TimeSupport, TimeUnits, DataType, GeneralCategory, NoDataValue) {standardGeneric("IaddVariable")})
@@ -414,9 +414,9 @@ setMethod("IgetSource",
 	)
 setMethod("IgetDeletedDataValues", 
 		signature(object = "odm1_1Ver"),
-		function(object,ID=NULL, from=NULL, to=NULL, SiteID=NULL, VariableID=NULL, Offset=NULL, OffsetTypeID=NULL, CensorCode=NULL, QualifierID=NULL, MethodID=NULL, SourceID=NULL, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID=NULL, VersionID, exact=FALSE, ...  ){
+		function(object,ID=NULL, from=NULL, to=NULL,  tz=c("global", "UTC", "GMT", "0", "local"), SiteID=NULL, VariableID=NULL, Offset=NULL, OffsetTypeID=NULL, CensorCode=NULL, QualifierID=NULL, MethodID=NULL, SourceID=NULL, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID=NULL, VersionID, exact=FALSE, ...  ){
 
-			where.clause <- assembleDataWhereClause(ID=ID, from=from, to=to, SiteID=SiteID, VariableID=VariableID, Offset=Offset, OffsetTypeID=OffsetTypeID, CensorCode=CensorCode, QualifierID=QualifierID, MethodID=MethodID, SourceID=SourceID, SampleID=SampleID, DerivedFromID=DerivedFromID, QualityControlLevelID=QualityControlLevelID, exact=exact)
+			where.clause <- assembleDataWhereClause(ID=ID, from=from, to=to, tz=tz, SiteID=SiteID, VariableID=VariableID, Offset=Offset, OffsetTypeID=OffsetTypeID, CensorCode=CensorCode, QualifierID=QualifierID, MethodID=MethodID, SourceID=SourceID, SampleID=SampleID, DerivedFromID=DerivedFromID, QualityControlLevelID=QualityControlLevelID, exact=exact)
 			if(where.clause==""){
 				where.clause <- "WHERE"
 			} else {
@@ -431,9 +431,9 @@ setMethod("IgetDeletedDataValues",
 
 setMethod("IgetOldDataValues", 
 		signature(object = "odm1_1Ver"),
-		function(object,ID=NULL, from=NULL, to=NULL, SiteID=NULL, VariableID=NULL, Offset=NULL, OffsetTypeID=NULL, CensorCode=NULL, QualifierID=NULL, MethodID=NULL, SourceID=NULL, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID=NULL, VersionID, exact=FALSE, ...  ){
+		function(object,ID=NULL, from=NULL, to=NULL,  tz=c("global", "UTC", "GMT", "0", "local"), SiteID=NULL, VariableID=NULL, Offset=NULL, OffsetTypeID=NULL, CensorCode=NULL, QualifierID=NULL, MethodID=NULL, SourceID=NULL, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID=NULL, VersionID, exact=FALSE, ...  ){
 
-			where.clause <- assembleDataWhereClause(ID=ID, from=from, to=to, SiteID=SiteID, VariableID=VariableID, Offset=Offset, OffsetTypeID=OffsetTypeID, CensorCode=CensorCode, QualifierID=QualifierID, MethodID=MethodID, SourceID=SourceID, SampleID=SampleID, DerivedFromID=DerivedFromID, QualityControlLevelID=QualityControlLevelID, exact=exact)
+			where.clause <- assembleDataWhereClause(ID=ID, from=from, to=to, tz=tz, SiteID=SiteID, VariableID=VariableID, Offset=Offset, OffsetTypeID=OffsetTypeID, CensorCode=CensorCode, QualifierID=QualifierID, MethodID=MethodID, SourceID=SourceID, SampleID=SampleID, DerivedFromID=DerivedFromID, QualityControlLevelID=QualityControlLevelID, exact=exact)
 			if(where.clause==""){
 				where.clause <- "WHERE"
 			} else {
@@ -447,7 +447,7 @@ setMethod("IgetOldDataValues",
 	)
 setMethod("IgetDeletedDataValues", 
 		signature(object = "odm1_1"),
-		function(object,ID=NULL, from=NULL, to=NULL, SiteID=NULL, VariableID=NULL, Offset=NULL, OffsetTypeID=NULL, CensorCode=NULL, QualifierID=NULL, MethodID=NULL, SourceID=NULL, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID=NULL, VersionID, ...  ){
+		function(object,ID=NULL, from=NULL, to=NULL,  tz=c("global", "UTC", "GMT", "0", "local"), SiteID=NULL, VariableID=NULL, Offset=NULL, OffsetTypeID=NULL, CensorCode=NULL, QualifierID=NULL, MethodID=NULL, SourceID=NULL, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID=NULL, VersionID, ...  ){
 
 			#Do nothing because no version
 		}
@@ -455,16 +455,16 @@ setMethod("IgetDeletedDataValues",
 
 setMethod("IgetOldDataValues", 
 		signature(object = "odm1_1"),
-		function(object,ID=NULL, from=NULL, to=NULL, SiteID=NULL, VariableID=NULL, Offset=NULL, OffsetTypeID=NULL, CensorCode=NULL, QualifierID=NULL, MethodID=NULL, SourceID=NULL, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID=NULL, VersionID, ...  ){
+		function(object,ID=NULL, from=NULL, to=NULL,  tz=c("global", "UTC", "GMT", "0", "local"), SiteID=NULL, VariableID=NULL, Offset=NULL, OffsetTypeID=NULL, CensorCode=NULL, QualifierID=NULL, MethodID=NULL, SourceID=NULL, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID=NULL, VersionID, ...  ){
 
 			#Do nothing because no version
 		}
 )
 setMethod("IgetDataValues", 
 		signature(object = "odm1_1"),
-		function(object,ID=NULL, from=NULL, to=NULL, SiteID=NULL, VariableID=NULL, Offset=NULL, OffsetTypeID=NULL, CensorCode=NULL, QualifierID=NULL, MethodID=NULL, SourceID=NULL, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID=NULL, exact=FALSE, ...  ){
+		function(object,ID=NULL, from=NULL, to=NULL,  tz=c("global", "UTC", "GMT", "0", "local"), SiteID=NULL, VariableID=NULL, Offset=NULL, OffsetTypeID=NULL, CensorCode=NULL, QualifierID=NULL, MethodID=NULL, SourceID=NULL, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID=NULL, exact=FALSE, ...  ){
 
-			where.clause <- assembleDataWhereClause(ID=ID, from=from, to=to, SiteID=SiteID, VariableID=VariableID, Offset=Offset, OffsetTypeID=OffsetTypeID, CensorCode=CensorCode, QualifierID=QualifierID, MethodID=MethodID, SourceID=SourceID, SampleID=SampleID, DerivedFromID=DerivedFromID, QualityControlLevelID=QualityControlLevelID, exact=exact)
+			where.clause <- assembleDataWhereClause(ID=ID, from=from, to=to, tz=tz, SiteID=SiteID, VariableID=VariableID, Offset=Offset, OffsetTypeID=OffsetTypeID, CensorCode=CensorCode, QualifierID=QualifierID, MethodID=MethodID, SourceID=SourceID, SampleID=SampleID, DerivedFromID=DerivedFromID, QualityControlLevelID=QualityControlLevelID, exact=exact)
 
 			query <- paste("SELECT * FROM DataValues ", where.clause)
 			to.ret <- run.query(object, query )
@@ -747,11 +747,7 @@ setMethod("IaddDataValues",
 				if(thevalue=="NULL") next # skip NA values from importing
 				thevalueAccuracy <- sv(valueAccuracy, rownum)
 				thelocalDateTime <- sv(localDateTime, rownum)
-				theTZ <- sv(TZ, rownum)
-				if(theTZ=="NULL"){
-					theTZ <- "+0"
-					warning("There was a TZ value of 'NULL', replaced by 'UTC'")
-				}
+				theTZ <- tz2offset(sv(TZ, rownum))
 				theDerivedFromID <- sv(DerivedFromID, rownum)
 
 				insert.query <- paste("INSERT INTO DataValues (DataValue, ValueAccuracy, LocalDateTime, UTCOffset, DateTimeUTC, SiteID, VariableID, OffsetValue, OffsetTypeID, CensorCode, QualifierID, MethodID, SourceID, SampleID, DerivedFromID, QualityControlLevelID) VALUES (", paste(thevalue,

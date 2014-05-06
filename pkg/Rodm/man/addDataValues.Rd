@@ -133,14 +133,19 @@ options(odm.handler=sqhandler)
 }
 
 #Store metadata in database
-addSite(Code="test", Name="Virtual test site", x=-5, y=46, LatLongDatum="WGS84", Elevation=1500, State="Germany")
-addVariable(Name="Distance", Unit="cm", ValueType="Field Observation", GeneralCategory="Instrumentation", Code="test_dist")
+addSite(Code="test", Name="Virtual test site", x=-5, y=46,
+	LatLongDatum="WGS84", Elevation=1500, State="Germany")
+addVariable(Name="Distance", Unit="cm", ValueType="Field Observation",
+	GeneralCategory="Instrumentation", Code="test_dist")
 addQualityControlLevel(ID=6,Code="ok", Definition="The default")
 
-addISOMetadata(TopicCategory="Unknown", Title="Testdata", Abstract="This data is created to test the functions of RObsDat")
+addISOMetadata(TopicCategory="Unknown", Title="Testdata",
+	Abstract="This data is created to test the functions of RObsDat")
 addSource(Organization="Your Org", SourceDescription="Madeup data", 
 	SourceLink="RObsDat Documentation", ContactName="Yourself",
 	Metadata="Testdata")
+
+library(xts)
 
 example.data <- xts(1:366, seq(as.POSIXct("2010-01-01", tz="UTC"), 
 		as.POSIXct("2011-01-01", tz="UTC"), length.out=366))

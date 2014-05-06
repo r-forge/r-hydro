@@ -1,5 +1,6 @@
 #options(testPostgreSQL = TRUE, testMySQL = TRUE)
 #options(testMySQL = TRUE)
+#options(testPostgreSQL = TRUE)
 context("db_engines")
 
 test_that("postgreSQL works", {

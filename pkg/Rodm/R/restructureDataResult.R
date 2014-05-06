@@ -1,4 +1,5 @@
-restructureDataResult <- function(to.ret, value.numeric=TRUE){
+restructureDataResult <- function(to.ret, value.numeric=TRUE, tz=c("global", "UTC", "GMT", "0", "local")){
+	tz <- match.arg(tz)
 	if(NROW(to.ret)>0) {
 		#to be compatible with postgres
 		colnames(to.ret) <- tolower(colnames(to.ret))
@@ -8,17 +9,26 @@ restructureDataResult <- function(to.ret, value.numeric=TRUE){
 		data.types <- sapply(to.ret, is.numeric)
 		the.numerics <- which(data.types)
 		the.char <- which(!data.types)
-		index.col <- which(names(to.ret)=="datetimeutc")
+		if(tz=="local"){
+			index.col <- which(names(to.ret)=="localdatetime")
+			tzname <- to.ret$utcoffset
+			todo("Find a solution to timezone representation. 
+				The mapping Offset (as suggested in ODM1.1) to
+				a specific timezone is not unique, thus currently
+				the information get's lost from the database")
+		} else {
+			index.col <- which(names(to.ret)=="datetimeutc")
+			tzname <- "GMT"
+		}
 		the.char <- the.char[the.char!=index.col]
 
-		order.by <- chr2date(to.ret[,index.col], tz="GMT")
-		order.by.unique <- chr2date(unique(to.ret[,index.col]), tz="GMT")
+		order.by <- chr2date(to.ret[,index.col], tz=tzname)
+		order.by.unique <- chr2date(unique(to.ret[,index.col]), tz=tzname)
 
-		ts.columns <- colnames(to.ret) %in% tolower(c("ValueID", "DataValue", "LocalDateTime", "DateTimeUTC", "DerivedFromID", "VersionID"))
+		ts.columns <- colnames(to.ret) %in% tolower(c("ValueID", "DataValue", "LocalDateTime", "DateTimeUTC", "UTCOffset", "DerivedFromID", "VersionID"))
 		metadata <- unique(to.ret[,!ts.columns])
 		for(dataset in 1:NROW(metadata)){
 				sel<- to.ret$valueaccuracy == metadata$valueaccuracy[dataset]&
-				to.ret$utcoffset == metadata$utcoffset[dataset]&
 				to.ret$siteid == metadata$siteid[dataset]&
 				to.ret$variableid == metadata$variableid[dataset]&
 				to.ret$offsetvalue == metadata$offsetvalue[dataset]&
