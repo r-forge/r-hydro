@@ -1,4 +1,4 @@
-fuserouting.sim <- function(U, mid, modlist, timedelay, deltim=1) {    
+fuserouting.sim <- function(U, mid, modlist, timedelay, deltim=1,trace=FALSE) {    
    ## FUSE Routing model
    # Author: Claudia Vitolo
    #
@@ -12,7 +12,10 @@ fuserouting.sim <- function(U, mid, modlist, timedelay, deltim=1) {
    # Returns:
    #   X:                             routed runoff
   
-   print("routing ...")
+   inAttr <- attributes(U)
+   U <- coredata(U)
+  
+   if(trace) print("routing ...")
    # Assing standard parameters
    size_frac_future = 500       # fraction of runoff in future time steps
    alpha = 2.5                  # shape parameter
@@ -46,12 +49,12 @@ fuserouting.sim <- function(U, mid, modlist, timedelay, deltim=1) {
      }
    }
 
-   #attributes(X) <- attributes(U)
+   attributes(X) <- inAttr
  
    return(X)
 }
 
-#fuserouting.ranges <- function() {
-#    list("timedelay" = c(0.01, 5),        # time delay in runoff (days)
-#}
+fuserouting.ranges <- function() {
+   list("timedelay" = c(0.01, 5))        # time delay in runoff (days)
+}
     
