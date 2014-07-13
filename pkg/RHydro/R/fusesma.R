@@ -14,12 +14,16 @@
 #   s:                             (optional) list of state variables 
 #   f:                             (optional) list of fluxes (containing also U)
 
-fusesma.sim <- function(DATA,mid,modlist,deltim,states=FALSE,fluxes=FALSE,
+fusesma.sim <- function(DATA,mid,modlist,deltim=1,states=FALSE,fluxes=FALSE,
                         fracstate0=0.25,rferr_add=0,rferr_mlt=1,
                         frchzne,fracten,maxwatr_1,percfrac,fprimqb,qbrate_2a,qbrate_2b,
                         qb_prms,maxwatr_2,baserte,rtfrac1,percrte,percexp,sacpmlt,
-                        sacpexp,iflwrte,axv_bexp,sareamax,loglamb,tishape,qb_powr) {              
-    DATA                        
+                        sacpexp,iflwrte,axv_bexp,sareamax,loglamb,tishape,qb_powr,
+                        trace=FALSE) { 
+    ## Keep attributes, but work with raw matrix
+    inAttr <- attributes(DATA[, 1])
+    DATA<-coredata(DATA)
+    
     stopifnot(c("P","E") %in% colnames(DATA))
     P <- DATA[,"P"]
     E <- DATA[,"E"]
@@ -75,7 +79,7 @@ fusesma.sim <- function(DATA,mid,modlist,deltim,states=FALSE,fluxes=FALSE,
 
     parameters <- list("mparam" = mparam,"dparam" = dparam) 
     
-    print("computing state variables ...")
+    if(trace) print("computing state variables ...")
     state1 <- ode("y" = state0, 
                   "times" = times, 
                   "func" = mstate_eqn, 
@@ -97,16 +101,16 @@ fusesma.sim <- function(DATA,mid,modlist,deltim,states=FALSE,fluxes=FALSE,
                 "watr_2"  = state1[,"states.watr_2"],
                 "free_2"  = state1[,"states.free_2"]  )
 
-    print("computing fluxes ...")
+    if(trace) print("computing fluxes ...")
     allfluxes <- outfluxes(smodl,P,E,mparam,dparam,state2)
     
-    # print("converting effective rainfall into zoo object ...")
-    # make it a time series object again
-    # attributes(U) <- attributes(P)
     # re-insert missing values
     # U[bad] <- NA
 
-    if (states == FALSE && fluxes == FALSE) results <- allfluxes$U
+    if (states == FALSE && fluxes == FALSE) {
+      results <- allfluxes$U
+      attributes(results) <- inAttr
+    }
     if (states == TRUE  && fluxes == FALSE) results <- list("s"=state2,"U"=allfluxes$U)
     if (states == FALSE && fluxes == TRUE)  results <- allfluxes
     if (states == TRUE  && fluxes == TRUE)  results <- list("s"=state2,"f"=allfluxes)
@@ -115,8 +119,8 @@ fusesma.sim <- function(DATA,mid,modlist,deltim,states=FALSE,fluxes=FALSE,
 }
 
 fusesma.ranges <- function() {
-    list("rferr_add" = c(0, 0),                      # additive rainfall error (mm)
-         "rferr_mlt" = c(1, 1),                      # multiplicative rainfall error (-)
+    list("rferr_add" = 0,                      # additive rainfall error (mm)
+         "rferr_mlt" = 1,                      # multiplicative rainfall error (-)
          "maxwatr_1" = c(25, 500),                   # depth of the upper soil layer (mm)
          "maxwatr_2" = c(50, 5000),                  # depth of the lower soil layer (mm)
          "fracten"   = c(0.05, 0.95),                # fraction total storage in tension storage (-)
@@ -138,7 +142,5 @@ fusesma.ranges <- function() {
          "axv_bexp"  = c(0.001, 3),                  # ARNO/VIC "b" exponent (-)
          "loglamb"   = c(5, 10),                     # mean value of the topographic index (m)
          "tishape"   = c(2, 5))                      # shape param for the topo index Gamma dist (-) 
-         #"timedelay" = c(0.01, 5),                  # time delay in runoff (days) ---> moved to "fuserouting.R"
-                
 }
 
