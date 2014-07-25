@@ -32,6 +32,9 @@ fusesma.sim <- function(DATA,mid,modlist,deltim=1,states=FALSE,fluxes=FALSE,
     #P[bad] <- 0
     #E[bad] <- 0
     
+    # Make sure mid is an integer (needed for compatibility with hydromad)
+    mid <- round(mid,0)
+    
     # Read model structure [LIST]
     smodl <- list("rferr"=modlist[mid,2],
                 "arch1"=modlist[mid,3],

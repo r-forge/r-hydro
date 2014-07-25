@@ -20,6 +20,9 @@ fuserouting.sim <- function(U, mid, modlist, timedelay, deltim=1,trace=FALSE) {
    size_frac_future = 500       # fraction of runoff in future time steps
    alpha = 2.5                  # shape parameter
    
+   # Make sure mid is an integer (needed for compatibility with hydromad)
+   mid <- round(mid,0)
+   
    # Read model structure
    qtdh <- modlist[mid,9]
    
