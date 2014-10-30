@@ -109,12 +109,12 @@ options(error = recover)
 	}
 	# prepare countries --> only once!
 	options(geonamesUsername="cite.all")
-	if(!require(geonames)){
+	if(!requireNamespace("geonames", quietly=TRUE)){
 		cat("Please install geonames with install.packages(geonames) to run this test\n")
 		return()
 	}
 	cat("Importing Geonames from web\n")
-	all.countries <- GNcountryInfo(lang="EN")
+	all.countries <- geonames::GNcountryInfo(lang="EN")
 
 	cat("Importing other Geonames\n")
 	addSite(Code=all.countries$isoAlpha3, Name=all.countries$countryName, x=as.numeric(all.countries$west), y=as.numeric(all.countries$north), 

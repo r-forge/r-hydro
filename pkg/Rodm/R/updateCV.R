@@ -1,13 +1,13 @@
 updateCV <- function(){
-	stopifnot(require(SSOAP))
-	stopifnot(require(XML))
+	stopifnot(requireNamespace("SSOAP", quietly=TRUE))
+	stopifnot(requireNamespace("XML", quietly=TRUE))
 	
-	def <- processWSDL("http://his.cuahsi.org/ODMCV_1_1/ODMCV_1_1.asmx?WSDL")
+	def <- SSOAP::processWSDL("http://his.cuahsi.org/ODMCV_1_1/ODMCV_1_1.asmx?WSDL")
 
-	ff <- genSOAPClientInterface(def=def)
+	ff <- SSOAP::genSOAPClientInterface(def=def)
 
 	ans <- ff@functions$GetUnits()
-	test <-     xmlToList(xmlParse(ans, asText = TRUE))
+	test <-     XML::xmlToList(XML::xmlParse(ans, asText = TRUE))
 	sapply(test$Records, function(x){
 				if(any(names(x)!="count")){
 					suppressWarnings(addUnits(Name=x$UnitsName, Type=x$UnitsType, Abbreviation=x$UnitsAbbreviation))
@@ -17,7 +17,7 @@ updateCV <- function(){
 
 
 	ans <- ff@functions$GetSpatialReferences()
-	test <-     xmlToList(xmlParse(ans, asText = TRUE))
+	test <-     XML::xmlToList(XML::xmlParse(ans, asText = TRUE))
 	sapply(test$Records, function(x){
 				if(any(names(x)!="count")){
 					if(is.null(x$SRSID)) x$SRSID="NULL"
@@ -30,7 +30,7 @@ updateCV <- function(){
 	for(tab in CVtables()){
 		command <- paste("ans <- ff@functions$Get", tab, "CV()", sep = "")
 		eval(parse(text=command))
-		test <- xmlToList(xmlParse(ans, asText = TRUE))
+		test <- XML::xmlToList(XML::xmlParse(ans, asText = TRUE))
 		sapply(test$Records, function(x){
 				if(any(names(x)!="count")){
 				  suppressWarnings(addCV(table=tab, term=x$Term, definition=x$Definition))

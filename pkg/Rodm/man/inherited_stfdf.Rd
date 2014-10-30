@@ -75,8 +75,10 @@ inDB = getDataValues()
 
 # Select data
 #You can selected the data by using numerics and characters.
-#In the following code line 'inDB' is sub-setted to the second and third location, the first twenty dates and the temperature.
-#Advice: The variable must have the correct term. For support look at the column name of inDB@data.
+#In the following code line 'inDB' is sub-setted to the 
+#second and third location, the first twenty dates and the temperature.
+#Advice: The variable must have the correct term. For support
+# look at the column name of inDB@data.
 
 selectedData = inDB[1, 1:10, "Distance"]
 
@@ -84,7 +86,9 @@ selectedData = inDB[1, 1:10, "Distance"]
 selectedData2 = inDB[1,10:10]
 selectedData3 = inDB[,10:10]
 
-#Attention: if the dataset contains only one location (or it is subset only one point) it's impossible to get a inherited spacetime-object. So you get a object of xts.
+#Attention: if the dataset contains only one location 
+#(or it is subset only one point) it's impossible 
+#to get a inherited spacetime-object. So you get a object of xts.
 #If only one time is selected you get a SpatialPointsDataFrame.
 
 #The inherited stfdf-data can visualized in different plots. For example:

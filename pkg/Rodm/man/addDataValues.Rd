@@ -191,7 +191,8 @@ if(NROW(ver3@data)>=32){
 if(dim(inDB@ValueIDs)[2]>=29) deleteDataValues(inDB@ValueIDs[,29],  "Remove a value")
 if(dim(inDB@ValueIDs)[2]>=14) deleteDataValues(inDB@ValueIDs[,10:14],  "Remove several values")
 
-# When more than one spatial point and times are given, then use the usually selection without 'ValueIDs'.
+# When more than one spatial point and times are given, 
+# then use the usually selection without 'ValueIDs'.
 # deleteDataValues(testSiteData[2,20:24],  "Remove several values.")
 
 getDataVersions()
