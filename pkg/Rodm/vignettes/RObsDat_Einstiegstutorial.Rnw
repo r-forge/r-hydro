@@ -60,7 +60,7 @@ In general, hydrological observations come as a
 triple including time, variables and space. This
 triple is usually extended by information about
 data quality and the data source/collection
-method. CUASHI has presented a specification for
+method. CUAHSI has presented a specification for
 the Observations Data Model (ODM) which is
 currently available as version 1.1
 \citep{Tarboton2008}. 
@@ -68,7 +68,7 @@ This data model is
 implemented by RObsDat, however the package has
 been designed to be potentially compatible with other data
 models. 
-In addition, CUASHI recommends to use a
+In addition, CUAHSI recommends to use a
 controlled vocabulary (CV) for the most important
 attributes to enhance semantic consistency
 and provides these through a web service. RObsDat
@@ -109,11 +109,10 @@ also store your data as time series data in form
 of a \verb@zoo@ or \verb@xts@ object. See the
 corresponding package documentations. You will need
 a basic understanding of these to work with
-RObsDat. Import from \verb@spacetime@ classes is
-planned.
+RObsDat.
 
 \subsection{spacetime}
-The next version of the package will return data
+This version of the package will return data
 as spacetime objects, which is a first step to
 provide possibilities for efficient handling and
 analysis of spatio-temporal data in R. See the
@@ -204,22 +203,22 @@ getDefaultDB()
 
 Before adding data values, we need to set up the
 meta-data. We will check what the correct names of
-the meta-data are:
+the metadata are:
 
 <<label=part2>>=
 #Store metadata in database
 getMetadata("SpatialReference", SRSName="WGS84", exact=TRUE)
 
-addSite(Code="testLocation", Name="Virtual test site", x=-5, y=46,
-	LatLongDatum="WGS84", Elevation=1500, State="Germany")
+addSite(Code="testSpatialPoints", Name="Virtual test site", x=25, y=56,
+	LatLongDatum="WGS84", Elevation=350, State="Germany")
 
-getMetadata("Units", Abbreviation="cm")
-getMetadata("VariableName", Term="Distance")
+getMetadata("Units", Name="degree celsius")
+getMetadata("VariableName", Term="Temperature")
 
-addVariable(Name="Distance", Unit="cm", ValueType="Field Observation",
-	GeneralCategory="Instrumentation", Code="test_dist")
+addVariable(Name="Temperature, transducer signal", Unit="degree celsius", ValueType="Field Observation",
+	GeneralCategory="Hydrology", Code="test_temp")
 
-addQualityControlLevel(ID=6,Code="ok", Definition="The default")
+addQualityControlLevel(ID=2,Code="test_ok", Definition="The default values")
 
 addISOMetadata(TopicCategory="Unknown", Title="Testdata",
 	Abstract="This data is created to test the functions of RObsDat")
@@ -229,7 +228,7 @@ addSource(Organization="Your Org", SourceDescription="Madeup data",
 @
 
 With this set of commands, we are done preparing
-meta-data for a first Variable and Location. Note
+meta-data for a first variable and location. Note
 that the information about the source is stored in
 two tables, one including the 
 \href{http://en.wikipedia.org/wiki/Dublin_Core}{Dublin Core}
@@ -240,17 +239,17 @@ For the tutorial, we are content with one site and
 one variable.
 
 As a next step, we can start to add data. Let's
-create a tutorial data set and store it a xts.
+create a tutorial data set and store it as xts.
 We introduce two data errors that we want to
 correct in a subsequent test. 
 
 <<label=part2>>=
-library(xts)
+require(xts)
 
-example.data <- xts(1:366, seq(as.POSIXct("2010-01-01", tz="UTC"), 
-		as.POSIXct("2011-01-01", tz="UTC"), length.out=366))
-example.data[50] <- 100
-example.data[200] <- 40
+example.data <- xts(1:40, seq(as.POSIXct("2014-01-01", tz="UTC"), 
+		as.POSIXct("2014-02-09", tz="UTC"), length.out=40))
+example.data[40] <- 30
+example.data[35] <- 22
 @
 
 With loggers, we often obtain multiple files with
@@ -261,17 +260,24 @@ data. As long as no conflicts arise, the package
 is silent about redundant entries. If present, existing
 conflicts are presented and the user is asked
 about the desired action. We simulate this by
-first importing the first 100 data sets, modifying
+first importing the first 20 data sets, modifying
 our data and then importing the remaining data
 set.
 
 <<label=part3>>=
-addDataValues(example.data[1:100], Site="testLocation", Variable="test_dist",  
-	Source="Madeup", QualityControlLevel="ok")
+addDataValues(example.data[1:20], Site="Virtual test site", Variable="test_temp",  
+	Source="Madeup", QualityControlLevel="test_ok")
+
+@
+
+By importing the remaining data through insert the hole values, only the new data will imported.
+If an existing value was changed you get the question what should happen with them.	
+
+<<label=part3>>=
 #Avoid duplicates autmatically
-example.data[75] <- 100
-addDataValues(example.data, Site="testLocation", Variable="test_dist",  
-	Source="Madeup", QualityControlLevel="ok")
+example.data[15] <- 30
+addDataValues(example.data, Site="Virtual test site", Variable="test_temp",  
+	Source="Madeup", QualityControlLevel="test_ok")
 @
 
 Note the ''split
@@ -293,42 +299,114 @@ database remembers synonyms for data sets.
 Data in the database can be accessed and filtered
 in an intuitive way:
 
-<<label=part4>>=
-inDB <- getDataValues(Site="test")
-plot(inDB)
+The data are restored in several STFDF.
+RObsDat contain a class with an inherited STFDF from the packages spacetime.
+STFDF is for spatio-temporal data with a full data frame. It shows n spatial points and m times.
+Foreach location and time exists observations.
+It deals with spatio-temporal data and provides special time series analysis.
+The object of class inherited\_stfdf contains one stfdf with the main-data: spatial data of package sp and temporal informations of class xts. 
+he actual data is stored in the form of a data.frame.
+Furthermore it contains two stfdf-objects with the 'ValueIDs' and the 'DerivedFromIDs' and also one data.frame with the Meta-informations.
+
+Thus 'getDataValues' returns a spacetime object.
+RObsDat has powerful mechanism to retrieve the data needed through data base queries.
+The query can specify additional contraints (e.g. site):
+
+<<label=part6>>=
+allData <- getDataValues()
+testSiteData <- getDataValues(Site="test")
 @
+
+Further you can access the slots of object by take advantage of the '@'.
+For example:
+testSiteData@Metadata
+testSiteData@sp
+testSiteData@time
+testSiteData@data
+
+
+To retrieve the data through sub-setting the spacetime object is also efficient:
+
+a[i, j, k]
+i= spatial features
+j = temporal instances
+k = data variable(s)
+
+You can selected the data by using numerics and characters.
+In the following code line 'allData' is sub-setted to the second and third location, the first twenty dates and the temperature.
+To choose the data variable is especially interesting, when the selected data contains more than one variable.
+Advice: The variable must have the correct term with combination of the respective metadata-id. For choose the right term look at the column name of allData@data.
+
+\verb@selectedData = allData[2:3, 1:20, "Temp2erature, transducer signal\_1"]@
+
+Furthermore you can miss out some parameters:
+\verb@selectedData = allData[1:2,10:20]@
+\verb@selectedData = allData[,10:20]@
+
+Attention: if the dataset contains only one location (or it is subset only one point) it's impossible to get a inherited spacetime-object. So you get a object of xts.
+If only one time is selected you get a SpatialPointsDataFrame.
+
+The inherited stfdf-data can visualized in different plots. For example:
+
+stplot(selectedData, mode='tp', type = 's')
+stplot(selectedData, mode='xt')
+
+When you add more variables you can visualized also plots with more than one variable or several locations.
 
 Raw data often needs to be cleaned before it can
 be used. RObsDat supports this and allows to
-reconstruct data modification operations. The
+reconstruct data modification operations by use of version management. The
 following lines demonstrate this:
 
-<<label=part4>>=
+<<label=part5>>=
 #Version management
-to.correct <- which(inDB@values < 100 & 
-	index(inDB@values) > as.POSIXct("2010-06-01"))
-inDB@values[to.correct] <- 200
-inDB@values[50] <- 50
 
-updateDataValues(inDB, "Correction of wrong value")
+testSiteData <- getDataValues(Site="test")
 
-ver2 <- inDB
-ver2@values[50:60] <- 90
-updateDataValues(ver2, "Changing more data")
+to.correct <- which(testSiteData@data > 30)
+testSiteData@data[to.correct,] <- 20
+testSiteData@data[39,] <- 32
 
-ver3 <- inDB
-ver3@values[50:60] <- 190
-updateDataValues(ver3, "Ups, I used 90 instead of 190 by mistake")
+#ToDo - doesn't pass test
+#updateDataValues(testSiteData, "Correction of wrong value")
 
-deleteDataValues(inDB[250],  "And finally remove a value")
+ver2 <- testSiteData
+ver2@data[10:13,] <- 60
+#updateDataValues(ver2, "Changing more data")
 
+testSiteData <- getDataValues(Site="test")
+ver3 <- testSiteData
+ver3@data[30:32,] <- 33
+#updateDataValues(ver3, "Ups, I used 60 instead of 33 by mistake")
+
+@
+
+And finally we want to remove values.
+At first only one value. In this case the 36'th value. Rules which are explained by selection come into effect.
+So you have to add '@ValueIDs' to remove only one value (one time point) or several values, when the dataset contains only one location.
+deleteDataValues(testSiteData@ValueIDs[,36],  "Remove a value")
+deleteDataValues(testSiteData@ValueIDs[,10:14],  "Remove several values")
+
+If you want to delete by boolean, then you have to use the addition @ValueIDs, too.
+to.delete <- testSiteData@data == 60
+	if(any(to.delete)){
+		deleteDataValues(testSiteData@ValueIDs[,to.delete],  "And finally remove several value by boolean")
+	}
+
+When more than one spatial point and times are given, then use the usually selection without '@ValueIDs'.
+deleteDataValues(testSiteData[ ,20:24],  "Remove several values.")
+
+
+Finally RObsDat can show older data-versions.
+
+<<label=partxyz>>=
 getDataVersions()
 
-versionQuery <- getDataValues(Site=1, VersionID=1)
+versionQuery1 <- getDataValues(Site=1, VersionID=1)
+#stplot(versionQuery1, mode="ts")
 
-plot(versionQuery)
-versionQuery <- getDataValues(Site=1, VersionID=2)
-plot(versionQuery)
+versionQuery2 <- getDataValues(Site=1, VersionID=2)
+#stplot(versionQuery2, mode="ts")
 @
 
 \section{Conclusion}
