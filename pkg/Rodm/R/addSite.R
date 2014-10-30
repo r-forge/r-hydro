@@ -1,7 +1,7 @@
 addSite <- function(Code, Name, x, y, Elevation=rep(0, length(Code)), LatLongDatum, LocalProjection=NULL, isLocal=NULL, VerticalDatum=NULL,PositionAccuracy=rep(0, length(Code)), State=NULL, County=NULL, Comment=NULL){
 	#mandatory fields: Code, Name, Lat, Long, LatLongDatum
 
-	#check from referencetables: SpatialReferences -> LatLongDatum, LocalProjection
+	#check from reference tables: SpatialReferences -> LatLongDatum, LocalProjection
 	stopifnot(length(LatLongDatum) == length(Code))
 	stopifnot(length(Name) == length(Code))
 	stopifnot(length(x) == length(Code))
@@ -48,7 +48,7 @@ addSite <- function(Code, Name, x, y, Elevation=rep(0, length(Code)), LatLongDat
 		SpatialReferenceID2 <- rep(1, length(Code))
 	}
 
-	#check from referencetables: VerticalDatum
+	#check from reference tables: VerticalDatum
 	if(!is.null(VerticalDatum)){
 		stopifnot(length(VerticalDatum) == length(Code))
 		VertDatID <- getID("VerticalDatum",VerticalDatum)

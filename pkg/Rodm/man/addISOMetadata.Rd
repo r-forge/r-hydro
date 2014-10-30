@@ -5,8 +5,8 @@
 Functions to provide reference to data sources
 }
 \description{
-The ISOMetadata table contains dataset and project level metadata required by the CUAHSI HIS
-metadata system (http://www.cuahsi.org/his/documentation.html) for compliance with standards
+The ISOMetadata table contains dataset and project level meta data required by the CUAHSI HIS
+meta data system (http://www.cuahsi.org/his/documentation.html) for compliance with standards
 such as the draft ISO 19115 or ISO 8601.
 
 }
@@ -28,7 +28,7 @@ ContactName = rep("Unknown", length(Organization)),
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{TopicCategory}{
-Reference ot the TopicCategory table, giving the broad ISO19115 
+Reference to the TopicCategory table, giving the broad ISO19115 
 metadata topic category for data from this source. 
 
 }

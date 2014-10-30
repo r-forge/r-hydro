@@ -5,7 +5,7 @@ Extend controlled vocabulary for units.
 }
 \description{
 Add a term to the controlled vocabulary for units. The better way is to 
-have CUASHI add the term to the official vocabulary through their webpage:
+have CUAHSI add the term to the official vocabulary through their webpage:
 http://his.cuahsi.org/mastercvreg/
 }
 \usage{
@@ -30,7 +30,7 @@ Dominik Reusser
 }
 
 \seealso{
- \code{\link{updateCV}} to retrieve the vocabularies from the CUASHI web service and update the database. \code{\link{getMetadata}}  allows to query for meta data.
+ \code{\link{updateCV}} to retrieve the vocabularies from the CUAHSI web service and update the database. \code{\link{getMetadata}}  allows to query for meta data.
 }
 \examples{
 getDefaultDB()

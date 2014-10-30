@@ -25,7 +25,7 @@ tz2offset(tz)
 \details{
 What should be here?
 
-guess.tz returns the correct string representation of tz that can be understood by strptime.
+guess.tz returns the correct string representation of tz that can be understood by 'strptime'.
 
 tz2offset returns the time difference in hours to GMT.
 }

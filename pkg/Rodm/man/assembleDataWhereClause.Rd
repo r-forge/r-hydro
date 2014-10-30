@@ -44,7 +44,7 @@ expand.where(w.o, var, var.name, exact = TRUE, isnumeric=FALSE)
  Information about the type of the offset as defined in the OffsetTypes table. See also \code{\link{addOffsetType}}. 
 }
   \item{CensorCode}{
- Information about the cesor used for the observation. 
+ Information about the censor used for the observation. 
 }
   \item{QualifierID}{
 Qualifying information that can note anything unusual or
@@ -60,7 +60,7 @@ Reference to the original sources of the data, providing information sufficient 
 retrieve and reconstruct the data value from the original data files
 }
   \item{SampleID}{
-Information about physical samples analyzed in a laboratory to obtain an observation.
+Information about physical samples analysed in a laboratory to obtain an observation.
 }
   \item{DerivedFromID}{
 Reference to another record in the database, from which a value was derived.

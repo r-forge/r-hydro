@@ -1,10 +1,10 @@
-export( addCV,                     deleteDataValues,   odm.close, 
+export( addCV,             deleteDataValues,   odm.close, 
 addDataValues,             expandVar,          reload, 
 addISOMetadata,            expand.where,       restructureDataResult, 
-addOffsetType,             getDataMatrix,       
-addSite,                   getDataValues,       
-addSource,                 getDataVersions,     
-addSpatialReferences,      getID,               
+addOffsetType,             getDataValues,
+addSite,                   getDataVersions,         
+addSource,                 getID,   
+addSpatialReferences,                     
 addSynonym, exportSynonyms, importSynonyms,
 getMetadata,         
 addUnits,                              
@@ -14,16 +14,20 @@ updateCV,
 updateDataValues, 
 CVtables, getDefaultDB)
 
-exportClasses("odm1_1", "odm1_1Ver", "observations")
+exportClasses("odm1_1", "odm1_1Ver", "inherited_stfdf")
 
-exportMethods(show, plot, merge)
+exportMethods(show, plot)
+export(stplot)
 
 # Import all packages listed as Imports or Depends
 import(
+  spacetime,
   xts,
-  zoo,
   DBI,
   vwr,
-  methods
+  methods,
+  sp
 )
 importFrom(e1071, permutations)
+importFrom(zoo, coredata)
+importFrom(zoo, plot.zoo)

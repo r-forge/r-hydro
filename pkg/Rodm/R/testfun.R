@@ -3,51 +3,91 @@ exampleCommands <- function(){
 	#doitall <- FALSE
 	if(doitall){
 
+###ADD DATA VALUES
 	try(getMetadata("Site"), silent=TRUE)
-	addSite(Code="test", Name="Virtual test site", x=-5, y=46, LatLongDatum="WGS84", Elevation=1500, State="Germany")
-	addVariable(Name="Distance", Unit="cm", ValueType="Field Observation", GeneralCategory="Instrumentation", Code="test_dist")
-	addQualityControlLevel(ID=6,Code="ok", Definition="The default")
+	addSite(Code="testSpatialPoints", Name="Virtual test site", x=25, y=56,
+	LatLongDatum="WGS84", Elevation=350, State="Germany")
+	addVariable(Name="Temperature, transducer signal", Unit="degree celsius", ValueType="Field Observation",
+	GeneralCategory="Hydrology", Code="test_temp")
+	addQualityControlLevel(ID=2,Code="test_ok", Definition="The default values")
+	addISOMetadata(TopicCategory="Unknown", Title="Testdata",
+		Abstract="This data is created to test the functions of RObsDat")
+	addSource(Organization="Your Org", SourceDescription="Madeup data", 
+		SourceLink="RObsDat Documentation", ContactName="Yourself",
+		Metadata="Testdata")
+	
+	
+	example.data <- xts(1:40, seq(as.POSIXct("2014-01-01", tz="UTC"), 
+		as.POSIXct("2014-02-09", tz="UTC"), length.out=40))
+	example.data[40] <- 30
+	example.data[35] <- 22
 
-	addISOMetadata(TopicCategory="Unknown", Title="Testdata", Abstract="This data is created to test the functions of RObsDat")
-	addSource(Organization="Your Org", SourceDescription="Madeup data", SourceLink="RObsDat Documentation", ContactName="Yourself", Metadata="Testdata")
-
-	example.data <- xts(1:366, seq(as.POSIXct("2010-01-01", tz="UTC"), as.POSIXct("2011-01-01", tz="UTC"), length.out=366))
-	example.data[50] <- 100
-	example.data[200] <- 40
-
-	addDataValues(example.data[1:100], Site="test", Variable="test_dist",  Source="Madeup", QualityControlLevel="ok")
+	addDataValues(example.data[1:20], Site="testSpatialPoints", Variable="test_temp",  
+	Source="Madeup", QualityControlLevel="test_ok")
 	#Avoid duplicates autmatically
-	addDataValues(example.data, Site="test", Variable="test_dist",  Source="Madeup", QualityControlLevel="ok")
-	inDB <- getDataValues(Site=getID("Site","test"))
-	plot(inDB)
+	addDataValues(example.data, Site="testSpatialPoints", Variable="test_temp",  
+	Source="Madeup", QualityControlLevel="test_ok")
+	
+	
+### TEST STPLOT
+	testSiteData <- getDataValues(Site="test")
+	stplot(testSiteData, mode="ts")
 
-	#Version management
-	to.correct <- which(inDB@values < 100 & index(inDB@values) > as.POSIXct("2010-06-01"))
-	inDB@values[to.correct] <- 200
-	inDB@values[50] <- 50
+	
+### TEST SELECTION
+	#test selection Main Data
+	selectedData1 = testSiteData[, 10:20]
+	selectedData2 = testSiteData[,,'Temperatur, transducer signal']
 
-	updateDataValues(inDB, "Correction of wrong value")
+	#test selection for other Slots
+	selectedData3 = testSiteData@ValueIDs[,10:20]
+	selectedData4 = testSiteData@ValueIDs[,,'Temperatur, transducer signal']
 
-	ver2 <- inDB
-	ver2@values[50:60] <- 90
+	
+### VERSION MANAGEMENT
+
+### UPDATE
+	to.correct <- which(testSiteData@data > 30)
+	testSiteData@data[to.correct,] <- 20
+	testSiteData@data[39,] <- 32
+
+	updateDataValues(testSiteData, "Correction of wrong value")
+
+	ver2 <- testSiteData
+	ver2@data[10:13,] <- 60
 	updateDataValues(ver2, "Changing more data")
 
-	ver3 <- inDB
-	ver3@values[50:60] <- 190
-	updateDataValues(ver3, "Ups, I used 90 instead of 190 by mistake")
+	ver3 <- testSiteData
+	ver3@data[30:32,] <- 33
+	updateDataValues(ver3, "Ups, I used 60 instead of 33 by mistake")
 
-	to.delete <- inDB@values == 250
+	
+### DELETE
+	# via ValueID:
+	deleteDataValues(testSiteData@ValueIDs[,36],  "And finally remove one value via ID")
+	deleteDataValues(testSiteData@ValueIDs[,20:26],  "And finally remove several values via ID")
+	
+	# via direct access
+	deleteDataValues(testSiteData[,30:35],  "And finally remove multi values via ID")
+	
+	to.delete <- testSiteData@data == 60
 	if(any(to.delete)){
-		deleteDataValues(inDB[to.delete],  "And finally remove a value")
+		deleteDataValues(testSiteData@ValueIDs[,to.delete],  "And finally remove several value")
 	}
-
+	
+### GET OLD VERSION
 	getDataVersions()
 
+	#show no deleted values
 	versionQuery <- getDataValues(Site=1, VersionID=1)
-
-	plot(versionQuery)
+	stplot(versionQuery, mode = 'ts')
+	
 	versionQuery <- getDataValues(Site=1, VersionID=2)
-	plot(versionQuery)
+	stplot(versionQuery, mode = 'ts')
+	
+	#show deleted values
+	versionQuery <- getDataValues(Site=1, VersionID=2, show.deleted=TRUE)
+	stplot(versionQuery, mode = 'ts')
 	}
 
 }
@@ -55,13 +95,14 @@ exampleCommands <- function(){
 cleanupMySQL <- function(con){
 		for(i in 1:6){
 			try(dbGetQuery(con, "DROP TABLE if exists DataValues, DataValuesRepository;"), silent=TRUE)
-			try( dbGetQuery(con, "DROP TABLE if exists `Categories`,  `DerivedFrom`, `GeneralCategoryCV`, `GroupDescriptions`, `Groups`, `ISOMetadata`, `LabMethods`, `Methods`, `ODMVersion`, `OffsetTypes`, `Qualifiers`, `QualityControlLevels`, `SampleMediumCV`, `Samples`, `SampleTypeCV`, `SeriesCatalog`, `Sites`, `Sources`, `SpatialReferences`, `SpeciationCV`, `TopicCategoryCV`, `Units`, `ValueTypeCV`, `VariableNameCV`, `Variables`, `Versions`, `VerticalDatumCV`, CensorCodeCV, DataTypeCV , DataValues, Synonyms;") , silent=TRUE)
+			try(dbGetQuery(con, "DROP TABLE if exists `Categories`,  `DerivedFrom`, `GeneralCategoryCV`, `GroupDescriptions`, `Groups`, `ISOMetadata`, `LabMethods`, `Methods`, `ODMVersion`, `OffsetTypes`, `Qualifiers`, `QualityControlLevels`, `SampleMediumCV`, `Samples`, `SampleTypeCV`, `SeriesCatalog`, `Sites`, `Sources`, `SpatialReferences`, `SpeciationCV`, `TopicCategoryCV`, `Units`, `ValueTypeCV`, `VariableNameCV`, `Variables`, `Versions`, `VerticalDatumCV`, CensorCodeCV, DataTypeCV , DataValues, Synonyms;") , silent=TRUE)
 		}
 }
 
 
 
 longExample <- function() {
+options(error = recover)
 	if(!as.logical(getOption("testLongExample", FALSE))){
 		cat("Not testing long example. Use 'options(testLongExample = TRUE)' to do so\n")
 		return()
@@ -471,11 +512,8 @@ longExample <- function() {
 					"san.shared","san.other.unimproved","san.open.def","health.workers","under5.mort","electrate.total","mean_schooling","expected_schooling")
 
 	req.vars.water <- c("population.A2","water.available.cur","water.available.ipsl","water.available.echam","water.available.cncm3")
-				
-	all.water.dat <- getDataMatrix(variables=req.vars.water,select.time=strptime(paste(c(1990,2030,2060,2090), "01-01", sep="-"), "%Y-%m-%d" , 
-	tz="UTC"),  warn.missing = FALSE)
-
-#	rest.data <- getDataMatrix(variables=req.vars.rest, select.time = "latest",warn.missing = FALSE)
+	
+	all.water.dat <- getDataValues(Variable=req.vars.water)
 
 #	all.data <- merge(all.water.dat, rest.data, by.x = "contryCode", by.y = "countryCode")
 

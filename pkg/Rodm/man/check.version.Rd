@@ -27,7 +27,7 @@ check.version(object, version)
 What do you need?
 }
 \value{
-nothing returned. Side effects assure that the package can be used without explicitly setting up a database.
+Nothing returned. Side effects assure that the package can be used without explicitly setting up a database.
 }
 \author{
 Dominik Reusser

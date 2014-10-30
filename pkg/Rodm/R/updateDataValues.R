@@ -1,49 +1,53 @@
 updateDataValues <- function(getDataResult, reason=NULL){
-	#Requery the data 
-	stopifnot(class(getDataResult)=="observations")
-	inDB <- getDataValues(ID=as.numeric(getDataResult@ids))
+	stopifnot(class(getDataResult)=="inherited_stfdf")
 
-	#Find differences based on ID!
-	comp <- getDataResult == inDB
-	details <- attributes(comp)
-	if(any(!(names(details) %in% c("values", "dim")))){
-		todo("Implement updating if anything besides values is different")
-		browser()
-		stop("Unimplemented")
+	inDB <- getDataValues(ID=unique(as.vector(as.matrix(getDataResult@ValueIDs@data))))
+
+	if(any(dim(inDB@data)!=dim(getDataResult@data))){
+		stop(paste("error while comparing data:\n dimension of data in DB: ", paste(dim(inDB@data), collapse=", "), "dimension of data passed to function: ", paste(dim(getDataResult@data),collapse=", ")))
 	}
-
+	# get only updated data sets
+	comp <- getDataResult == inDB			# == doesn't work on STFDF. Therefore class_stfdf contains a method named ==
 
 	#update the single records
 	if(all(comp)){
 		warning("Nothing to update")
 		return()
 	}
-	to.update <- coredata(getDataResult@ids)[!comp]
+  
+	to.update <- getDataResult@ValueIDs@data[comp]
 	IarchiveDataValues(getOption("odm.handler"),ValueID=to.update, reason)
+		
+		
 	for(rec.id in to.update){
-		the.row <- which(getDataResult@ids==rec.id)
+		the.row <- which(getDataResult@ValueIDs@data==rec.id)
+		
+		metaID <- getDataResult@MetadataRel@data[the.row,]
+		
 		#make sure that ID is processed correctly in Iupdate if it is NA
-		#the.tz <- guess.tz(getDataResult[the.row]@attributes$utcoffset)
 		todo("Correct handling of tz in updateDataValues")
 		the.tz <- "GMT"
 		obj <- getOption("odm.handler")
+	    selectMeta = which(getDataResult@Metadata$MetaId == metaID)
+	   
 		IupdateDataValues(obj,ValueID=rec.id, 
-				#localDateTime=chr2date(index(getDataResult[the.row]@values), tz=the.tz),
-				localDateTime=index(getDataResult[the.row]@values),
-				value=sv(coredata(getDataResult[the.row]@values)),
-				valueAccuracy=sv(getDataResult[the.row]@attributes$valueaccuracy),
-				TZ=the.tz,
-				SiteID=getID("Site", getDataResult[the.row]@attributes$site, remove.special.character=FALSE),
-				VariableID=getID("Variable",getDataResult[the.row]@attributes$variable, remove.special.character=FALSE),
-				Offset=sv(getDataResult[the.row]@attributes$offsetvalue),
-				OffsetTypeID=getID("OffsetType",getDataResult[the.row]@attributes$offsettype, remove.special.character=FALSE),
-				CensorCode=sv(getDataResult[the.row]@attributes$censorcode),
-				QualifierID=getID("Qualifier",getDataResult[the.row]@attributes$qualifier, remove.special.character=FALSE),
-				MethodID=getID("Method",getDataResult[the.row]@attributes$method, remove.special.character=FALSE),
-				SourceID=getID("Source",getDataResult[the.row]@attributes$source, remove.special.character=FALSE),
-				SampleID=getID("Sample",getDataResult[the.row]@attributes$sample, remove.special.character=FALSE),
-				DerivedFromID= sv(coredata(getDataResult[the.row]@derivedFrom)),
-				QualityControlLevelID=getID("QualityControlLevel",getDataResult[the.row]@attributes$qualitycontrollevel, remove.special.character=FALSE))
-
+				localDateTime=index(getDataResult@time[the.row,]),
+				value=sv(coredata(getDataResult@data[the.row,])),				
+				valueAccuracy=sv(getDataResult@Metadata$Valueaccuracy[selectMeta]),			
+				TZ = the.tz,
+				SiteID=getID("Site",getDataResult@Metadata$site[selectMeta]),				
+				VariableID=getID("Variable",getDataResult@Metadata$variable[selectMeta]),				
+				Offset=sv(getDataResult@Metadata$offsetvalue[selectMeta]),					
+				OffsetTypeID=getID("OffsetType",getDataResult@Metadata$offsettype[selectMeta]),				
+				CensorCode=sv(getDataResult@Metadata$censorcode[selectMeta]),				
+				QualifierID=getID("Qualifier",getDataResult@Metadata$qualifier[selectMeta]),				
+				MethodID=getID("Method",getDataResult@Metadata$method[selectMeta]),			
+				SourceID=getID("Source",getDataResult@Metadata$source[selectMeta]),				
+				SampleID=getID("Sample",getDataResult@Metadata$sample[selectMeta]),				
+				DerivedFromID= sv(getDataResult@DerivedFromIDs@data[selectMeta]),		
+				QualityControlLevelID=getID("QualityControlLevel",getDataResult@Metadata$qualitycontrollevel[selectMeta])
+				
+				)				
+								
 	}
 }

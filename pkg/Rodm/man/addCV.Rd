@@ -7,12 +7,12 @@ Extend controlled vocabularies
 }
 \description{
 Add a term to one of the controlled vocabularies. The better way is to 
-have CUASHI add the term to the official vocabulary through their webpage:
+have CUAHSI add the term to the official vocabulary through their web-page:
 http://his.cuahsi.org/mastercvreg/
 
 updateCV queries the official vocabulary again and updates the database tables.
 
-CVtables returns a list of controled vocabularies.
+CVtables returns a list of controlled vocabularies.
 }
 \usage{
 addCV(table, term, definition)
@@ -27,7 +27,7 @@ CVtables()
    Character: Term to be added.
 }
   \item{definition}{
-   Character: Defintion of the term 
+   Character: Definition of the term 
 }
 }
 \value{

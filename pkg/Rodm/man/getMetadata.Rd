@@ -3,14 +3,14 @@
 \alias{getID}
 \alias{id2name}
 \title{
-Get information about metadata
+Get information about meta data
 }
 \description{
-getMetadata allows to query entries from the metadata tables.
+getMetadata allows to query entries from the meta data tables.
 
-getID allows to find the ID for an entry from a metadaa table. A smart matching algorithm is used to retrieve relevant entries.
+getID allows to find the ID for an entry from a meta table. A smart matching algorithm is used to retrieve relevant entries.
 
-id2name is an internal function. It takes a dataframe (e.g. returned from IgetDataValues) and converts each column with a name starting with ID to the name or term from the corresponding metadata table.
+id2name is an internal function. It takes a data frame (e.g. returned from IgetDataValues) and converts each column with a name starting with ID to the name or term from the corresponding meta data table.
 }
 \usage{
 getMetadata(table, EXACT = FALSE, ...)
@@ -19,7 +19,7 @@ id2name(dataframe)
 }
 \arguments{
   \item{table}{
-Table name of the metadata table.
+Table name of the meta data table.
 }
   \item{EXACT}{
 boolean indicating whether only exact matches should be returned or partial matches of the term should be accepted.
@@ -31,7 +31,7 @@ boolean indicating whether special characters should be removed when comparing. 
 String describing the entry in the table.
 }
   \item{dataframe}{
-Dataframe to be converted from ID - columns to names.
+Data frame to be converted from ID - columns to names.
 }
   \item{\dots}{
 Additional columns to filter entries.
@@ -43,20 +43,21 @@ The matching algorithm of getID first attempts to find exact matches in one of t
 ToDo explain use of synonyms
 }
 \value{
-getID returns a vector of the IDs. getMetadata returns a dataframe representing the metadata table
+getID returns a vector of the IDs.
+getMetadata returns a data frame representing the meta data table.
 }
 \author{
 Dominik Reusser
 }
 \seealso{
-Use \code{\link{CVtables}} to obtain a list of controlled vocabularies. See also the ODM documentation from QUASHI
+Use \code{\link{CVtables}} to obtain a list of controlled vocabularies. See also the ODM documentation from CUAHSI
 }
 \examples{
 #connect to standard database
-#this also retrieves the controlled vocabularies from the CUASHI server
+#this also retrieves the controlled vocabularies from the CUAHSI server
 getDefaultDB()
 
-#retrieve metadata
+#retrieve meta data
 getMetadata(table="VariableName")
 }
 \keyword{ utilities }

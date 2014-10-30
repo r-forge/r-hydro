@@ -10,19 +10,19 @@
 Internal functions: helping to do things
 }
 \description{
-The following methods are used internaly:
+The following methods are used internally:
 
-reload is used to recompile and reload the package during development.
+Reload is used to recompile and reload the package during development.
 
-todo is used to indicate unfinished implementations. options(verbose.todos = TRUE) can be used to determine if the corresponding text is printed.
+Todo is used to indicate unfinished implementations. options(verbose.todos = TRUE) can be used to determine if the corresponding text is printed.
 
 run.query is used to run queries. In addition, the  query string is printed if options(verbose.queries=TRUE) is set.
 
 run.sql.script reads an SQL script from a text file and executes all the commands.
 
-sqlnow returnes a database engine specific term to obtain the current time and date.
+sqlnow returns a database engine specific term to obtain the current time and date.
 
-sv and svk are uesd to return the correct element from a vector to be entered in a database query. The commands take care to give useful result also for vectors that are NULL and NA-entries in a vector. svk must be used if the database column has to meet a foreign key relation ship. In this case, the appropriate key is returned.
+sv and svk are used to return the correct element from a vector to be entered in a database query. The commands take care to give useful result also for vectors that are NULL and NA-entries in a vector. svk must be used if the database column has to meet a foreign key relation ship. In this case, the appropriate key is returned.
 }
 \usage{
 reload()

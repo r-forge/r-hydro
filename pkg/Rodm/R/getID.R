@@ -38,7 +38,7 @@ getID <- function(table, value,#, allowNoValue=FALSE
 
 
 	#avoid special characters
-	#and remove trainling spaces
+	#and remove trailing spaces
 	if(remove.special.character){
 		#we need to be able to turn this off after lookup with
 		#levenstein algorithm, if special characters are present
@@ -67,7 +67,7 @@ getID <- function(table, value,#, allowNoValue=FALSE
 			#avoid running loop again if we found a value
 			if(NROW(entry)==0){
 				for(field in lookup[[table]]){
-					#Skip ID field if we have characters (causes trouble with postgeres
+					#Skip ID field if we have characters (causes trouble with postgres
 					if(field == "ID" & is.character(phraseA)) next
 					command <- paste('entry <- unique(rbind(entry, Iget',table,'(options("odm.handler")[[1]], ',field,'="',phraseA,'", exact=',exact,')))', sep='')
 					eval(parse(text=command))

@@ -20,10 +20,10 @@ Code used by organization that collects the data to identify the site
 Full name of the sampling site. 
 }
   \item{x}{
-x coordiante
+x coordinate
 }
   \item{y}{
-y coordiante
+y coordinate
 }
   \item{Elevation}{
 Elevation of sampling location 
@@ -37,7 +37,7 @@ Spatial Reference System of
 the local coordinates  
 }
   \item{isLocal}{
-Boolean, indicating if x and y are inthe lat/long or local coordiante system.
+Boolean, indicating if x and y are in the lat/long or local coordinate system.
 }
   \item{VerticalDatum}{
 Vertical datum of the elevation.

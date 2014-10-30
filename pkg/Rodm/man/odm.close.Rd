@@ -14,7 +14,7 @@ getDefaultDB(file="RODM.db")
 }
 \arguments{
   \item{file}{
-    Name of the file delivered with the package. Normaly should not be changed.
+    Name of the file delivered with the package. Normally should not be changed.
 }
 }
 

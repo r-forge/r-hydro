@@ -5,7 +5,7 @@
 Transfer synonyms  
 }
 \description{
-Functions that allow to transfer synonyms from one database to another. This may be useful because the synonyms include quite a bit of manual matching on large datasets. Transfering those allows to reconstruct a database from source file more easily
+Functions that allow to transfer synonyms from one database to another. This may be useful because the synonyms include quite a bit of manual matching on large datasets. Transferring those allows to reconstruct a database from source file more easily.
 }
 \usage{
 exportSynonyms(file)
@@ -17,7 +17,7 @@ importSynonyms(file)
 }
 }
 \value{
-Used for the side effect of creating/importing a file. The file is includes the columns phrase, table, and key.
+Used for the side effect of creating/importing a file. The file includes the columns phrase, table and key.
 }
 \author{
 Dominik Reusser

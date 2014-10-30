@@ -567,7 +567,7 @@ setMethod("IarchiveDataValues",
 setMethod("IupdateDataValues", 
 		signature(object = "odm1_1"),
 		function(object, ValueID, localDateTime, value, TZ, SiteID, VariableID, Offset=NULL, OffsetTypeID=NULL, CensorCode, QualifierID=NULL, MethodID, SourceID, SampleID=NULL, DerivedFromID=NULL, QualityControlLevelID, valueAccuracy=NULL,...  ){
-			insert.query <- paste("UPDATE DataValues SET DataValue = \"",value,
+				insert.query <- paste("UPDATE DataValues SET DataValue = \"",value,
 					"\", ValueAccuracy = ", valueAccuracy,
 				       	", LocalDateTime = \"", localDateTime,
 				       	"\", UTCOffset = \"", tz2offset(TZ),

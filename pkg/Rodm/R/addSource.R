@@ -10,7 +10,7 @@ addSource <- function(Organization, SourceDescription, SourceLink=NULL, ContactN
 			next
 		}
 
-		#check from referencetable
+		#check from reference table
 		if(!is.null(Metadata[i])){
 			MetadataID <- getID("ISOMetadata",Metadata[i])
 		} else {

@@ -4,7 +4,7 @@ addCV <- function(table, term, definition){
 		definition[i] <- gsub("'", "`", definition[i])
 		definition[i] <- gsub("\"", "`", definition[i])
 		if(NROW(existing <- IgetCV(getOption("odm.handler"), table=table, term=term[i], definition=definition[i]))>0){
-			warning(paste("Skiping existing entry:", term[i]))
+			warning(paste("Skipping existing entry:", term[i]))
 			return()
 		}
 		warning(paste("Extending CV", table, " which should not be necessary. Please propose new term to CUASHI at http://his.cuahsi.org/mastercvreg/", sep=""))

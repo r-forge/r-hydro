@@ -8,7 +8,7 @@ addISOMetadata <- function(TopicCategory="Unknown", Title="Unknown", Abstract="U
 	if(!any(theUnexisting)){
 		return()
 	}
-	#check from referencetable
+	#check from reference table
 	if(!is.null(TopicCategory)){
 		stopifnot(length(TopicCategory) == length(Title))
 		TheTopicCategory <- getID("TopicCategory",TopicCategory[theUnexisting])

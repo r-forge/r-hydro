@@ -27,7 +27,7 @@ data to identify the variable.
   \item{Name}{
 Full text name of the variable 
 that was measured, observed, 
-modeled. Refers to the controlled vocabulary.
+modelled. Refers to the controlled vocabulary.
 }
   \item{Speciation}{
 Text code used to identify how
@@ -41,7 +41,7 @@ controlled vocabulary table.
 the units of the data
 values associated with the
 variable.
-Referes to the Units controled vocabulary.
+Refers to the Units controlled vocabulary.
 }
   \item{SampleMedium}{
 The medium in which the
@@ -111,7 +111,7 @@ Nothing is returned
 Dominik Reusser
 }
 \seealso{
- \code{\link{updateCV}} to retrieve the vocabularies from the CUASHI web service and update the database. \code{\link{getMetadata}}  allows to query for meta data.
+ \code{\link{updateCV}} to retrieve the vocabularies from the CUAHSI web service and update the database. \code{\link{getMetadata}}  allows to query for meta data.
 }
 \examples{
 #connect to standard database

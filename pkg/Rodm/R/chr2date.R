@@ -1,3 +1,4 @@
+# convert a character to date
 chr2date <- function(string, tz){
 	string <- as.character(string)
 	if(all(nchar(string) %in% c(10,19))){

@@ -1,3 +1,5 @@
+# convert a numeric to string
+
 id2name <- function(dataframe){
 	dataframe.new <- dataframe
 	names.alt <- sub("id","",names(dataframe))

@@ -1,10 +1,10 @@
 \name{expandVar}
 \alias{expandVar}
 \title{
-Internal: make sure metadata information can be processed in a flexible way.
+Internal: make sure meta data information can be processed in a flexible way.
 }
 \description{
-Converts metadata to a matrix
+Converts meta data to a matrix
 }
 \usage{
 expandVar(var, nrow, ncol, checkID = FALSE, table = NULL)
@@ -30,7 +30,7 @@ expandVar(var, nrow, ncol, checkID = FALSE, table = NULL)
 What do you want to know?
 }
 \value{
-a matrix with the metadata.
+A matrix with the meta data.
 }
 \author{
 Dominik Reusser

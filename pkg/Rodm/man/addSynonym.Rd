@@ -4,7 +4,7 @@
 Add a synonym for one of the entries in any meta data table
 }
 \description{
-For more convenience while importing data, synonyms for existing entries can be handeled by the package. This command allows you to add a synonym. Existing synonyms are then used to match the right record when searching and importing data.
+For more convenience while importing data, synonyms for existing entries can be handled by the package. This command allows you to add a synonym. Existing synonyms are then used to match the right record when searching and importing data.
 }
 
 \usage{
@@ -16,7 +16,7 @@ addSynonym(table, phrase, id)
 Name of the table, in which an entry exists.
 }
   \item{phrase}{
-The synonym
+The synonym.
 }
   \item{id}{
 Unique ID of the record.

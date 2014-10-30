@@ -1,8 +1,5 @@
 addDataValues <- function(DataZoo=NULL, Date=NULL, Value=NULL, ValueAccuracy=rep(NA, NCOL(DataZoo)), Site, Variable, Offset=rep(NA, NCOL(DataZoo)), OffsetType=rep('No', NCOL(DataZoo)), CensorCode = rep("nc", NCOL(DataZoo)), Qualifier=rep("No", NCOL(DataZoo)), Method=rep('No', NCOL(DataZoo)), Source, Sample=rep("No", NCOL(DataZoo)), DerivedFrom=NULL, QualityControlLevel, tolerance=0){
 	#mandatory: DataValue,  Site, Variable, CensorCode, Method, Source, QualityControlLevel
-
-
-
 	todo("UnitConversion")
 	if(is.null(DataZoo) & (is.null(Date) | is.null(Value))) stop("You must provide information either as DataZoo or Date and Value")
 	if(!is.null(Value)){
@@ -24,12 +21,7 @@ addDataValues <- function(DataZoo=NULL, Date=NULL, Value=NULL, ValueAccuracy=rep
 		Value[emptyValue] <- NA
 		warning("Some data values included empty strings. These are treated as NA.")
 	}
-
-	#if(is.null(DataZoo)) DataZoo <- xts(Value, order.by=Date)
-
 	
-
-
 	#check variables with foreign keys
 	SiteID <- expandVar(Site, nrow=NROW(Value), ncol=NCOL(Value), checkID=TRUE, table="Site")
 	VariableID <- expandVar(Variable, nrow=NROW(Value), ncol=NCOL(Value), checkID=TRUE, table="Variable")
@@ -59,7 +51,7 @@ addDataValues <- function(DataZoo=NULL, Date=NULL, Value=NULL, ValueAccuracy=rep
 				Sample=SampleID[,column],QualityControlLevel=QualityControlLevelID[,column])
 		c.m <- unique(metadata) #cases.metadata
 		metadata$rownr <- 1:NROW(metadata)
-		#import unique cases of metadata seperately (e.g. Worldbank)
+		#import unique cases of meta data separately (e.g. Worldbank)
 		for(ca in 1:NROW(c.m)){ #each case
 
 			#select corresponding data from DataZoo
@@ -96,9 +88,13 @@ addDataValues <- function(DataZoo=NULL, Date=NULL, Value=NULL, ValueAccuracy=rep
 				time.range <- range(Date)
 				order.date <- Date[row.sel]
 			}
+      
 			database.entries <- getDataValues(from=time.range[1], to=time.range[2], tz="global", Site=c.m$Site[ca], Variable=c.m$Variable[ca], Offset=c.m$Offset[ca], OffsetType=c.m$OffsetType[ca], CensorCode=c.m$CensorCodeNum[ca], Qualifier=c.m$Qualifier[ca], Method=c.m$Method[ca], Source=c.m$Source[ca], Sample=c.m$Sample[ca],QualityControlLevel=c.m$QualityControlLevel[ca], show.deleted=TRUE, all.ID=TRUE)
-			if(NROW(database.entries)>0){
-				to.test <- merge(database.entries@values, xts(Value[row.sel,column], order.by=order.date), join="right")
+		  if(NROW(database.entries)>0){
+			   
+    entriesXtsValues = xts(database.entries@data, order.by=index(database.entries@time))
+    to.test <- merge(entriesXtsValues, xts(Value[row.sel,column], order.by=order.date), join="right")
+        
 				stopifnot(NROW(to.test) == NROW(row.sel))
 				if(NCOL(to.test)!=2){
 					cat("Error while checking for duplicates. Contact the maintainer\n")
@@ -118,7 +114,7 @@ addDataValues <- function(DataZoo=NULL, Date=NULL, Value=NULL, ValueAccuracy=rep
 						plot.zoo(to.test$inDatabase, col="green", main=paste("Import of column", column), ylim=range(coredata(to.test), na.rm=TRUE), type="b")
 						points(to.test$toImport[different], col="red")
 						legend("top", c("database records", "differing (to import)"), col=c("green", "red"), lty=c(1,NA), pch=c(NA,1))
-						cat("Data to import is not matching data in database for", sum(different, na.rm=TRUE), "values (See plot)\nWhat shall I do?\n  1) Dischard data to import and import remaining, missing data\n  2) Overwrite values in database with new values\n  0) Stop and let you modify the data to import before another attempt\nEnter a number (0-2) for your choise.\n")
+						cat("Data to import is not matching data in database for", sum(different, na.rm=TRUE), "values (See plot)\nWhat shall I do?\n  1) Discard data to import and import remaining, missing data\n  2) Overwrite values in database with new values\n	0) Stop and let you modify the data to import before another attempt\nEnter a number (0-2) for your choise.\n")
 						choice <- "impossible"
 						attempts <- 0
 						if(!interactive()) {
@@ -136,18 +132,18 @@ addDataValues <- function(DataZoo=NULL, Date=NULL, Value=NULL, ValueAccuracy=rep
 					}
 
 					if(choice==0){
-						cat("returning a xts object with the data in the database and the data to be imported\n")
+						cat("returning a spacetime object with the data in the database and the data to be imported\n")
 						return(to.test)
-					} else if (choice==2){
-						to.update <- database.entries
-						database.entries@values[different] <- to.test$toImport[different]
-						updateDataValues(database.entries[different], paste("Replacement upon import on", date()))
+					} else if (choice==2){	
+						differentUpdate <- different
+						differentUpdate[is.na(differentUpdate)] <- FALSE
+						database.entries@data[differentUpdate,] <- as.numeric(to.test$toImport[differentUpdate])
+						updateDataValues(database.entries, paste("Replacement upon import on", date()))
 					}
-					#nothing to do for choice 1 because is.na(different) is false for differing values, so data will not be importet
-
-
 					
+					#nothing to do for choice 1 because is.na(different) is false for differing values, so data will not be imported
 				}
+    
 				the.missing <- is.na(different)
 				do.import <- !is.na(to.test$toImport) & the.missing
 				to.import <- to.test$toImport[do.import]
@@ -157,17 +153,18 @@ addDataValues <- function(DataZoo=NULL, Date=NULL, Value=NULL, ValueAccuracy=rep
 				do.import[row.sel] <- TRUE
 			}
 			if(any(do.import)){
-				#browser()
 				if(Date.by.col){
 					theDate <- rep(Date[column], sum(do.import))
 				} else {
 					theDate <- Date[do.import]
 				}
-				thetz <- as.numeric(strftime(theDate, "%z"))
+				# strftime(theDate, "%z") funktioniert. As.numeric schmeißt Fehler-Warnung: NAs introduced by coercion
+				thetz <- strftime(theDate, "%z")
 				todo("Correct functioning of tz")
 
 				IaddDataValues(getOption("odm.handler"),localDateTime=theDate, values=to.import, TZ=thetz, SiteID=SiteID[do.import,column], VariableID=VariableID[do.import,column], Offset=Offset[do.import,column], OffsetTypeID=OffsetTypeID[do.import,column], CensorCode=CensorCodeNum[do.import], QualifierID=QualifierID[do.import,column], MethodID=MethodID[do.import,column], SourceID=SourceID[do.import,column], SampleID=SampleID[do.import,column],QualityControlLevelID=QualityControlLevelID[do.import,column], valueAccuracy=ValueAccuracy[do.import,column])
 			}
+					
 			#import data
 		}
 	}

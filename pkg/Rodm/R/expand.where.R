@@ -1,5 +1,7 @@
 expand.where <- function(w.o, var, var.name, exact=TRUE, isnumeric=FALSE){
-	if(exact){
+	
+
+  if(exact){
 		like = " = "
 		perc = ""
 	} else {
@@ -11,9 +13,10 @@ expand.where <- function(w.o, var, var.name, exact=TRUE, isnumeric=FALSE){
 	} else {
 		quotation = "'"
 	}
+  
 	if(!is.null(var)){
 		if(isnumeric & !is.numeric(var)){ 
-			print("Warning: numeric variables need to be numeric if isnumeric is set. Trying to convert")
+			warning ("Numeric variables need to be numeric if isnumeric is set. Trying to convert")
 			var.old <- var
 			var <- as.numeric(var.old)
 			print(paste("From", var.old, "to", var))

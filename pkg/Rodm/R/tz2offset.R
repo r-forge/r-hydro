@@ -1,12 +1,15 @@
 tz2offset <- function(tz){
       to.ret <- NA
-      if(as.character(tz)=="CEST" || as.character(tz)=="UTC" || as.character(tz)=="GMT" || as.character(tz)=="0" || as.character(tz)=="000"  || as.character(tz)=="0000" || as.character(tz)=="+0000"){
+
+      if(as.character(tz)=="CEST" || as.character(tz)=="UTC" || as.character(tz)=="GMT" || as.character(tz)=="0" || as.character(tz)=="000"  || as.character(tz)=="0000" || as.character(tz)=="+0000"
+		|| as.character(tz)=="W. Europe Daylight Time"  || as.character(tz)=="Mitteleurop\u00E4ische Zeit"){
 	      to.ret=0
       }
       if(as.character(tz)=="-1" ||  as.character(tz)=="-100" || as.character(tz)=="-0100"){
 	      to.ret=-100
       }
-      if(as.character(tz)=="1" ||  as.character(tz)=="100" || as.character(tz)=="0100" || as.character(tz)=="+0100"){
+      if(as.character(tz)=="1" ||  as.character(tz)=="100" || as.character(tz)=="0100" || as.character(tz)=="+0100" || as.character(tz)=="W. Europe Standard Time"
+	  ){
 	      to.ret=100
       }
       if(as.character(tz)=="2" ||  as.character(tz)=="200" || as.character(tz)=="0200" || as.character(tz)=="+0200"){
@@ -76,6 +79,7 @@ tz2offset <- function(tz){
 	      to.ret="+0"
 	      warning("There was a TZ value of 'NULL', replaced by 'UTC'")
       }
+	  	  #browser()
       if(is.na(to.ret)){
 		stop(paste("unknown tz:", tz))
       }

@@ -3,13 +3,13 @@
 \alias{RObsDat}
 \docType{package}
 \title{
-R-Interface to the observations Data Model from QUASHI
+R-Package to the observations Data Model from CUAHSI
 }
 \description{
-This package provides classes and functions for handling observational (time series) data. 
+This package provides classes and functions for handling observational (spatio-temporal) data. 
 
 The package provides a number of feature for your convenience:
-- Automatic retrieval of standard vocabularies from QUASHI.
+- Automatic retrieval of standard vocabularies from CUAHSI.
 - Fuzzy matching of terms for more convenient insertion.
 - Automatic handling of synonyms for more convenient data processing. 
 
@@ -17,7 +17,7 @@ Note: tell me what additional questions should be answered here.
 
 The package has a large number of dependencies. To install, use the following command:
 
-\code{install.packages(c("sp", "testthat","XMLSchema", "SSOAP", "xts", "vwr", "RSQLite"), repos = c("http://www.omegahat.org/R", "http://mirrors.softliste.de/cran"))}
+\code{install.packages(c("spacetime", "sp", "testthat","XMLSchema", "SSOAP", "xts", "vwr", "RSQLite"), repos = c("http://www.omegahat.org/R", "http://mirrors.softliste.de/cran"))}
 }
 \details{
 Use \code{\link{addDataValues}} to store data in the database.

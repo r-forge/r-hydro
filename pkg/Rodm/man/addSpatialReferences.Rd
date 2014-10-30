@@ -5,7 +5,7 @@ Add spatial reference system
 }
 \description{
 Add a term to the spatial references controlled vocabularies. The better way is to 
-have CUASHI add the term to the official vocabulary through their webpage:
+have CUAHSI add the term to the official vocabulary through their web page:
 http://his.cuahsi.org/mastercvreg/
 }
 \usage{

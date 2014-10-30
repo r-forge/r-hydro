@@ -32,11 +32,11 @@ expandVar <- function(var, nrow, ncol, checkID=FALSE, table=NULL){
 		} else if(nrow==nrow.var){
 			return(matrix(theID, ncol=ncol, nrow=nrow))
 		} else {
-			cat("Unexpected expansion of variable. Please impement\n")
+			cat("Unexpected expansion of variable. Please implement\n")
 			browser()
 		}
 	} else {
-			cat("Unexpected expansion of variable. Please impement\n")
+			cat("Unexpected expansion of variable. Please implement\n")
 			browser()
 	}
 	stop("Should not be here")

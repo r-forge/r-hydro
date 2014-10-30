@@ -1,10 +1,9 @@
 \name{restructureDataResult}
-\alias{restructureDataResult}
 \title{
 Internal: Convert database query results
 }
 \description{
-Function to convert database query results into a list of two xts objects, one for numerical and one for character information.
+Function to convert database query results into a spacetime object (an inherited stfdf). One for numerical and one for character information.
 }
 \usage{
 restructureDataResult(to.ret, value.numeric=TRUE,

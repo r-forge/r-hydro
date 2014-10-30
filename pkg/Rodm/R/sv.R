@@ -1,5 +1,5 @@
 sv <- function(the.vect, rownum=1){ #select variable
-	#aviod going beyond the vector.
+	#avoid going beyond the vector.
 	#If we have only one entry, we may
 	# assume that this is valid for all
 	if(length(the.vect)==1) rownum=1

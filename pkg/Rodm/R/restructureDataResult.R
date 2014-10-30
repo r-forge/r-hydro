@@ -1,110 +1,75 @@
 restructureDataResult <- function(to.ret, value.numeric=TRUE, tz=c("global", "UTC", "GMT", "0", "local")){
-	tz <- match.arg(tz)
-	if(NROW(to.ret)>0) {
-		#to be compatible with postgres
-		colnames(to.ret) <- tolower(colnames(to.ret))
-		#to be able to compare also NA
-		to.ret[is.na(to.ret)] <- -9999999999
-		#sort according to data types and create to xts objects, one numeric, one string
-		data.types <- sapply(to.ret, is.numeric)
-		the.numerics <- which(data.types)
-		the.char <- which(!data.types)
-		if(tz=="local"){
-			index.col <- which(names(to.ret)=="localdatetime")
-			tzname <- to.ret$utcoffset
-			todo("Find a solution to timezone representation. 
-				The mapping Offset (as suggested in ODM1.1) to
-				a specific timezone is not unique, thus currently
-				the information get's lost from the database")
-		} else {
-			index.col <- which(names(to.ret)=="datetimeutc")
-			tzname <- "GMT"
-		}
-		the.char <- the.char[the.char!=index.col]
+  
+  
+  tz <- match.arg(tz)
+  if(NROW(to.ret)>0) {
+    #to be compatible with postgres
+    colnames(to.ret) <- tolower(colnames(to.ret))
+    #to be able to compare also NA
+    to.ret[is.na(to.ret)] <- -9999999999
+    #sort according to data types and create to xts objects, one numeric, one string
+    data.types <- sapply(to.ret, is.numeric)
+    the.numerics <- which(data.types)
+    the.char <- which(!data.types)
+    
+    
+    if(tz=="local"){
+      index.col <- which(names(to.ret)=="localdatetime")
+      tzname <- to.ret$utcoffset
+      todo("Find a solution to timezone representation. 
+           The mapping Offset (as suggested in ODM1.1) to
+           a specific timezone is not unique, thus currently
+           the information get's lost from the database")
+    } else {
+      index.col <- which(names(to.ret)=="datetimeutc")
+      tzname <- "GMT"
+    }
+    the.char <- the.char[the.char!=index.col]
 
-		order.by <- chr2date(to.ret[,index.col], tz=tzname)
-		order.by.unique <- chr2date(unique(to.ret[,index.col]), tz=tzname)
+    time.order.by <- chr2date(to.ret[,index.col], tz=tzname)
+    time.order.by.unique <- chr2date(sort(unique(to.ret[,index.col])), tz=tzname) # chr2date macht es zum POSIX
+   
+    metadata.id <- rep(NA, NROW(to.ret)) # create empty vector
+	non.metadata.columns <- colnames(to.ret) %in% tolower(c("ValueID", "DataValue", "LocalDateTime", "DateTimeUTC", "UTCOffset", "DerivedFromID", "VersionID"))
+    metadata <- unique(to.ret[,!non.metadata.columns])
+    metadata.plain <- id2name(metadata)
+	metadata.id <- rep(NROW(metadata.plain), NROW(to.ret))
+    
+    #convert NA back
+    to.ret[to.ret == -9999999999] <- NA
+    
+    #create the spatialPoint
+      siteData = getMetadata("Site", ID=unique(to.ret$siteid))
+      sp = cbind(siteData$Latitude, siteData$Longitude)
+      row.names(sp) = siteData$Name
 
-		ts.columns <- colnames(to.ret) %in% tolower(c("ValueID", "DataValue", "LocalDateTime", "DateTimeUTC", "UTCOffset", "DerivedFromID", "VersionID"))
-		metadata <- unique(to.ret[,!ts.columns])
-		for(dataset in 1:NROW(metadata)){
-				sel<- to.ret$valueaccuracy == metadata$valueaccuracy[dataset]&
-				to.ret$siteid == metadata$siteid[dataset]&
-				to.ret$variableid == metadata$variableid[dataset]&
-				to.ret$offsetvalue == metadata$offsetvalue[dataset]&
-				to.ret$offsettypeid == metadata$offsettypeid[dataset]&
-				to.ret$censorcode == metadata$censorcode[dataset]&
-				to.ret$qualifierid == metadata$qualifierid[dataset]&
-				to.ret$methodid == metadata$methodid[dataset]&
-				to.ret$sourceid == metadata$sourceid[dataset]&
-				to.ret$sampleid == metadata$sampleid[dataset]&
-				to.ret$qualitycontrollevelid == metadata$qualitycontrollevelid[dataset]
+    sp = SpatialPoints(sp)
 
+    # create Spacetime-Columnnames (consists of variablenname and MetadataID)
+    variablenname = unique(metadata.plain$variable)
+    st_colnames <- NULL
+    	
+    for(variable in variablenname){
+        st_colnames <- c(st_colnames,variable)
+    }
+	MetaId = unique(metadata.id)
+	
+	# create STFDF-Objects-Attachments
+    stfdfMain <- createST(sp=sp, siteID=siteData$ID, location=to.ret$siteid, timeobject=time.order.by.unique, timelong=time.order.by, variables = st_colnames, thedata=to.ret$datavalue)
+	stfdfValueIDs <- createST(sp=sp, siteID=siteData$ID, location=to.ret$siteid, timeobject=time.order.by.unique, timelong=time.order.by, variables = st_colnames, thedata=to.ret$valueid)
+    stfdfDerivedFromIDs <- createST(sp=sp, siteID=siteData$ID, location=to.ret$siteid, timeobject=time.order.by.unique, timelong=time.order.by, variables = st_colnames, thedata=to.ret$derivedfromid)
+    stfdfMetaRelation <- createST(sp=sp, siteID=siteData$ID, location=to.ret$siteid, timeobject=time.order.by.unique, timelong=time.order.by, variables = st_colnames, thedata=metadata.id)
+    
+	
+	# Content Metadata
+    metadataTable <- cbind(MetaId, metadata.plain)
 
-				if(sum(sel) != length(unique(order.by[sel]))){
-					dup <- duplicated(to.ret[,-1])
-					if(any(dup)){
-						ids <- to.ret$valueid[sel]
-						sel[sel] <- !dup
-						if(sum(sel) != length(unique(order.by[sel]))){
-							cat("Multiple entries with the same metadata, but not duplicates (?). Resolve in browser.\n")
-							browser()
-						} else {
-							warning(paste("Some duplicated entries in database in the dataset with ids", paste(ids, collapse="; ") ))
-						}
-
-
-
-					} else {
-						dup <- duplicated(to.ret[,-c(1,2)])
-						if(any(dup)){
-							ids <- to.ret$valueid[sel]
-							sel[sel] <- !dup
-							if(sum(sel) != length(unique(order.by[sel]))){
-								cat("Multiple entries with the same metadata, but not duplicates (?). Part2. Resolve in browser.\n")
-								browser()
-							} else {
-								warning(paste("Entries in database with conflicting data with ids", paste(ids, collapse="; ") ))
-							}
-
-
-
-						} else {
-							cat("Multiple entries with the same metadata. Can not restructure the data. A dataframe with the problematic metadata is returned\n")
-							browser()
-							return(id2name(metadata)[dataset,])
-						}
-					}
-				}
-				if(dataset==1){
-					if(value.numeric){
-						value.xts <- xts(suppressWarnings(as.numeric(to.ret[sel,"datavalue"])),order.by=order.by[sel])
-					} else {
-						value.xts <- xts(to.ret[sel,"datavalue"],order.by=order.by[sel])
-					}
-					id.xts <- xts(to.ret[sel,"valueid"],order.by=order.by[sel])
-					derivedfrom.xts <-  xts(to.ret[sel,"derivedfromid"],order.by=order.by[sel])
-				} else {
-					value.xts <- suppressWarnings(merge(value.xts, xts(to.ret[sel,"datavalue"],order.by=order.by[sel])))
-					id.xts <- merge(id.xts, xts(to.ret[sel,"valueid"],order.by=order.by[sel]))
-					derivedfrom.xts <- merge(derivedfrom.xts, xts(to.ret[sel,"derivedfromid"],order.by=order.by[sel]))
-				}
-
-		}
-		metadata.plain <- id2name(metadata)
-		colnames(value.xts) <- paste(metadata.plain$Site, metadata.plain$Variable, sep=": ")
-		colnames(id.xts) <- paste(metadata.plain$Site, metadata.plain$Variable, sep=": ")
-		colnames(derivedfrom.xts) <- paste(metadata.plain$Site, metadata.plain$Variable, sep=": ")
-		#convert NA back
-		value.xts[value.xts==-9999999999] <- NA
-		derivedfrom.xts[derivedfrom.xts==-9999999999] <- NA
-		metadata.plain[metadata.plain==-9999999999] <- NA
-
-		to.ret <- new("observations", values=value.xts, ids=id.xts, derivedFrom=derivedfrom.xts, attributes=metadata.plain)
-		#to.ret <- list(values=value.xts, ids=id.xts, derivedfrom=derivedfrom.xts, attrib=metadata.plain)
-		
-		#browser()
-		#names(res)[1:3] <- c("ID", "Code", "Descritption")
-	}
+	 # create the hole objects in an inherited_stfdf
+	inherited_stfdf_object = inherited_stfdf(sp = stfdfMain@sp, time = stfdfMain@time, data = stfdfMain@data, endtime = stfdfMain@endTime,
+									ValueIDs=stfdfValueIDs,
+									DerivedFromIDs=	stfdfDerivedFromIDs,
+									MetadataRel = stfdfMetaRelation,
+									Metadata=metadataTable)    
+	return(inherited_stfdf_object)
+  }
 }
-
