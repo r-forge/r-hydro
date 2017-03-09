@@ -96,11 +96,16 @@ baseflow_sep=function(runoff, method="DFM", parms=c(c=0.925, window_size=10, f_l
   lr=length(runoff)
   if (method=="DFM") #baseflow separation; single-pass digital filter method 
   {
-    qd=array(runoff[1], lr) #direct runoff
     cc=parms["c"]
-    for(i in 2:lr)
-      qd[i]=max(0, cc*qd[i-1]+(1+cc)/2*(runoff[i]-runoff[i-1]))
-    qb=runoff-qd
+    qd=array(runoff[1], lr) #direct runoff
+    diff_runoff = diff(runoff)
+     #fast implementation
+      qd = c(runoff[1], filter(x = (1+cc)/2*diff_runoff, filter = cc, method = "recursive", init=runoff[1]))
+    if (any(qd<0)) #any negative values? Do original implementation (slower)
+      for(i in 2:lr)
+  #      qd[i]=max(0, cc*qd[i-1]+(1+cc)/2*(runoff[i]-runoff[i-1]), na.rm=TRUE)
+        qd[i] =max(0, cc*qd[i-1]+(1+cc)/2*diff_runoff[i-1], na.rm=TRUE)
+     qb=runoff-qd
   }    
 
   if (method=="constant_slope") #baseflow separation; constant slope (Dingman 2002, p. 375) 

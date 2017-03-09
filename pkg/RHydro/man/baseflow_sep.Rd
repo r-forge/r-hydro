@@ -22,13 +22,14 @@ base-flow separation method, see details.
 }
 
 \item{parms}{
-method-specific paramters, see details.
+method-specific paramters, see details. The effect of the parameter will be dependent on the temporal resolution of the runoff series.
 }
 
 }
 
 \details{
-\code{method="DFM"} (default) selects baseflow separation using a single-pass digital filter method (e.g. Sawicz et al, 2011). It uses the parameter \code{c}.
+\code{method="DFM"} (default) selects baseflow separation using a single-pass digital filter method (e.g. Sawicz et al, 2011). It uses the parameter \code{c}, varying between 0 (baseflow close to runoff) to 1 (constant baseflow). \\
+q_direct[i] = max(0, cc*qd[i-1]+(1+cc)/2*(runoff[i]-runoff[i-1]), na.rm=TRUE)
 
 \code{method="constant_slope"} separates base flow by drawing a line with constant slope from the minima of the hydrograph to the next intersection with it. Dingman (2002) recommends for the parameter \code{c_slope} a value depending on catchment area A (A < 20 mi²): c_slope = 0.05 ft³/s * A /h. You do the math, imperial units suck.
 
